@@ -856,7 +856,9 @@
     elapsedSec: 0,
     currentVoice: null,
     voices: [],
-    currentAudio: null,    // HTMLAudioElement, jos MP3 toistossa
+    currentAudio: null,    // HTMLAudioElement (varakeinon toistossa)
+    audioCtx: null,        // Web Audio AudioContext (pää-soitin)
+    currentSource: null,   // AudioBufferSourceNode (käynnissä oleva ääni)
     scenario: null,        // 'renkaat' | 'hata' | 'hinta'
     step: 0,
     speakingUtterance: null,
@@ -984,18 +986,106 @@
   });
 
   // ====== Audio + Speech helper ======
-  // Yritetään ensin ladata ja toistaa MP3 /audio/<key>.mp3.
-  // Jos sitä ei ole, käytetään selaimen omaa puhetta.
+  // Yritetään ensin ladata MP3 ja toistaa se Web Audio API:lla,
+  // joka liittää alkuun 350 ms hiljaisuus-prefiksin → selaimen äänilaitteisto
+  // ehtii käynnistyä eikä yhtään puhetta katkea alusta.
+  // Jos MP3:a ei löydy, käytetään selaimen omaa puhetta varakeinona.
+
+  function getAudioContext() {
+    if (!state.audioCtx) {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      try { state.audioCtx = new Ctx(); } catch (e) { return null; }
+    }
+    // Selaimen autoplay-politiikka voi suspendoida kontekstin — yritä jatkaa
+    if (state.audioCtx.state === 'suspended') {
+      try { state.audioCtx.resume(); } catch (e) {}
+    }
+    return state.audioCtx;
+  }
+
   function stopAudio() {
     if (state.currentAudio) {
       try { state.currentAudio.pause(); } catch (e) {}
       state.currentAudio = null;
     }
+    if (state.currentSource) {
+      try { state.currentSource.onended = null; } catch (e) {}
+      try { state.currentSource.stop(); } catch (e) {}
+      state.currentSource = null;
+    }
   }
 
+  // Lataa MP3:n raakadata fetchillä ja palauttaa ArrayBufferin
+  function fetchAudioBuffer(url) {
+    return fetch(url).then(function (resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return resp.arrayBuffer();
+    });
+  }
+
+  // Pää: Web Audio API + 350 ms hiljaisuus-prefiksi
   function tryPlayMp3(key, onSuccess, onMissing) {
     if (!key) { onMissing(); return; }
     stopAudio();
+
+    var ctx = getAudioContext();
+    if (!ctx) {
+      // Web Audio API ei tuettu → kokeillaan vanhalla tavalla
+      return tryPlayMp3Fallback(key, onSuccess, onMissing);
+    }
+
+    var url = AUDIO_DIR + key + '.mp3';
+    var settled = false;
+    var settle = function (fn) {
+      if (settled) return;
+      settled = true;
+      state.currentSource = null;
+      fn();
+    };
+
+    fetchAudioBuffer(url)
+      .then(function (arrayBuf) {
+        if (settled) return;
+        // decodeAudioData voi ottaa callback- tai promise-muodon
+        return new Promise(function (resolve, reject) {
+          // Kopio bufferista on suositeltava, koska decodeAudioData
+          // saattaa "kuluttaa" alkuperäisen Safarissa
+          var copy = arrayBuf.slice(0);
+          ctx.decodeAudioData(copy, resolve, reject);
+        });
+      })
+      .then(function (orig) {
+        if (settled || !orig) return;
+        // Rakenna uusi buffer: 350 ms hiljaisuutta + alkuperäinen ääni
+        var SILENCE_MS = 350;
+        var sampleRate = orig.sampleRate;
+        var silenceSamples = Math.round(sampleRate * SILENCE_MS / 1000);
+        var totalSamples = silenceSamples + orig.length;
+        var combined = ctx.createBuffer(orig.numberOfChannels, totalSamples, sampleRate);
+        for (var ch = 0; ch < orig.numberOfChannels; ch++) {
+          var dest = combined.getChannelData(ch);
+          var src = orig.getChannelData(ch);
+          // Hiljaisuus alussa on jo nollaa (Float32Array initialisoidaan nollilla)
+          // Kopioi alkuperäinen näytteistä silenceSamples eteenpäin
+          dest.set(src, silenceSamples);
+        }
+
+        var source = ctx.createBufferSource();
+        source.buffer = combined;
+        source.connect(ctx.destination);
+        state.currentSource = source;
+
+        source.onended = function () { settle(onSuccess); };
+        source.start(0);
+      })
+      .catch(function () {
+        settle(onMissing);
+      });
+  }
+
+  // Varakeino: vanha HTMLAudio-malli (jos Web Audio API ei toimi)
+  function tryPlayMp3Fallback(key, onSuccess, onMissing) {
     var audio = new Audio();
     audio.preload = 'auto';
     audio.src = AUDIO_DIR + key + '.mp3';
@@ -1012,9 +1102,6 @@
     audio.addEventListener('ended', function () { settle(onSuccess); });
     audio.addEventListener('error', function () { settle(onMissing); });
 
-    // Pieni esi-viive: 400 ms ennen toistoa.
-    // Tämä antaa selaimelle aikaa puskuroida MP3:n alku, niin ensimmäinen sana ei katkea.
-    // Samalla puhekupla ehtii ilmestyä ennen kuin ääni alkaa — tuntuu luonnollisemmalta.
     setTimeout(function () {
       if (settled) return;
       var p = audio.play();
@@ -1560,11 +1647,16 @@
 
   skipBtn.addEventListener('click', function () {
     try { if (synth) synth.cancel(); } catch (e) {}
-    // Jos MP3 toistossa, hyppää eteenpäin: simuloidaan 'ended'
+    // Jos HTMLAudio toistossa (varakeino), hyppää eteenpäin
     if (state.currentAudio) {
       var a = state.currentAudio;
       state.currentAudio = null;
       try { a.pause(); a.dispatchEvent(new Event('ended')); } catch (e) {}
+    }
+    // Jos Web Audio toistossa, stop() laukaisee onended → dialogi etenee
+    if (state.currentSource) {
+      try { state.currentSource.stop(); } catch (e) {}
+      // Jätä state.currentSource = null tehtäväksi onended-callbackille
     }
   });
 
