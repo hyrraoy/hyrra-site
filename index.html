@@ -463,7 +463,7 @@
 <!-- ====================== NAV ====================== -->
 <header class="nav" id="nav">
   <div class="container nav-inner">
-    <a href="#" class="nav-logo" aria-label="Hyrrä etusivu">
+    <a href="/" class="nav-logo" aria-label="Hyrrä etusivu">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" role="img" aria-label="hyrrä">
   <title>hyrrä</title>
   <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#0F3D3E">
@@ -510,7 +510,7 @@
       <p class="lead">Hyrrä on suomalainen AI-vastaanottaja, joka vastaa puhelimeen, varaa ajat ja lähettää tekstiviestivahvistuksen — silloinkin, kun olet auton alla, asiakkaalla tai lomalla.</p>
       <div class="hero-ctas">
         <a href="#yhteys" class="btn btn-primary btn-lg">Varaa ilmainen pilotti</a>
-        <a href="04_demo.html" class="btn btn-ghost btn-lg">
+        <a href="/demo" class="btn btn-ghost btn-lg">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
           Kuuntele demo
         </a>
@@ -976,7 +976,7 @@
           <li><a href="#toiminta">Miten toimii</a></li>
           <li><a href="#ominaisuudet">Ominaisuudet</a></li>
           <li><a href="#hinnoittelu">Hinnoittelu</a></li>
-          <li><a href="04_demo.html">Kuuntele demo</a></li>
+          <li><a href="/demo">Kuuntele demo</a></li>
         </ul>
       </div>
 
@@ -985,7 +985,7 @@
         <ul>
           <li><a href="#">Tietoa meistä</a></li>
           <li><a href="#">Blogi</a></li>
-          <li><a href="#yhteys">Yhteystiedot</a></li>
+          <li><a href="/yhteystiedot">Yhteystiedot</a></li>
           <li><a href="#">Työpaikat</a></li>
         </ul>
       </div>
@@ -993,10 +993,10 @@
       <div class="foot-col">
         <h4>Lainsäädäntö</h4>
         <ul>
-          <li><a href="#">Tietosuojaseloste</a></li>
-          <li><a href="#">Käyttöehdot</a></li>
-          <li><a href="#">DPA</a></li>
-          <li><a href="#">Y-tunnus: 0000000-0</a></li>
+          <li><a href="/tietosuoja">Tietosuojaseloste</a></li>
+          <li><a href="/kayttoehdot">Käyttöehdot</a></li>
+          <li><a href="/dpa">DPA</a></li>
+          <li><span>Y-tunnus: 3555902-3</span></li>
         </ul>
       </div>
     </div>
@@ -1105,6 +1105,60 @@
     });
   })();
 </script>
+
+
+<!-- ====== Cookie consent (Hyrrä) ====== -->
+<div id="hyrraCookie" role="region" aria-label="Evästehuomautus" hidden>
+  <div class="hc-inner">
+    <p class="hc-text">
+      Hyrrä.fi käyttää vain teknisesti välttämättömiä evästeitä. Sivu lataa typografisen fontin Googlen palvelusta. Emme seuraa sinua emmekä jaa tietojasi markkinointitarkoituksiin. <a href="/tietosuoja">Lue tietosuojaseloste</a>.
+    </p>
+    <button id="hyrraCookieOk" class="hc-btn" type="button">Selvä</button>
+  </div>
+</div>
+<style>
+  #hyrraCookie {
+    position: fixed; left: 16px; right: 16px; bottom: 16px;
+    z-index: 99999; max-width: 720px; margin: 0 auto;
+    background: #0F3D3E; color: #FFFFFF;
+    border-radius: 14px; padding: 16px 20px;
+    box-shadow: 0 18px 50px rgba(15,61,62,0.28), 0 4px 14px rgba(15,61,62,0.18);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+    animation: hyrraCookieIn .35s ease-out both;
+  }
+  @keyframes hyrraCookieIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  #hyrraCookie .hc-inner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  #hyrraCookie .hc-text { font-size: 14px; flex: 1; min-width: 240px; margin: 0; color: rgba(255,255,255,0.95); }
+  #hyrraCookie .hc-text a { color: #FFB627; text-decoration: underline; text-underline-offset: 2px; }
+  #hyrraCookie .hc-btn {
+    background: #FFB627; color: #0F3D3E; border: none;
+    padding: 10px 22px; border-radius: 8px;
+    font-family: inherit; font-weight: 700; font-size: 14px;
+    cursor: pointer; transition: opacity .15s;
+  }
+  #hyrraCookie .hc-btn:hover { opacity: 0.92; }
+  #hyrraCookie .hc-btn:active { transform: translateY(1px); }
+  @media (max-width: 520px) {
+    #hyrraCookie .hc-inner { flex-direction: column; align-items: stretch; }
+    #hyrraCookie .hc-btn { width: 100%; }
+  }
+</style>
+<script>
+(function(){
+  var KEY = 'hyrra-cookie-ok';
+  try { if (localStorage.getItem(KEY) === '1') return; } catch(e) {}
+  var el = document.getElementById('hyrraCookie');
+  if (!el) return;
+  el.hidden = false;
+  var btn = document.getElementById('hyrraCookieOk');
+  if (btn) btn.addEventListener('click', function(){
+    try { localStorage.setItem(KEY, '1'); } catch(e) {}
+    el.hidden = true;
+  });
+})();
+</script>
+<!-- ====== /Cookie consent ====== -->
 
 </body>
 </html>
