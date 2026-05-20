@@ -663,7 +663,7 @@
 <body>
 
 <header class="nav">
-  <a class="brand" href="03_landing.html" aria-label="Hyrrä etusivulle">
+  <a class="brand" href="/" aria-label="Hyrrä etusivulle">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" role="img" aria-label="hyrrä">
   <title>hyrrä</title>
   <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#0F3D3E">
@@ -680,7 +680,7 @@
 </svg>
   </a>
   <nav class="links">
-    <a href="03_landing.html" class="back" aria-label="Takaisin etusivulle">
+    <a href="/" class="back" aria-label="Takaisin etusivulle">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
       Takaisin
     </a>
@@ -826,7 +826,7 @@
     <div class="side-card" style="background: var(--deep); color: #fff; border-color: transparent;">
       <h4 style="color: var(--amber);">Valmiina käyttöön?</h4>
       <p class="sub" style="color: rgba(255,255,255,0.7);">Aloita 14 päivän ilmainen kokeilu, ei sitoumusta.</p>
-      <a href="03_landing.html" class="btn-amber" style="text-decoration: none;">
+      <a href="/" class="btn-amber" style="text-decoration: none;">
         Varaa demo
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -996,7 +996,9 @@
   function tryPlayMp3(key, onSuccess, onMissing) {
     if (!key) { onMissing(); return; }
     stopAudio();
-    var audio = new Audio(AUDIO_DIR + key + '.mp3');
+    var audio = new Audio();
+    audio.preload = 'auto';
+    audio.src = AUDIO_DIR + key + '.mp3';
     state.currentAudio = audio;
 
     var settled = false;
@@ -1009,11 +1011,17 @@
 
     audio.addEventListener('ended', function () { settle(onSuccess); });
     audio.addEventListener('error', function () { settle(onMissing); });
-    // Joissain selaimissa play() palauttaa Promise, joka voi hylätä (esim. tiedostoa ei löydy)
-    var p = audio.play();
-    if (p && typeof p.catch === 'function') {
-      p.catch(function () { settle(onMissing); });
-    }
+
+    // Pieni esi-viive: 400 ms ennen toistoa.
+    // Tämä antaa selaimelle aikaa puskuroida MP3:n alku, niin ensimmäinen sana ei katkea.
+    // Samalla puhekupla ehtii ilmestyä ennen kuin ääni alkaa — tuntuu luonnollisemmalta.
+    setTimeout(function () {
+      if (settled) return;
+      var p = audio.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function () { settle(onMissing); });
+      }
+    }, 400);
   }
 
   // Pääpaketti: yritä MP3, fallback selaimen puhe
@@ -1575,6 +1583,60 @@
 
 })();
 </script>
+
+
+<!-- ====== Cookie consent (Hyrrä) ====== -->
+<div id="hyrraCookie" role="region" aria-label="Evästehuomautus" hidden>
+  <div class="hc-inner">
+    <p class="hc-text">
+      Hyrrä.fi käyttää vain teknisesti välttämättömiä evästeitä. Sivu lataa typografisen fontin Googlen palvelusta. Emme seuraa sinua emmekä jaa tietojasi markkinointitarkoituksiin. <a href="/tietosuoja">Lue tietosuojaseloste</a>.
+    </p>
+    <button id="hyrraCookieOk" class="hc-btn" type="button">Selvä</button>
+  </div>
+</div>
+<style>
+  #hyrraCookie {
+    position: fixed; left: 16px; right: 16px; bottom: 16px;
+    z-index: 99999; max-width: 720px; margin: 0 auto;
+    background: #0F3D3E; color: #FFFFFF;
+    border-radius: 14px; padding: 16px 20px;
+    box-shadow: 0 18px 50px rgba(15,61,62,0.28), 0 4px 14px rgba(15,61,62,0.18);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+    animation: hyrraCookieIn .35s ease-out both;
+  }
+  @keyframes hyrraCookieIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  #hyrraCookie .hc-inner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  #hyrraCookie .hc-text { font-size: 14px; flex: 1; min-width: 240px; margin: 0; color: rgba(255,255,255,0.95); }
+  #hyrraCookie .hc-text a { color: #FFB627; text-decoration: underline; text-underline-offset: 2px; }
+  #hyrraCookie .hc-btn {
+    background: #FFB627; color: #0F3D3E; border: none;
+    padding: 10px 22px; border-radius: 8px;
+    font-family: inherit; font-weight: 700; font-size: 14px;
+    cursor: pointer; transition: opacity .15s;
+  }
+  #hyrraCookie .hc-btn:hover { opacity: 0.92; }
+  #hyrraCookie .hc-btn:active { transform: translateY(1px); }
+  @media (max-width: 520px) {
+    #hyrraCookie .hc-inner { flex-direction: column; align-items: stretch; }
+    #hyrraCookie .hc-btn { width: 100%; }
+  }
+</style>
+<script>
+(function(){
+  var KEY = 'hyrra-cookie-ok';
+  try { if (localStorage.getItem(KEY) === '1') return; } catch(e) {}
+  var el = document.getElementById('hyrraCookie');
+  if (!el) return;
+  el.hidden = false;
+  var btn = document.getElementById('hyrraCookieOk');
+  if (btn) btn.addEventListener('click', function(){
+    try { localStorage.setItem(KEY, '1'); } catch(e) {}
+    el.hidden = true;
+  });
+})();
+</script>
+<!-- ====== /Cookie consent ====== -->
 
 </body>
 </html>
