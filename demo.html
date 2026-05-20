@@ -1,0 +1,1580 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Hyrrä — Demo</title>
+<meta name="theme-color" content="#0F3D3E">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0F3D3E;
+    --deep-2: #14524F;
+    --amber: #FFB627;
+    --amber-2: #F4A700;
+    --kerma: #FAF7F2;
+    --surface: #FFFFFF;
+    --ink: #1A1A1A;
+    --muted: #6B7280;
+    --line: #E8E2D7;
+    --moss: #3F7D58;
+    --red: #E25C5C;
+    --shadow-card: 0 30px 80px -20px rgba(15,61,62,0.25), 0 10px 24px -12px rgba(15,61,62,0.18);
+    --shadow-soft: 0 8px 20px -10px rgba(15,61,62,0.18);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--kerma);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+  a { color: inherit; }
+  button { font-family: inherit; }
+
+  /* Header */
+  .nav {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav .brand { display: inline-flex; align-items: center; height: 36px; }
+  .nav .brand svg { height: 32px; width: auto; display: block; }
+  .nav .links { display: flex; gap: 22px; align-items: center; }
+  .nav .links a {
+    color: var(--deep);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14.5px;
+  }
+  .nav .links a:hover { opacity: 0.7; }
+  .nav .back {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid rgba(15,61,62,0.18);
+    border-radius: 999px;
+    background: transparent;
+    transition: background 120ms ease;
+  }
+  .nav .back:hover { background: rgba(15,61,62,0.06); }
+
+  /* Hero */
+  .hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 28px 8px;
+    text-align: center;
+  }
+  .eyebrow {
+    color: var(--deep);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .hero h1 {
+    color: var(--deep);
+    font-size: clamp(28px, 4vw, 44px);
+    margin: 10px 0 6px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .hero p {
+    color: var(--muted);
+    margin: 0 auto;
+    max-width: 620px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  /* Main layout */
+  .stage {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 28px 80px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .stage { grid-template-columns: 1fr; padding: 18px 16px 80px; gap: 18px; }
+    .nav { padding: 18px 16px; }
+    .hero { padding: 10px 16px 0; }
+  }
+
+  /* Phone card */
+  .phone {
+    background: linear-gradient(180deg, #102E2F 0%, #0F3D3E 50%, #0B2A2B 100%);
+    border-radius: 36px;
+    padding: 22px;
+    color: #fff;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(800px 300px at 20% -10%, rgba(255,182,39,0.10), transparent 60%),
+      radial-gradient(600px 260px at 110% 20%, rgba(255,255,255,0.06), transparent 60%);
+    pointer-events: none;
+  }
+  .phone-inner {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 22px;
+    position: relative;
+    backdrop-filter: blur(6px);
+  }
+
+  .call-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+  .biz {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .biz-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--amber), var(--amber-2));
+    color: var(--deep);
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 16px;
+    box-shadow: 0 0 0 3px rgba(255,182,39,0.15);
+  }
+  .biz-name { font-weight: 700; font-size: 15px; line-height: 1.1; }
+  .biz-sub { color: rgba(255,255,255,0.65); font-size: 12.5px; margin-top: 3px; }
+
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 10px 6px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.85);
+    font-variant-numeric: tabular-nums;
+  }
+  .status .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--moss);
+    box-shadow: 0 0 0 4px rgba(63,125,88,0.18);
+  }
+  .status.ringing .dot { background: var(--amber); box-shadow: 0 0 0 4px rgba(255,182,39,0.22); animation: pulseDot 1.1s ease-in-out infinite; }
+  .status.ended .dot { background: var(--red); box-shadow: 0 0 0 4px rgba(226,92,92,0.18); }
+
+  @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1 } 50% { transform: scale(1.4); opacity: 0.6 } }
+
+  /* Idle / Ringing */
+  .idle-wrap {
+    padding: 30px 8px 14px;
+    text-align: center;
+  }
+  .ring-graphic {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    margin: 8px auto 18px;
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 50% 50%, rgba(255,182,39,0.20), rgba(255,182,39,0) 70%);
+    position: relative;
+  }
+  .ring-graphic .core {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--amber), var(--amber-2));
+    color: var(--deep);
+    display: grid; place-items: center;
+    box-shadow: 0 12px 30px -10px rgba(255,182,39,0.55);
+  }
+  .ring-graphic.pulsing::before,
+  .ring-graphic.pulsing::after {
+    content: "";
+    position: absolute; inset: 0; margin: auto;
+    width: 88px; height: 88px; border-radius: 50%;
+    border: 2px solid rgba(255,182,39,0.55);
+    animation: ringPulse 1.6s ease-out infinite;
+  }
+  .ring-graphic.pulsing::after { animation-delay: 0.8s; }
+  @keyframes ringPulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(2.1); opacity: 0; }
+  }
+
+  .idle-title { font-size: 18px; font-weight: 700; }
+  .idle-sub {
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    margin: 8px auto 22px;
+    max-width: 420px;
+    line-height: 1.5;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--amber);
+    color: var(--deep);
+    border: none;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -10px rgba(255,182,39,0.65);
+    transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  }
+  .btn-primary:hover { transform: translateY(-1px); background: var(--amber-2); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary svg { width: 18px; height: 18px; }
+
+  .disclaimer {
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    margin-top: 16px;
+    line-height: 1.5;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Conversation */
+  .convo {
+    margin-top: 16px;
+    min-height: 280px;
+    max-height: 460px;
+    overflow-y: auto;
+    padding: 6px 4px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+  }
+  .convo::-webkit-scrollbar { width: 6px; }
+  .convo::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 8px; }
+
+  .bubble {
+    max-width: 86%;
+    padding: 11px 14px;
+    border-radius: 16px;
+    font-size: 14.5px;
+    line-height: 1.45;
+    animation: bubbleIn 220ms cubic-bezier(.2,.7,.3,1);
+    word-wrap: break-word;
+  }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .bubble.hyrra {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.96);
+    color: var(--ink);
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 6px 14px -8px rgba(0,0,0,0.35);
+    opacity: 0.55;
+    transition: opacity 200ms ease;
+  }
+  .bubble.hyrra.speaking {
+    opacity: 1;
+    box-shadow: 0 8px 20px -8px rgba(255,182,39,0.5), 0 0 0 2px rgba(255,182,39,0.4);
+  }
+  .bubble.hyrra .who {
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 4px;
+  }
+  .bubble.hyrra .who .wf {
+    display: inline-flex; gap: 2px; align-items: end; height: 12px;
+  }
+  .bubble.hyrra.speaking .who .wf b {
+    background: var(--amber);
+    animation: bar 0.9s ease-in-out infinite;
+  }
+  .bubble.hyrra .who .wf b {
+    display: inline-block;
+    width: 3px; height: 6px;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: background 200ms ease;
+  }
+  .bubble.hyrra.speaking .who .wf b:nth-child(1) { animation-delay: 0s; }
+  .bubble.hyrra.speaking .who .wf b:nth-child(2) { animation-delay: 0.15s; }
+  .bubble.hyrra.speaking .who .wf b:nth-child(3) { animation-delay: 0.3s; }
+  .bubble.hyrra.speaking .who .wf b:nth-child(4) { animation-delay: 0.45s; }
+  .bubble.hyrra.speaking .who .wf b:nth-child(5) { animation-delay: 0.2s; }
+  @keyframes bar {
+    0%, 100% { height: 4px; }
+    50% { height: 12px; }
+  }
+
+  .bubble.caller {
+    align-self: flex-end;
+    background: var(--amber);
+    color: var(--deep);
+    border-bottom-right-radius: 5px;
+    font-weight: 600;
+    max-width: 80%;
+    box-shadow: 0 6px 14px -8px rgba(255,182,39,0.6);
+  }
+  .bubble.caller .who {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 3px;
+    text-align: right;
+  }
+
+  /* Options */
+  .options {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(255,255,255,0.12);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .options-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .options-label svg { width: 13px; height: 13px; opacity: 0.7; }
+  .opt {
+    text-align: left;
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.10);
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 14.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 140ms ease, transform 80ms ease, border-color 140ms ease;
+    line-height: 1.4;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .opt:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,182,39,0.4); }
+  .opt:active { transform: scale(0.99); }
+  .opt[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .opt .chev { opacity: 0.5; }
+  .opt.input-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 8px;
+  }
+  .opt.input-row input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font: inherit;
+    padding: 6px 8px;
+    font-size: 14.5px;
+  }
+  .opt.input-row input::placeholder { color: rgba(255,255,255,0.45); }
+  .opt.input-row button {
+    background: var(--amber);
+    color: var(--deep);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13.5px;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .ctrl-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ctrl {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.10);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.14); }
+  .ctrl.danger {
+    background: rgba(226,92,92,0.18);
+    border-color: rgba(226,92,92,0.4);
+    color: #fff;
+  }
+  .ctrl.danger:hover { background: rgba(226,92,92,0.28); }
+  .ctrl svg { width: 14px; height: 14px; }
+
+  /* Summary card (post-call) */
+  .summary {
+    margin-top: 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 18px;
+    padding: 18px;
+    animation: bubbleIn 280ms ease;
+  }
+  .summary h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .summary h3 svg { width: 18px; height: 18px; }
+  .summary ul {
+    list-style: none; padding: 0; margin: 0 0 14px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .summary li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.45;
+  }
+  .summary li .check {
+    flex: 0 0 18px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--moss);
+    color: #fff;
+    display: grid; place-items: center;
+    margin-top: 1px;
+  }
+  .summary li .check svg { width: 11px; height: 11px; }
+  .summary li b { color: #fff; font-weight: 600; }
+
+  .summary-actions {
+    display: flex; gap: 10px; flex-wrap: wrap; padding-top: 12px;
+    border-top: 1px dashed rgba(255,255,255,0.12);
+  }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+  .btn-ghost svg { width: 14px; height: 14px; }
+  .btn-amber {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--amber);
+    color: var(--deep);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn-amber:hover { background: var(--amber-2); }
+  .btn-amber svg { width: 14px; height: 14px; }
+
+  /* Side panel */
+  .side {
+    display: flex; flex-direction: column; gap: 16px;
+    position: sticky; top: 20px;
+  }
+  @media (max-width: 960px) { .side { position: static; } }
+
+  .side-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: var(--shadow-soft);
+  }
+  .side-card h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--deep);
+    letter-spacing: -0.005em;
+  }
+  .side-card .sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 14px;
+    line-height: 1.5;
+  }
+
+  /* Mock SMS */
+  .sms {
+    background: linear-gradient(180deg, #F4F1EB 0%, #ECE6D9 100%);
+    border-radius: 16px;
+    padding: 14px;
+    border: 1px solid var(--line);
+  }
+  .sms-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .sms-from {
+    display: flex; align-items: center; gap: 9px;
+    font-weight: 600;
+    color: var(--deep);
+    font-size: 13px;
+  }
+  .sms-from .av {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--deep);
+    color: var(--amber);
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 11px;
+  }
+  .sms-time { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .sms-body {
+    background: #fff;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border-top-left-radius: 4px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    box-shadow: 0 2px 6px -3px rgba(0,0,0,0.08);
+  }
+  .sms-body a { color: var(--deep); font-weight: 600; }
+
+  .feat {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .feat-icon {
+    flex: 0 0 28px; width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(255,182,39,0.15);
+    color: var(--deep);
+    display: grid; place-items: center;
+  }
+  .feat-icon svg { width: 14px; height: 14px; }
+  .feat b { color: var(--deep); }
+
+  .hidden { display: none !important; }
+
+  .footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px 32px;
+    color: var(--muted);
+    font-size: 12.5px;
+    text-align: center;
+  }
+  @media (max-width: 960px) { .footer { padding: 0 16px 24px; } }
+
+  /* Voice picker */
+  .voice-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+  }
+  .voice-row select {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 5px 8px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+    max-width: 220px;
+  }
+  .voice-row select option { color: var(--ink); }
+
+  /* Branch selector at idle */
+  .branches {
+    margin-top: 22px;
+    display: flex; flex-direction: column; gap: 8px;
+    text-align: left;
+  }
+  .branches .lbl {
+    color: rgba(255,255,255,0.55);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .branch-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  }
+  @media (max-width: 480px) { .branch-grid { grid-template-columns: 1fr; } }
+  .branch-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 1.4;
+    text-align: left;
+  }
+  .branch-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,182,39,0.4); }
+  .branch-btn b { display: block; color: var(--amber); font-size: 11.5px; letter-spacing: 0.04em; margin-bottom: 2px; text-transform: uppercase; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="03_landing.html" aria-label="Hyrrä etusivulle">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" role="img" aria-label="hyrrä">
+  <title>hyrrä</title>
+  <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#0F3D3E">
+    <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
+    <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
+    <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
+    <path transform="translate(1734 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
+    <path transform="translate(2162 0)" d="M274 566Q333 566 377.5 542.0Q422 518 446 479V558H617V0H446V79Q421 40 376.5 16.0Q332 -8 273 -8Q205 -8 149.0 27.5Q93 63 60.5 128.5Q28 194 28 280Q28 366 60.5 431.0Q93 496 149.0 531.0Q205 566 274 566ZM324 417Q273 417 237.5 380.5Q202 344 202 280Q202 216 237.5 178.5Q273 141 324 141Q375 141 410.5 178.0Q446 215 446 279Q446 343 410.5 380.0Q375 417 324 417Z"/>
+  </g>
+  <g transform="translate(151.53 18.29) rotate(-12)" fill="#FFB627">
+    <circle cx="-9" cy="0" r="8"/>
+    <circle cx="12" cy="2" r="8"/>
+  </g>
+</svg>
+  </a>
+  <nav class="links">
+    <a href="03_landing.html" class="back" aria-label="Takaisin etusivulle">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      Takaisin
+    </a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Live-demo</div>
+  <h1>Soita Hyrrälle.</h1>
+  <p>Koe miltä asiakkaastasi tuntuu, kun Hyrrä vastaa puhelimeen. Ei pitkää valikkoa, ei "paina ykköstä". Vain keskustelu.</p>
+</section>
+
+<main class="stage">
+
+  <!-- Phone card -->
+  <section class="phone" aria-label="Puhelusimulaattori">
+    <div class="phone-inner">
+
+      <!-- Call header -->
+      <div class="call-header">
+        <div class="biz">
+          <div class="biz-avatar">A</div>
+          <div>
+            <div class="biz-name" id="bizName">Asentamo Helsinki</div>
+            <div class="biz-sub" id="bizSub">Autokorjaamo · Pasila</div>
+          </div>
+        </div>
+        <div class="status" id="status">
+          <span class="dot"></span>
+          <span id="statusText">Valmiina</span>
+          <span id="timer" class="hidden" style="margin-left:4px;">00:00</span>
+        </div>
+      </div>
+
+      <!-- Idle screen -->
+      <div id="idle" class="idle-wrap">
+        <div class="ring-graphic" id="ringGraphic">
+          <div class="core">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+        </div>
+        <div class="idle-title" id="idleTitle">Soita Hyrrälle</div>
+        <div class="idle-sub">Paina nappia alla niin soitto käynnistyy. Hyrrä vastaa ja juttelee suomeksi — sinä valitset, mitä asiakas sanoo seuraavaksi.</div>
+        <button class="btn-primary" id="startBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Soita Hyrrälle
+        </button>
+
+        <div class="branches">
+          <div class="lbl">Tai valitse skenaario suoraan</div>
+          <div class="branch-grid">
+            <button class="branch-btn" data-scenario="renkaat">
+              <b>Skenaario 1</b>
+              Ajanvaraus: renkaiden vaihto
+            </button>
+            <button class="branch-btn" data-scenario="hata">
+              <b>Skenaario 2</b>
+              Hätä: auto ei käynnisty
+            </button>
+            <button class="branch-btn" data-scenario="hinta">
+              <b>Skenaario 3</b>
+              Kysely: öljynvaihdon hinta
+            </button>
+          </div>
+        </div>
+
+        <div class="voice-row" id="voiceRow">
+          <span>Ääni:</span>
+          <select id="voiceSelect" aria-label="Valitse ääni"></select>
+        </div>
+
+        <p class="disclaimer">
+          Tämä on simulaatio. Hyrrä puhuu ElevenLabsin natiivilla suomi-äänellä, kun äänitiedostot on ladattu sivustolle. Muuten käytetään selaimen omaa puhetta varakeinona.
+        </p>
+      </div>
+
+      <!-- Active call screen -->
+      <div id="active" class="hidden">
+        <div class="convo" id="convo" aria-live="polite"></div>
+        <div id="optionsHost"></div>
+
+        <div class="controls">
+          <div class="ctrl-group">
+            <button class="ctrl" id="muteBtn" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="muteIcon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+              <span id="muteLabel">Vaimenna</span>
+            </button>
+            <button class="ctrl" id="skipBtn" title="Ohita ääni">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              Ohita
+            </button>
+          </div>
+          <button class="ctrl danger" id="endBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" transform="rotate(135 12 12)"/></svg>
+            Lopeta
+          </button>
+        </div>
+
+        <!-- Summary appears after call -->
+        <div id="summary" class="summary hidden"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Side panel -->
+  <aside class="side">
+
+    <div class="side-card">
+      <h4>Mitä yrittäjä saa puhelinsoittonsa jälkeen</h4>
+      <p class="sub">Hyrrä kertoo sinulle välittömästi tekstiviestillä, mitä asiakas halusi. Et menetä yhtäkään soittoa.</p>
+
+      <div class="sms" id="smsCard">
+        <div class="sms-head">
+          <div class="sms-from"><div class="av">H</div> Hyrrä</div>
+          <div class="sms-time" id="smsTime">nyt</div>
+        </div>
+        <div class="sms-body" id="smsBody">
+          Tähän ilmestyy yhteenveto, kun puhelu päättyy.
+        </div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div><b>Varaus suoraan kalenteriin.</b> Hyrrä kytkeytyy Timmaan, Velloon, Google Calendariin ja muihin.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div><b>Suomenkielinen, 24/7.</b> Asiakkaat saavat aina luonnollisen vastauksen — ei perinteistä puhelinvastaajaa.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div><b>Asentuu 30 minuutissa.</b> Annat puhelinnumerosi, kerrot mitä teet, valmis.</div>
+      </div>
+    </div>
+
+    <div class="side-card" style="background: var(--deep); color: #fff; border-color: transparent;">
+      <h4 style="color: var(--amber);">Valmiina käyttöön?</h4>
+      <p class="sub" style="color: rgba(255,255,255,0.7);">Aloita 14 päivän ilmainen kokeilu, ei sitoumusta.</p>
+      <a href="03_landing.html" class="btn-amber" style="text-decoration: none;">
+        Varaa demo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+  </aside>
+</main>
+
+<footer class="footer">
+  Hyrrä — Suomalainen AI-vastaanottaja pk-yrityksille. © 2026 hyrra.fi
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ====== Audio (ElevenLabs-MP3:t, jos saatavilla) ======
+  // Demo yrittää ensin soittaa /audio/<key>.mp3-tiedoston.
+  // Jos sitä ei ole, käytetään selaimen omaa puhetta varakeinona.
+  var AUDIO_DIR = 'audio/';   // suhteellinen polku (samassa sijainnissa kuin demo.html)
+
+  // ====== State ======
+  var state = {
+    started: false,
+    muted: false,
+    timerInterval: null,
+    elapsedSec: 0,
+    currentVoice: null,
+    voices: [],
+    currentAudio: null,    // HTMLAudioElement, jos MP3 toistossa
+    scenario: null,        // 'renkaat' | 'hata' | 'hinta'
+    step: 0,
+    speakingUtterance: null,
+    activeBubble: null,
+    awaitingChoice: false,
+    audioSlotKey: null,    // 'ti' | 'to' | 'huom' — käytetään dynaamisille repliikeille
+    collected: {           // collected facts
+      vehicle: null,
+      service: null,
+      slot: null,
+      slotLabel: null,
+      phone: null,
+      location: null,
+      tow: null,
+    },
+  };
+
+  // ====== Elements ======
+  var $ = function (id) { return document.getElementById(id); };
+  var convoEl = $('convo');
+  var optHost = $('optionsHost');
+  var startBtn = $('startBtn');
+  var idleEl = $('idle');
+  var activeEl = $('active');
+  var statusEl = $('status');
+  var statusText = $('statusText');
+  var timerEl = $('timer');
+  var muteBtn = $('muteBtn');
+  var muteLabel = $('muteLabel');
+  var skipBtn = $('skipBtn');
+  var endBtn = $('endBtn');
+  var summaryEl = $('summary');
+  var voiceSelect = $('voiceSelect');
+  var smsBody = $('smsBody');
+  var smsTime = $('smsTime');
+  var ringGraphic = $('ringGraphic');
+  var bizName = $('bizName');
+  var bizSub = $('bizSub');
+
+  // ====== Speech synthesis voice handling ======
+  var synth = window.speechSynthesis || null;
+
+  function loadVoices() {
+    if (!synth) return [];
+    var v = synth.getVoices() || [];
+    state.voices = v;
+    return v;
+  }
+
+  function pickBestFinnishVoice(voices) {
+    if (!voices || !voices.length) return null;
+    // Priorities: 1) lang starts with fi, prefer female-sounding names, 2) lang === 'fi-FI',
+    // 3) any fi voice, 4) null (caller will fall back)
+    var fiVoices = voices.filter(function (v) {
+      return (v.lang || '').toLowerCase().indexOf('fi') === 0;
+    });
+    if (!fiVoices.length) return null;
+
+    // Prefer Google / Microsoft natural voices, female names if available
+    var preferredNames = ['Satu', 'Heidi', 'Selma', 'Noora', 'Google', 'Microsoft', 'Eveliina'];
+    for (var i = 0; i < preferredNames.length; i++) {
+      var pref = preferredNames[i];
+      var match = fiVoices.find(function (v) {
+        return v.name && v.name.indexOf(pref) !== -1;
+      });
+      if (match) return match;
+    }
+    return fiVoices[0];
+  }
+
+  function populateVoiceSelect() {
+    var voices = loadVoices();
+    voiceSelect.innerHTML = '';
+    var fiVoices = voices.filter(function (v) { return (v.lang || '').toLowerCase().indexOf('fi') === 0; });
+
+    if (!synth) {
+      var o = document.createElement('option');
+      o.textContent = 'Selain ei tue puhetta';
+      o.disabled = true;
+      voiceSelect.appendChild(o);
+      voiceSelect.disabled = true;
+      return;
+    }
+
+    if (!fiVoices.length) {
+      var o2 = document.createElement('option');
+      o2.value = '__none__';
+      o2.textContent = 'Ei suomenkielistä ääntä — tekstinä';
+      voiceSelect.appendChild(o2);
+      // Add any voices as fallback (e.g., Swedish) — last resort
+      voices.slice(0, 8).forEach(function (v) {
+        var op = document.createElement('option');
+        op.value = v.name;
+        op.textContent = v.name + ' (' + v.lang + ')';
+        voiceSelect.appendChild(op);
+      });
+      state.currentVoice = null;
+      return;
+    }
+
+    fiVoices.forEach(function (v) {
+      var op = document.createElement('option');
+      op.value = v.name;
+      op.textContent = v.name + ' (' + v.lang + ')';
+      voiceSelect.appendChild(op);
+    });
+    var best = pickBestFinnishVoice(voices);
+    state.currentVoice = best;
+    if (best) voiceSelect.value = best.name;
+  }
+
+  if (synth) {
+    populateVoiceSelect();
+    if (typeof synth.onvoiceschanged !== 'undefined') {
+      synth.onvoiceschanged = populateVoiceSelect;
+    }
+  } else {
+    populateVoiceSelect();
+  }
+
+  voiceSelect.addEventListener('change', function () {
+    var name = voiceSelect.value;
+    var v = (state.voices || []).find(function (x) { return x.name === name; });
+    if (v) state.currentVoice = v;
+  });
+
+  // ====== Audio + Speech helper ======
+  // Yritetään ensin ladata ja toistaa MP3 /audio/<key>.mp3.
+  // Jos sitä ei ole, käytetään selaimen omaa puhetta.
+  function stopAudio() {
+    if (state.currentAudio) {
+      try { state.currentAudio.pause(); } catch (e) {}
+      state.currentAudio = null;
+    }
+  }
+
+  function tryPlayMp3(key, onSuccess, onMissing) {
+    if (!key) { onMissing(); return; }
+    stopAudio();
+    var audio = new Audio(AUDIO_DIR + key + '.mp3');
+    state.currentAudio = audio;
+
+    var settled = false;
+    var settle = function (fn) {
+      if (settled) return;
+      settled = true;
+      state.currentAudio = null;
+      fn();
+    };
+
+    audio.addEventListener('ended', function () { settle(onSuccess); });
+    audio.addEventListener('error', function () { settle(onMissing); });
+    // Joissain selaimissa play() palauttaa Promise, joka voi hylätä (esim. tiedostoa ei löydy)
+    var p = audio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(function () { settle(onMissing); });
+    }
+  }
+
+  // Pääpaketti: yritä MP3, fallback selaimen puhe
+  function speakWithKey(key, text, onEnd) {
+    if (state.muted) {
+      var ms = Math.min(5200, Math.max(1400, text.length * 55));
+      setTimeout(function () { onEnd && onEnd(); }, ms);
+      return;
+    }
+    tryPlayMp3(key,
+      function () { onEnd && onEnd(); },
+      function () { speak(text, onEnd); }
+    );
+  }
+
+  // Vanha speak() — varakeino kun MP3:a ei ole
+  function speak(text, onEnd) {
+    // Cancel previous
+    if (synth) { try { synth.cancel(); } catch (e) {} }
+    if (!synth || state.muted) {
+      // Simulate timing
+      var ms = Math.min(5200, Math.max(1400, text.length * 55));
+      setTimeout(function () { onEnd && onEnd(); }, ms);
+      return null;
+    }
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fi-FI';
+    if (state.currentVoice) u.voice = state.currentVoice;
+    u.rate = 1.0;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    u.onend = function () {
+      state.speakingUtterance = null;
+      if (state.activeBubble) state.activeBubble.classList.remove('speaking');
+      onEnd && onEnd();
+    };
+    u.onerror = function () {
+      state.speakingUtterance = null;
+      if (state.activeBubble) state.activeBubble.classList.remove('speaking');
+      onEnd && onEnd();
+    };
+    state.speakingUtterance = u;
+    try {
+      synth.speak(u);
+    } catch (e) {
+      var ms2 = Math.min(5000, Math.max(1400, text.length * 55));
+      setTimeout(function () { onEnd && onEnd(); }, ms2);
+    }
+    return u;
+  }
+
+  // ====== Bubbles & UI ======
+  function clearOptions() {
+    optHost.innerHTML = '';
+  }
+
+  function addHyrraBubble(text) {
+    // Dim all previous Hyrrä bubbles
+    var prev = convoEl.querySelectorAll('.bubble.hyrra.speaking');
+    prev.forEach(function (b) { b.classList.remove('speaking'); });
+
+    var b = document.createElement('div');
+    b.className = 'bubble hyrra speaking';
+    b.innerHTML =
+      '<div class="who">' +
+        '<span>Hyrrä</span>' +
+        '<span class="wf" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b></span>' +
+      '</div>' +
+      '<div class="txt"></div>';
+    b.querySelector('.txt').textContent = text;
+    convoEl.appendChild(b);
+    state.activeBubble = b;
+    scrollConvo();
+    return b;
+  }
+
+  function addCallerBubble(text) {
+    var b = document.createElement('div');
+    b.className = 'bubble caller';
+    b.innerHTML = '<div class="who">Sinä (asiakas)</div><div class="txt"></div>';
+    b.querySelector('.txt').textContent = text;
+    convoEl.appendChild(b);
+    scrollConvo();
+    return b;
+  }
+
+  function scrollConvo() {
+    requestAnimationFrame(function () {
+      convoEl.scrollTop = convoEl.scrollHeight;
+    });
+  }
+
+  function renderOptions(options) {
+    clearOptions();
+    if (!options || !options.length) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'options';
+    wrap.innerHTML =
+      '<div class="options-label">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' +
+        'Sano seuraava:' +
+      '</div>';
+
+    options.forEach(function (opt) {
+      if (opt.type === 'input') {
+        var row = document.createElement('div');
+        row.className = 'opt input-row';
+        row.innerHTML =
+          '<input type="' + (opt.inputType || 'text') + '" placeholder="' + opt.placeholder + '" />' +
+          '<button type="button">Lähetä</button>';
+        var inp = row.querySelector('input');
+        var btn = row.querySelector('button');
+        var doSubmit = function () {
+          var val = (inp.value || '').trim();
+          if (!val) val = opt.placeholder;
+          opt.handler(val);
+        };
+        btn.addEventListener('click', doSubmit);
+        inp.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); doSubmit(); }
+        });
+        wrap.appendChild(row);
+        setTimeout(function () { try { inp.focus(); } catch(e){} }, 200);
+      } else {
+        var btn2 = document.createElement('button');
+        btn2.className = 'opt';
+        btn2.innerHTML =
+          '<span>' + escapeHtml(opt.label) + '</span>' +
+          '<span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>';
+        btn2.addEventListener('click', function () { opt.handler(opt.label); });
+        wrap.appendChild(btn2);
+      }
+    });
+
+    optHost.appendChild(wrap);
+    scrollConvo();
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+
+  // ====== Timer ======
+  function startTimer() {
+    state.elapsedSec = 0;
+    updateTimer();
+    timerEl.classList.remove('hidden');
+    state.timerInterval = setInterval(function () {
+      state.elapsedSec++;
+      updateTimer();
+    }, 1000);
+  }
+  function stopTimer() {
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+  function updateTimer() {
+    var m = Math.floor(state.elapsedSec / 60);
+    var s = state.elapsedSec % 60;
+    timerEl.textContent = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+  }
+  function elapsedHuman() {
+    var m = Math.floor(state.elapsedSec / 60);
+    var s = state.elapsedSec % 60;
+    if (m > 0) return m + ' min ' + s + ' s';
+    return s + ' s';
+  }
+
+  // ====== Scenarios ======
+  // Each step: { say: '...', then: function or 'options' producing options }
+  // We implement scenarios procedurally.
+
+  function startCall(scenario) {
+    state.started = true;
+    state.scenario = scenario || null;
+    state.elapsedSec = 0;
+    state.audioSlotKey = null;
+    stopAudio();
+    state.collected = { vehicle: null, service: null, slot: null, slotLabel: null, phone: null, location: null, tow: null };
+
+    idleEl.classList.add('hidden');
+    activeEl.classList.remove('hidden');
+    summaryEl.classList.add('hidden');
+    summaryEl.innerHTML = '';
+    convoEl.innerHTML = '';
+    clearOptions();
+
+    // Ringing
+    statusEl.classList.remove('ended');
+    statusEl.classList.add('ringing');
+    statusText.textContent = 'Soi…';
+    timerEl.classList.add('hidden');
+
+    setTimeout(function () {
+      // Answered
+      statusEl.classList.remove('ringing');
+      statusText.textContent = 'Vastattu';
+      startTimer();
+      // Greeting
+      hyrraSay('Asentamo Helsinki, Hyrrä vastaa. Miten voin auttaa?', function () {
+        if (state.scenario === 'renkaat') {
+          callerSay('Tarvitsisin ajan renkaiden vaihtoon.', function () { branchRenkaat(); });
+        } else if (state.scenario === 'hata') {
+          callerSay('Auto ei käynnisty, voiko tulla heti?', function () { branchHata(); });
+        } else if (state.scenario === 'hinta') {
+          callerSay('Mikä on hinta öljynvaihtoon?', function () { branchHinta(); });
+        } else {
+          // Open menu
+          renderOptions([
+            { label: 'Tarvitsisin ajan renkaiden vaihtoon.', handler: function (l) { callerSay(l, function(){ state.scenario = 'renkaat'; branchRenkaat(); }); } },
+            { label: 'Auto ei käynnisty, voiko tulla heti?', handler: function (l) { callerSay(l, function(){ state.scenario = 'hata'; branchHata(); }); } },
+            { label: 'Mikä on hinta öljynvaihtoon?', handler: function (l) { callerSay(l, function(){ state.scenario = 'hinta'; branchHinta(); }); } }
+          ]);
+        }
+      });
+    }, 1500);
+  }
+
+  // Lookup-taulukko: jokaiselle staattiselle Hyrrä-repliikille audio-avain.
+  // Dynaamiset (slot-pohjaiset) repliikit käsitellään prefiksitarkistuksella.
+  var TEXT_TO_AUDIO = {
+    'Asentamo Helsinki, Hyrrä vastaa. Miten voin auttaa?': '01_tervehdys',
+    'Selvä, renkaiden vaihto. Onko kausivaihto, vai uudet renkaat?': '10_renkaat_tyyppi',
+    'Hyvä. Mikä auton merkki ja malli?': '11_kysy_auto',
+    'Kiitos. Meillä on aika ensi tiistaina kello 9 tai torstaina kello 14. Kumpi sopii?': '12_tarjoa_ajat',
+    'Hetki, katson. Onnistuisi myös huomenna klo 11, mutta vain jos sinulla on omat renkaat mukana. Sopiiko?': '13_huominen',
+    'Selvä, kuulostaa kiireelliseltä. Missä auto on nyt?': '20_hata_sijainti',
+    'Onko vakuutuksessasi hinaussopimus?': '21_hata_vakuutus',
+    'Saamme paikalle hinausauton tunnin sisällä, ja korjaamomme katsoo auton heti tänään iltapäivällä. Sopiiko?': '22_hata_hinaus',
+    'Selvä, järjestämme sinulle taksin lähimmälle metroasemalle hinaajan saapuessa. Kuittaan asian.': '23_hata_taksi',
+    'Lähetän sinulle tekstarilla hinausauton arvioidun saapumisajan. Pidä puhelin lähellä. Kaikki hoituu.': '24_hata_loppuun',
+    'Öljynvaihto autoosi maksaa noin 89 euroa, sisältää öljyt ja suodattimen. Halutaanko varata aika?': '30_hinta_oljy',
+    'Selvä. Lähetän sinulle tekstarilla yhteenvedon hinnasta ja linkin, jolla varaat ajan milloin sinulle sopii. Kiitos soitosta!': '31_hinta_mietin'
+  };
+
+  function resolveAudioKey(text) {
+    if (TEXT_TO_AUDIO[text]) return TEXT_TO_AUDIO[text];
+    // Dynaamiset prefiksit (askPhone / closeRenkaat)
+    var slot = state.audioSlotKey; // 'ti' | 'to' | 'huom' | null
+    if (!slot) return null;
+    if (text.indexOf('Selvä, varaan ') === 0)
+      return '14' + ({ti:'a',to:'b',huom:'c'}[slot]) + '_vahvista_' + slot;
+    if (text.indexOf('Kiitos! Vahvistus tulee hetkessä.') === 0)
+      return '15' + ({ti:'a',to:'b',huom:'c'}[slot]) + '_loppuun_' + slot;
+    return null;
+  }
+
+  // hyrraSay(text, after) — yrittää ensin MP3:n /audio/<key>.mp3, sitten selaimen puhetta.
+  function hyrraSay(text, after) {
+    clearOptions();
+    var bubble = addHyrraBubble(text);
+    var key = resolveAudioKey(text);
+    speakWithKey(key, text, function () {
+      after && after();
+    });
+  }
+
+  function callerSay(text, after) {
+    addCallerBubble(text);
+    setTimeout(function () { after && after(); }, 400);
+  }
+
+  // ----- Branch A: renkaiden vaihto -----
+  function branchRenkaat() {
+    state.collected.service = 'renkaiden vaihto';
+    hyrraSay('Selvä, renkaiden vaihto. Onko kausivaihto, vai uudet renkaat?', function () {
+      renderOptions([
+        { label: 'Kausivaihto.', handler: function (l) {
+            state.collected.service = 'kausivaihto';
+            callerSay(l, askVehicle);
+          } },
+        { label: 'Uudet renkaat, talvirenkaat.', handler: function (l) {
+            state.collected.service = 'uudet talvirenkaat';
+            callerSay(l, askVehicle);
+          } }
+      ]);
+    });
+  }
+
+  function askVehicle() {
+    hyrraSay('Hyvä. Mikä auton merkki ja malli?', function () {
+      renderOptions([
+        { label: 'Toyota Corolla 2019.', handler: function (l) { state.collected.vehicle = 'Toyota Corolla 2019'; callerSay(l, offerSlots); } },
+        { label: 'Volkswagen Golf 2021.', handler: function (l) { state.collected.vehicle = 'Volkswagen Golf 2021'; callerSay(l, offerSlots); } },
+        { label: 'Skoda Octavia 2018.', handler: function (l) { state.collected.vehicle = 'Skoda Octavia 2018'; callerSay(l, offerSlots); } },
+        { type: 'input', placeholder: 'Tai kirjoita itse, esim. Ford Focus 2017', handler: function (val) { state.collected.vehicle = val; callerSay(val, offerSlots); } }
+      ]);
+    });
+  }
+
+  function offerSlots() {
+    hyrraSay('Kiitos. Meillä on aika ensi tiistaina kello 9 tai torstaina kello 14. Kumpi sopii?', function () {
+      renderOptions([
+        { label: 'Tiistai 9.', handler: function (l) { state.collected.slot = 'ti-9'; state.collected.slotLabel = 'ti 14.5. klo 9:00'; state.audioSlotKey = 'ti'; callerSay(l, askPhone); } },
+        { label: 'Torstai 14.', handler: function (l) { state.collected.slot = 'to-14'; state.collected.slotLabel = 'to 16.5. klo 14:00'; state.audioSlotKey = 'to'; callerSay(l, askPhone); } },
+        { label: 'Olisiko aiempaa aikaa?', handler: function (l) {
+            callerSay(l, function () {
+              hyrraSay('Hetki, katson. Onnistuisi myös huomenna klo 11, mutta vain jos sinulla on omat renkaat mukana. Sopiiko?', function () {
+                renderOptions([
+                  { label: 'Sopii, huomenna 11.', handler: function (l2) { state.collected.slot = 'huom-11'; state.collected.slotLabel = 'huom. klo 11:00'; state.audioSlotKey = 'huom'; callerSay(l2, askPhone); } },
+                  { label: 'Otetaan sittenkin tiistai 9.', handler: function (l2) { state.collected.slot = 'ti-9'; state.collected.slotLabel = 'ti 14.5. klo 9:00'; state.audioSlotKey = 'ti'; callerSay(l2, askPhone); } }
+                ]);
+              });
+            });
+          } }
+      ]);
+    });
+  }
+
+  function askPhone() {
+    hyrraSay('Selvä, varaan ' + state.collected.slotLabel.replace(/^./, function(c){return c.toLowerCase();}) + '. Mihin numeroon lähetän vahvistuksen tekstiviestillä?', function () {
+      renderOptions([
+        { type: 'input', inputType: 'tel', placeholder: '+358 40 123 4567', handler: function (val) {
+            state.collected.phone = val;
+            callerSay(val, closeRenkaat);
+          } },
+        { label: 'Käytä numeroa, josta soitan.', handler: function (l) {
+            state.collected.phone = '+358 40 123 4567';
+            callerSay(l, closeRenkaat);
+          } }
+      ]);
+    });
+  }
+
+  function closeRenkaat() {
+    hyrraSay('Kiitos! Vahvistus tulee hetkessä. Asentamossa ollaan ' + state.collected.slotLabel + '. Hyvää päivänjatkoa!', function () {
+      endCall();
+    });
+  }
+
+  // ----- Branch B: hätä -----
+  function branchHata() {
+    state.collected.service = 'hinaus + päivystysdiagnoosi';
+    hyrraSay('Selvä, kuulostaa kiireelliseltä. Missä auto on nyt?', function () {
+      renderOptions([
+        { label: 'Kotipihalla, Pohjois-Haaga.', handler: function (l) { state.collected.location = 'Pohjois-Haaga'; callerSay(l, askInsurance); } },
+        { label: 'Pasilan parkkihallissa.', handler: function (l) { state.collected.location = 'Pasilan parkkihalli'; callerSay(l, askInsurance); } },
+        { type: 'input', placeholder: 'Tai kirjoita osoite/paikka', handler: function (val) { state.collected.location = val; callerSay(val, askInsurance); } }
+      ]);
+    });
+  }
+
+  function askInsurance() {
+    hyrraSay('Onko vakuutuksessasi hinaussopimus?', function () {
+      renderOptions([
+        { label: 'Kyllä, LähiTapiola.', handler: function (l) { state.collected.tow = 'vakuutuksen kautta'; callerSay(l, towPlan); } },
+        { label: 'En ole varma.', handler: function (l) { state.collected.tow = 'tarkistetaan vakuutuksesta'; callerSay(l, towPlan); } },
+        { label: 'Ei ole.', handler: function (l) { state.collected.tow = 'maksullinen hinaus'; callerSay(l, towPlan); } }
+      ]);
+    });
+  }
+
+  function towPlan() {
+    hyrraSay('Saamme paikalle hinausauton tunnin sisällä, ja korjaamomme katsoo auton heti tänään iltapäivällä. Sopiiko?', function () {
+      renderOptions([
+        { label: 'Sopii, kiitos!', handler: function (l) { callerSay(l, towConfirm); } },
+        { label: 'Sopii, mutta tarvitsen kyydin töihin.', handler: function (l) { callerSay(l, function () {
+            hyrraSay('Selvä, järjestämme sinulle taksin lähimmälle metroasemalle hinaajan saapuessa. Kuittaan asian.', function () { towConfirm(); });
+          }); } }
+      ]);
+    });
+  }
+
+  function towConfirm() {
+    state.collected.slotLabel = 'tänään, hinaus + päivystys iltapäivällä';
+    hyrraSay('Lähetän sinulle tekstarilla hinausauton arvioidun saapumisajan. Pidä puhelin lähellä. Kaikki hoituu.', function () {
+      endCall();
+    });
+  }
+
+  // ----- Branch C: hinta -----
+  function branchHinta() {
+    hyrraSay('Öljynvaihto autoosi maksaa noin 89 euroa, sisältää öljyt ja suodattimen. Halutaanko varata aika?', function () {
+      renderOptions([
+        { label: 'Kyllä kiitos, varataan.', handler: function (l) { state.collected.service = 'öljynvaihto'; callerSay(l, askVehicle); } },
+        { label: 'Mietin vielä, kiitos.', handler: function (l) {
+            callerSay(l, function () {
+              hyrraSay('Selvä. Lähetän sinulle tekstarilla yhteenvedon hinnasta ja linkin, jolla varaat ajan milloin sinulle sopii. Kiitos soitosta!', function () {
+                state.collected.service = 'öljynvaihtohintatieto';
+                state.collected.slotLabel = 'ei varausta';
+                endCall();
+              });
+            });
+          } }
+      ]);
+    });
+  }
+
+  // ====== End call & summary ======
+  function endCall() {
+    stopTimer();
+    statusEl.classList.remove('ringing');
+    statusEl.classList.add('ended');
+    statusText.textContent = 'Puhelu päättyi';
+    clearOptions();
+    try { if (synth) synth.cancel(); } catch (e) {}
+    stopAudio();
+
+    // Build summary
+    var phone = state.collected.phone || '+358 40 123 4567';
+    var vehicle = state.collected.vehicle || 'Toyota Corolla 2019';
+    var service = state.collected.service || 'palvelu';
+    var slot = state.collected.slotLabel || 'sovittu ajankohta';
+    var calendar = 'Timma';
+
+    var lines = [];
+    lines.push({ key: 'Soittaja', val: phone });
+
+    if (state.scenario === 'hata') {
+      lines.push({ key: 'Tilanne', val: 'Hätä — auto ei käynnisty' });
+      lines.push({ key: 'Sijainti', val: state.collected.location || 'Pohjois-Haaga' });
+      lines.push({ key: 'Hinaus', val: state.collected.tow || 'vakuutuksen kautta' });
+      lines.push({ key: 'Päivystys', val: 'tänään iltapäivällä' });
+      lines.push({ key: 'Vahvistus', val: 'tekstiviesti ETAsta' });
+      lines.push({ key: 'Lisätty kalenteriin', val: calendar });
+    } else if (state.scenario === 'hinta' && state.collected.slotLabel === 'ei varausta') {
+      lines.push({ key: 'Asia', val: 'Öljynvaihdon hinta (89 €)' });
+      lines.push({ key: 'Asiakas', val: 'tarjottu hintayhteenveto tekstiviestillä' });
+      lines.push({ key: 'Liidi', val: 'tallennettu jatkokontaktia varten' });
+    } else {
+      lines.push({ key: 'Asiakas', val: 'tarjottu Hyrrä-vahvistus tekstiviestillä' });
+      lines.push({ key: 'Varaus', val: vehicle + ', ' + service + ', ' + slot });
+      lines.push({ key: 'Lisätty kalenteriin', val: calendar });
+    }
+    lines.push({ key: 'Aikaa kului', val: elapsedHuman() });
+
+    var html =
+      '<h3>' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        'Puhelu hoidettu' +
+      '</h3>' +
+      '<ul>' +
+        lines.map(function (l) {
+          return '<li>' +
+            '<span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+            '<span><b>' + escapeHtml(l.key) + ':</b> ' + escapeHtml(l.val) + '</span>' +
+          '</li>';
+        }).join('') +
+      '</ul>' +
+      '<div class="summary-actions">' +
+        '<button class="btn-amber" id="resetBtn">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>' +
+          'Kokeile uudestaan' +
+        '</button>' +
+        nextScenarioButtonsHtml() +
+      '</div>';
+
+    summaryEl.innerHTML = html;
+    summaryEl.classList.remove('hidden');
+
+    $('resetBtn').addEventListener('click', resetToIdle);
+    var s1 = document.querySelector('[data-next="renkaat"]');
+    var s2 = document.querySelector('[data-next="hata"]');
+    var s3 = document.querySelector('[data-next="hinta"]');
+    if (s1) s1.addEventListener('click', function () { startCall('renkaat'); });
+    if (s2) s2.addEventListener('click', function () { startCall('hata'); });
+    if (s3) s3.addEventListener('click', function () { startCall('hinta'); });
+
+    updateSMS();
+    summaryEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function nextScenarioButtonsHtml() {
+    var sc = state.scenario;
+    var btns = [];
+    if (sc !== 'renkaat') btns.push('<button class="btn-ghost" data-next="renkaat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>Toinen skenaario: renkaat</button>');
+    if (sc !== 'hata') btns.push('<button class="btn-ghost" data-next="hata"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Hätätilanne</button>');
+    if (sc !== 'hinta') btns.push('<button class="btn-ghost" data-next="hinta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Hintakysely</button>');
+    return btns.join('');
+  }
+
+  function updateSMS() {
+    var d = new Date();
+    var hh = d.getHours(); var mm = d.getMinutes();
+    smsTime.textContent = (hh < 10 ? '0' + hh : hh) + ':' + (mm < 10 ? '0' + mm : mm);
+
+    var sc = state.scenario;
+    var phone = state.collected.phone || '+358 40 123 4567';
+    var msg = '';
+    if (sc === 'hata') {
+      msg = 'Uusi puhelu — kiireellinen: auto ei käynnisty (' + (state.collected.location || 'Pohjois-Haaga') + '). Hinaus järjestyy ' + (state.collected.tow || 'vakuutuksen kautta') + ', päivystys iltapäivällä. Soittaja: Pekka K., ' + phone + '. Yhteenveto: hyrra.fi/puhelu/abc124';
+    } else if (sc === 'hinta' && state.collected.slotLabel === 'ei varausta') {
+      msg = 'Uusi puhelu — hintakysely: öljynvaihto (89 €). Asiakkaalle lähetetty hinta-yhteenveto tekstiviestillä, ei vielä varattu. Soittaja: Pekka K., ' + phone + '. Yhteenveto: hyrra.fi/puhelu/abc125';
+    } else {
+      var v = state.collected.vehicle || 'Toyota Corolla';
+      var s = state.collected.service || 'kausivaihto';
+      var t = state.collected.slotLabel || 'ti 14.5. klo 9';
+      msg = 'Uusi varaus: ' + v + ', ' + s + ', ' + t + '. Soittaja: Pekka K., ' + phone + '. Yhteenveto: hyrra.fi/varaus/abc123';
+    }
+    smsBody.textContent = msg;
+  }
+
+  function resetToIdle() {
+    state.started = false;
+    state.scenario = null;
+    state.elapsedSec = 0;
+    state.audioSlotKey = null;
+    stopAudio();
+    stopTimer();
+    try { if (synth) synth.cancel(); } catch(e){}
+    convoEl.innerHTML = '';
+    clearOptions();
+    summaryEl.classList.add('hidden');
+    activeEl.classList.add('hidden');
+    idleEl.classList.remove('hidden');
+    statusEl.classList.remove('ended');
+    statusEl.classList.remove('ringing');
+    statusText.textContent = 'Valmiina';
+    timerEl.classList.add('hidden');
+    timerEl.textContent = '00:00';
+    smsBody.textContent = 'Tähän ilmestyy yhteenveto, kun puhelu päättyy.';
+    smsTime.textContent = 'nyt';
+  }
+
+  // ====== Controls ======
+  startBtn.addEventListener('click', function () { startCall(null); });
+
+  document.querySelectorAll('.branch-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var sc = b.getAttribute('data-scenario');
+      startCall(sc);
+    });
+  });
+
+  muteBtn.addEventListener('click', function () {
+    state.muted = !state.muted;
+    muteBtn.setAttribute('aria-pressed', state.muted ? 'true' : 'false');
+    muteLabel.textContent = state.muted ? 'Vaimennettu' : 'Vaimenna';
+    if (state.muted) {
+      try { if (synth) synth.cancel(); } catch (e) {}
+      stopAudio();
+    }
+  });
+
+  skipBtn.addEventListener('click', function () {
+    try { if (synth) synth.cancel(); } catch (e) {}
+    // Jos MP3 toistossa, hyppää eteenpäin: simuloidaan 'ended'
+    if (state.currentAudio) {
+      var a = state.currentAudio;
+      state.currentAudio = null;
+      try { a.pause(); a.dispatchEvent(new Event('ended')); } catch (e) {}
+    }
+  });
+
+  endBtn.addEventListener('click', function () {
+    endCall();
+  });
+
+  // Guard: stop speech if user navigates away
+  window.addEventListener('beforeunload', function () {
+    try { if (synth) synth.cancel(); } catch(e) {}
+    stopAudio();
+  });
+
+  // Some browsers (notably mobile Safari) require user gesture for synth.
+  // The Start button click already counts as one, so we are fine.
+
+})();
+</script>
+
+</body>
+</html>
