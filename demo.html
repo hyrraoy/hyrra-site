@@ -859,6 +859,7 @@
     currentAudio: null,    // HTMLAudioElement (varakeinon toistossa)
     audioCtx: null,        // Web Audio AudioContext (pää-soitin)
     currentSource: null,   // AudioBufferSourceNode (käynnissä oleva ääni)
+    keepAlive: null,       // Hiljainen tausta-signaali, pitää audio-laitteen hereillä
     scenario: null,        // 'renkaat' | 'hata' | 'hinta'
     step: 0,
     speakingUtterance: null,
@@ -987,8 +988,10 @@
 
   // ====== Audio + Speech helper ======
   // Yritetään ensin ladata MP3 ja toistaa se Web Audio API:lla,
-  // joka liittää alkuun 350 ms hiljaisuus-prefiksin → selaimen äänilaitteisto
+  // joka liittää alkuun 500 ms hiljaisuus-prefiksin → selaimen äänilaitteisto
   // ehtii käynnistyä eikä yhtään puhetta katkea alusta.
+  // Lisäksi pyörii hiljainen keep-alive-signaali koko puhelun ajan,
+  // ettei käyttöjärjestelmän audio-output mene lepotilaan vuorojen välillä.
   // Jos MP3:a ei löydy, käytetään selaimen omaa puhetta varakeinona.
 
   function getAudioContext() {
@@ -1002,6 +1005,34 @@
       try { state.audioCtx.resume(); } catch (e) {}
     }
     return state.audioCtx;
+  }
+
+  // Hiljainen keep-alive-signaali (gain = 0) pitää audio-laitteen aktiivisena
+  // koko puhelun ajan. Estää sen, että OS siirtää audio-output:n lepotilaan
+  // vuorojen välillä, jolloin seuraavan vuoron alku katkeaisi.
+  function startKeepAlive(ctx) {
+    if (state.keepAlive || !ctx) return;
+    try {
+      var buffer = ctx.createBuffer(1, 2, ctx.sampleRate);
+      // Buffer on jo nolla — täysin hiljainen
+      var source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      var gain = ctx.createGain();
+      gain.gain.value = 0; // Täysin äänetön
+      source.connect(gain);
+      gain.connect(ctx.destination);
+      source.start(0);
+      state.keepAlive = { source: source, gain: gain };
+    } catch (e) {}
+  }
+
+  function stopKeepAlive() {
+    if (!state.keepAlive) return;
+    try { state.keepAlive.source.stop(); } catch (e) {}
+    try { state.keepAlive.source.disconnect(); } catch (e) {}
+    try { state.keepAlive.gain.disconnect(); } catch (e) {}
+    state.keepAlive = null;
   }
 
   function stopAudio() {
@@ -1024,7 +1055,7 @@
     });
   }
 
-  // Pää: Web Audio API + 350 ms hiljaisuus-prefiksi
+  // Pää: Web Audio API + 500 ms hiljaisuus-prefiksi + keep-alive
   function tryPlayMp3(key, onSuccess, onMissing) {
     if (!key) { onMissing(); return; }
     stopAudio();
@@ -1034,6 +1065,9 @@
       // Web Audio API ei tuettu → kokeillaan vanhalla tavalla
       return tryPlayMp3Fallback(key, onSuccess, onMissing);
     }
+
+    // Käynnistä keep-alive jos ei jo päällä — pitää OS-audio-laitteen aktiivisena
+    startKeepAlive(ctx);
 
     var url = AUDIO_DIR + key + '.mp3';
     var settled = false;
@@ -1057,8 +1091,8 @@
       })
       .then(function (orig) {
         if (settled || !orig) return;
-        // Rakenna uusi buffer: 350 ms hiljaisuutta + alkuperäinen ääni
-        var SILENCE_MS = 350;
+        // Rakenna uusi buffer: 500 ms hiljaisuutta + alkuperäinen ääni
+        var SILENCE_MS = 500;
         var sampleRate = orig.sampleRate;
         var silenceSamples = Math.round(sampleRate * SILENCE_MS / 1000);
         var totalSamples = silenceSamples + orig.length;
@@ -1289,6 +1323,9 @@
     state.elapsedSec = 0;
     state.audioSlotKey = null;
     stopAudio();
+    // Käynnistä audiokonteksti + keep-alive HETI startin yhteydessä (käyttäjäklikkaus)
+    var ctx = getAudioContext();
+    if (ctx) startKeepAlive(ctx);
     state.collected = { vehicle: null, service: null, slot: null, slotLabel: null, phone: null, location: null, tow: null };
 
     idleEl.classList.add('hidden');
@@ -1508,6 +1545,7 @@
     clearOptions();
     try { if (synth) synth.cancel(); } catch (e) {}
     stopAudio();
+    stopKeepAlive();
 
     // Build summary
     var phone = state.collected.phone || '+358 40 123 4567';
@@ -1609,6 +1647,7 @@
     state.elapsedSec = 0;
     state.audioSlotKey = null;
     stopAudio();
+    stopKeepAlive();
     stopTimer();
     try { if (synth) synth.cancel(); } catch(e){}
     convoEl.innerHTML = '';
@@ -1668,6 +1707,7 @@
   window.addEventListener('beforeunload', function () {
     try { if (synth) synth.cancel(); } catch(e) {}
     stopAudio();
+    stopKeepAlive();
   });
 
   // Some browsers (notably mobile Safari) require user gesture for synth.
