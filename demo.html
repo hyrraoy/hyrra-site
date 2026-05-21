@@ -606,24 +606,43 @@
   }
   @media (max-width: 960px) { .footer { padding: 0 16px 24px; } }
 
-  /* Voice picker */
-  .voice-row {
-    display: flex; align-items: center; gap: 8px;
-    margin-top: 12px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.7);
-  }
-  .voice-row select {
+  /* Voice toggle (Nainen / Mies) */
+  .voice-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 4px;
     background: rgba(255,255,255,0.06);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.12);
-    padding: 5px 8px;
-    border-radius: 8px;
-    font: inherit;
-    font-size: 12px;
-    max-width: 220px;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 999px;
   }
-  .voice-row select option { color: var(--ink); }
+  .voice-toggle .vt-label {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.55);
+    padding: 0 10px 0 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .voice-toggle .vt-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.72);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  }
+  .voice-toggle .vt-btn:hover { color: #fff; }
+  .voice-toggle .vt-btn.active {
+    background: linear-gradient(135deg, var(--amber), var(--amber-2));
+    color: var(--deep);
+    box-shadow: 0 4px 12px -4px rgba(255,182,39,0.55);
+  }
 
   /* Branch selector at idle */
   .branches {
@@ -747,9 +766,10 @@
           </div>
         </div>
 
-        <div class="voice-row" id="voiceRow">
-          <span>Ääni:</span>
-          <select id="voiceSelect" aria-label="Valitse ääni"></select>
+        <div class="voice-toggle" role="group" aria-label="Hyrrän ääni">
+          <span class="vt-label">Ääni</span>
+          <button type="button" class="vt-btn active" data-voice="nainen">Nainen</button>
+          <button type="button" class="vt-btn" data-voice="mies">Mies</button>
         </div>
 
         <p class="disclaimer">
@@ -844,9 +864,21 @@
   'use strict';
 
   // ====== Audio (ElevenLabs-MP3:t, jos saatavilla) ======
-  // Demo yrittää ensin soittaa /audio/<key>.mp3-tiedoston.
+  // Demo yrittää ensin soittaa /audio/<voiceVariant>/<key>.mp3-tiedoston.
   // Jos sitä ei ole, käytetään selaimen omaa puhetta varakeinona.
-  var AUDIO_DIR = 'audio/';   // suhteellinen polku (samassa sijainnissa kuin demo.html)
+  // voiceVariant on 'nainen' tai 'mies' — kytkin idle-näytössä.
+  function audioDir() {
+    return 'audio/' + (state.voiceVariant || 'nainen') + '/';
+  }
+
+  // Lataa tallennettu valinta (jos käyttäjä on aikaisemmin valinnut)
+  function loadSavedVoice() {
+    try {
+      var v = localStorage.getItem('hyrra-voice-variant');
+      if (v === 'mies' || v === 'nainen') return v;
+    } catch (e) {}
+    return 'nainen';
+  }
 
   // ====== State ======
   var state = {
@@ -860,6 +892,7 @@
     audioCtx: null,        // Web Audio AudioContext (pää-soitin)
     currentSource: null,   // AudioBufferSourceNode (käynnissä oleva ääni)
     keepAlive: null,       // Hiljainen tausta-signaali, pitää audio-laitteen hereillä
+    voiceVariant: loadSavedVoice(), // 'nainen' | 'mies'
     scenario: null,        // 'renkaat' | 'hata' | 'hinta'
     step: 0,
     speakingUtterance: null,
@@ -892,7 +925,7 @@
   var skipBtn = $('skipBtn');
   var endBtn = $('endBtn');
   var summaryEl = $('summary');
-  var voiceSelect = $('voiceSelect');
+  var voiceToggleBtns = document.querySelectorAll('.voice-toggle .vt-btn');
   var smsBody = $('smsBody');
   var smsTime = $('smsTime');
   var ringGraphic = $('ringGraphic');
@@ -909,81 +942,73 @@
     return v;
   }
 
-  function pickBestFinnishVoice(voices) {
+  function pickBestFinnishVoice(voices, variant) {
     if (!voices || !voices.length) return null;
-    // Priorities: 1) lang starts with fi, prefer female-sounding names, 2) lang === 'fi-FI',
-    // 3) any fi voice, 4) null (caller will fall back)
     var fiVoices = voices.filter(function (v) {
       return (v.lang || '').toLowerCase().indexOf('fi') === 0;
     });
     if (!fiVoices.length) return null;
 
-    // Prefer Google / Microsoft natural voices, female names if available
-    var preferredNames = ['Satu', 'Heidi', 'Selma', 'Noora', 'Google', 'Microsoft', 'Eveliina'];
-    for (var i = 0; i < preferredNames.length; i++) {
-      var pref = preferredNames[i];
+    // Suosi sukupuolen mukaan nimien perusteella (osumat varakeinoa varten).
+    // Tämä on heuristiikka — toimii suomalaisille TTS-äänille kuten Selma/Noora (n)
+    // ja Harri (m). Ei vaikuta MP3-soittoon, vain selaimen omaan puheeseen.
+    var preferredFemale = ['Satu', 'Heidi', 'Selma', 'Noora', 'Eveliina', 'Aurora', 'Soili'];
+    var preferredMale = ['Harri', 'Heikki', 'Miika', 'Lauri'];
+    var preferred = (variant === 'mies') ? preferredMale.concat(preferredFemale) : preferredFemale.concat(preferredMale);
+    for (var i = 0; i < preferred.length; i++) {
+      var pref = preferred[i];
       var match = fiVoices.find(function (v) {
         return v.name && v.name.indexOf(pref) !== -1;
       });
       if (match) return match;
     }
+    // Generic Microsoft / Google fallback
+    var fallbackKeys = ['Google', 'Microsoft'];
+    for (var j = 0; j < fallbackKeys.length; j++) {
+      var m = fiVoices.find(function (v) { return v.name && v.name.indexOf(fallbackKeys[j]) !== -1; });
+      if (m) return m;
+    }
     return fiVoices[0];
   }
 
-  function populateVoiceSelect() {
+  // Päivitä SpeechSynthesisin varakeino-ääni (vaihtoehtoisten valikko poistettu UI:sta).
+  // pickBestFinnishVoice valitsee automaattisesti parhaan saatavilla olevan suomi-äänen,
+  // ja sukupuolitavoitetta vaihdetaan voiceVariantin mukaan.
+  function refreshSpeechFallbackVoice() {
     var voices = loadVoices();
-    voiceSelect.innerHTML = '';
     var fiVoices = voices.filter(function (v) { return (v.lang || '').toLowerCase().indexOf('fi') === 0; });
-
-    if (!synth) {
-      var o = document.createElement('option');
-      o.textContent = 'Selain ei tue puhetta';
-      o.disabled = true;
-      voiceSelect.appendChild(o);
-      voiceSelect.disabled = true;
-      return;
-    }
-
-    if (!fiVoices.length) {
-      var o2 = document.createElement('option');
-      o2.value = '__none__';
-      o2.textContent = 'Ei suomenkielistä ääntä — tekstinä';
-      voiceSelect.appendChild(o2);
-      // Add any voices as fallback (e.g., Swedish) — last resort
-      voices.slice(0, 8).forEach(function (v) {
-        var op = document.createElement('option');
-        op.value = v.name;
-        op.textContent = v.name + ' (' + v.lang + ')';
-        voiceSelect.appendChild(op);
-      });
-      state.currentVoice = null;
-      return;
-    }
-
-    fiVoices.forEach(function (v) {
-      var op = document.createElement('option');
-      op.value = v.name;
-      op.textContent = v.name + ' (' + v.lang + ')';
-      voiceSelect.appendChild(op);
-    });
-    var best = pickBestFinnishVoice(voices);
-    state.currentVoice = best;
-    if (best) voiceSelect.value = best.name;
+    if (!fiVoices.length) { state.currentVoice = null; return; }
+    state.currentVoice = pickBestFinnishVoice(voices, state.voiceVariant);
   }
 
   if (synth) {
-    populateVoiceSelect();
+    refreshSpeechFallbackVoice();
     if (typeof synth.onvoiceschanged !== 'undefined') {
-      synth.onvoiceschanged = populateVoiceSelect;
+      synth.onvoiceschanged = refreshSpeechFallbackVoice;
     }
-  } else {
-    populateVoiceSelect();
   }
 
-  voiceSelect.addEventListener('change', function () {
-    var name = voiceSelect.value;
-    var v = (state.voices || []).find(function (x) { return x.name === name; });
-    if (v) state.currentVoice = v;
+  // Nainen / Mies -kytkin
+  function setVoiceVariant(v) {
+    if (v !== 'nainen' && v !== 'mies') return;
+    state.voiceVariant = v;
+    try { localStorage.setItem('hyrra-voice-variant', v); } catch (e) {}
+    // Päivitä kytkimen ulkoasu
+    voiceToggleBtns.forEach(function (btn) {
+      if (btn.getAttribute('data-voice') === v) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+    refreshSpeechFallbackVoice();
+  }
+
+  // Alusta kytkimen tila tallennetun valinnan mukaan
+  setVoiceVariant(state.voiceVariant);
+
+  voiceToggleBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = btn.getAttribute('data-voice');
+      setVoiceVariant(v);
+    });
   });
 
   // ====== Audio + Speech helper ======
@@ -1069,7 +1094,7 @@
     // Käynnistä keep-alive jos ei jo päällä — pitää OS-audio-laitteen aktiivisena
     startKeepAlive(ctx);
 
-    var url = AUDIO_DIR + key + '.mp3';
+    var url = audioDir() + key + '.mp3';
     var settled = false;
     var settle = function (fn) {
       if (settled) return;
@@ -1122,7 +1147,7 @@
   function tryPlayMp3Fallback(key, onSuccess, onMissing) {
     var audio = new Audio();
     audio.preload = 'auto';
-    audio.src = AUDIO_DIR + key + '.mp3';
+    audio.src = audioDir() + key + '.mp3';
     state.currentAudio = audio;
 
     var settled = false;
