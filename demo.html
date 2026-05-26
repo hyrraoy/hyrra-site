@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Hyrrä — Demo</title>
-<meta name="theme-color" content="#0F3D3E">
+<meta name="theme-color" content="#1B3A5C">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -15,8 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --deep: #0F3D3E;
-    --deep-2: #14524F;
+    --deep: #1B3A5C;
+    --deep-2: #2C4E73;
     --amber: #FFB627;
     --amber-2: #F4A700;
     --kerma: #FAF7F2;
@@ -26,8 +26,8 @@
     --line: #E8E2D7;
     --moss: #3F7D58;
     --red: #E25C5C;
-    --shadow-card: 0 30px 80px -20px rgba(15,61,62,0.25), 0 10px 24px -12px rgba(15,61,62,0.18);
-    --shadow-soft: 0 8px 20px -10px rgba(15,61,62,0.18);
+    --shadow-card: 0 30px 80px -20px rgba(27,58,92,0.25), 0 10px 24px -12px rgba(27,58,92,0.18);
+    --shadow-soft: 0 8px 20px -10px rgba(27,58,92,0.18);
   }
 
   * { box-sizing: border-box; }
@@ -65,12 +65,12 @@
   .nav .back {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 8px 14px;
-    border: 1px solid rgba(15,61,62,0.18);
+    border: 1px solid rgba(27,58,92,0.18);
     border-radius: 999px;
     background: transparent;
     transition: background 120ms ease;
   }
-  .nav .back:hover { background: rgba(15,61,62,0.06); }
+  .nav .back:hover { background: rgba(27,58,92,0.06); }
 
   /* Hero */
   .hero {
@@ -120,7 +120,7 @@
 
   /* Phone card */
   .phone {
-    background: linear-gradient(180deg, #102E2F 0%, #0F3D3E 50%, #0B2A2B 100%);
+    background: linear-gradient(180deg, #1B3A5C 0%, #2C4E73 50%, #0F2538 100%);
     border-radius: 36px;
     padding: 22px;
     color: #fff;
@@ -685,7 +685,7 @@
   <a class="brand" href="/" aria-label="Hyrrä etusivulle">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" role="img" aria-label="hyrrä">
   <title>hyrrä</title>
-  <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#0F3D3E">
+  <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#1B3A5C">
     <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
     <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
     <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
@@ -1404,7 +1404,7 @@
     'Saamme paikalle hinausauton tunnin sisällä, ja korjaamomme katsoo auton heti tänään iltapäivällä. Sopiiko?': '22_hata_hinaus',
     'Selvä, järjestämme sinulle taksin lähimmälle metroasemalle hinaajan saapuessa. Kuittaan asian.': '23_hata_taksi',
     'Lähetän sinulle tekstarilla hinausauton arvioidun saapumisajan. Pidä puhelin lähellä. Kaikki hoituu.': '24_hata_loppuun',
-    'Öljynvaihto autoosi maksaa noin 89 euroa, sisältää öljyt ja suodattimen. Halutaanko varata aika?': '30_hinta_oljy',
+    'Öljynvaihto autoosi maksaa noin kahdeksankymmentäyhdeksän euroa, hintaan sisältyy öljyt ja suodatin. Halutaanko varata aika?': '30_hinta_oljy',
     'Selvä. Lähetän sinulle tekstarilla yhteenvedon hinnasta ja linkin, jolla varaat ajan milloin sinulle sopii. Kiitos soitosta!': '31_hinta_mietin'
   };
 
@@ -1545,7 +1545,7 @@
 
   // ----- Branch C: hinta -----
   function branchHinta() {
-    hyrraSay('Öljynvaihto autoosi maksaa noin 89 euroa, sisältää öljyt ja suodattimen. Halutaanko varata aika?', function () {
+    hyrraSay('Öljynvaihto autoosi maksaa noin kahdeksankymmentäyhdeksän euroa, hintaan sisältyy öljyt ja suodatin. Halutaanko varata aika?', function () {
       renderOptions([
         { label: 'Kyllä kiitos, varataan.', handler: function (l) { state.collected.service = 'öljynvaihto'; callerSay(l, askVehicle); } },
         { label: 'Mietin vielä, kiitos.', handler: function (l) {
@@ -1755,9 +1755,9 @@
   #hyrraCookie {
     position: fixed; left: 16px; right: 16px; bottom: 16px;
     z-index: 99999; max-width: 720px; margin: 0 auto;
-    background: #0F3D3E; color: #FFFFFF;
+    background: #1B3A5C; color: #FFFFFF;
     border-radius: 14px; padding: 16px 20px;
-    box-shadow: 0 18px 50px rgba(15,61,62,0.28), 0 4px 14px rgba(15,61,62,0.18);
+    box-shadow: 0 18px 50px rgba(27,58,92,0.28), 0 4px 14px rgba(27,58,92,0.18);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     line-height: 1.5;
     animation: hyrraCookieIn .35s ease-out both;
@@ -1767,7 +1767,7 @@
   #hyrraCookie .hc-text { font-size: 14px; flex: 1; min-width: 240px; margin: 0; color: rgba(255,255,255,0.95); }
   #hyrraCookie .hc-text a { color: #FFB627; text-decoration: underline; text-underline-offset: 2px; }
   #hyrraCookie .hc-btn {
-    background: #FFB627; color: #0F3D3E; border: none;
+    background: #FFB627; color: #1B3A5C; border: none;
     padding: 10px 22px; border-radius: 8px;
     font-family: inherit; font-weight: 700; font-size: 14px;
     cursor: pointer; transition: opacity .15s;
