@@ -6,6 +6,46 @@
 <title>Hyrrä — Soittoihin vastataan. Aina.</title>
 <meta name="description" content="Hyrrä on suomalainen AI-vastaanottaja pk-yrityksille. Vastaa puhelimeen, varaa ajat ja lähettää SMS-vahvistuksen — 24/7.">
 <meta name="theme-color" content="#0F3D3E">
+
+<!-- Open Graph / sosiaalinen jako -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hyrrä.fi/">
+<meta property="og:title" content="Hyrrä — Suomalainen AI-puhelinvastaanottaja pk-yrityksille">
+<meta property="og:description" content="Pyörii silloinkin, kun sinä et. AI vastaa puhelimeen, varaa ajat ja lähettää SMS-vahvistuksen — 24/7. Alkaen 149 €/kk.">
+<meta property="og:image" content="https://hyrrä.fi/favicon-512.png">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:site_name" content="Hyrrä">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hyrrä — Suomalainen AI-puhelinvastaanottaja">
+<meta name="twitter:description" content="Pyörii silloinkin, kun sinä et. Alkaen 149 €/kk.">
+<meta name="twitter:image" content="https://hyrrä.fi/favicon-512.png">
+
+<!-- Schema.org — SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Hyrrä",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Suomalainen AI-puhelinvastaanottaja pk-yrityksille. Vastaa puhelimeen, varaa ajat ja lähettää SMS-vahvistuksen — 24/7.",
+  "offers": [
+    {"@type": "Offer", "name": "Mikro", "price": "149", "priceCurrency": "EUR"},
+    {"@type": "Offer", "name": "Pro", "price": "299", "priceCurrency": "EUR"},
+    {"@type": "Offer", "name": "Yritys", "price": "599", "priceCurrency": "EUR"}
+  ],
+  "provider": {
+    "@type": "Organization",
+    "name": "Hyrrä Oy",
+    "url": "https://hyrrä.fi/",
+    "email": "info@hyrrä.fi",
+    "telephone": "+358458047224",
+    "taxID": "3555902-3"
+  }
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -309,6 +349,31 @@
   .pricing{background:var(--white)}
   .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
   @media (max-width:880px){.price-grid{grid-template-columns:1fr}}
+
+  /* Billing-toggle */
+  .billing-toggle{
+    display:inline-flex;gap:4px;margin:14px auto 28px;padding:4px;
+    background:var(--cream);border:1px solid var(--line);border-radius:999px;
+  }
+  .billing-toggle .bt-btn{
+    background:transparent;border:none;cursor:pointer;
+    padding:8px 18px;border-radius:999px;
+    font-family:inherit;font-weight:600;font-size:14px;
+    color:var(--mist);transition:background .15s, color .15s, box-shadow .15s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .billing-toggle .bt-btn:hover{color:var(--deep)}
+  .billing-toggle .bt-btn.active{
+    background:var(--deep);color:var(--cream);
+    box-shadow:0 4px 12px -4px rgba(15,61,62,0.4);
+  }
+  .billing-toggle .bt-badge{
+    font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;
+    background:var(--amber);color:var(--deep);
+  }
+  .billing-toggle .bt-btn.active .bt-badge{background:var(--amber);color:var(--deep)}
+  .price-amount[data-monthly]{transition:opacity .15s}
+  .price-annual-note{display:block;font-size:12.5px;color:var(--mist);margin-top:4px;min-height:18px}
   .price{
     background:var(--cream);border:1px solid var(--line);border-radius:var(--radius-lg);
     padding:32px;display:flex;flex-direction:column;transition:transform .25s ease, box-shadow .25s ease;position:relative;
@@ -367,6 +432,29 @@
   .quote-role{font-size:13px;color:var(--mist);margin-top:2px}
   .quote-disclaimer{display:block;text-align:center;color:var(--mist);font-size:12.5px;margin-top:20px}
   @media (max-width:600px){.quote-wrap{padding:32px 24px}.quote-mark{top:12px;left:18px;font-size:72px}}
+
+  /* ---------- Vertailu ---------- */
+  .compare{background:var(--white)}
+  .compare-table{max-width:880px;margin:0 auto;background:var(--cream);border-radius:var(--radius-lg);padding:14px;border:1px solid var(--line);overflow-x:auto}
+  .compare-table table{width:100%;border-collapse:collapse;font-size:15px;min-width:560px}
+  .compare-table th{
+    text-align:left;padding:14px 18px;font-weight:700;color:var(--deep);
+    background:var(--white);font-size:13.5px;letter-spacing:0.02em;
+    border-bottom:1px solid var(--line);
+  }
+  .compare-table th:first-child{border-top-left-radius:var(--radius-md)}
+  .compare-table th:last-child{border-top-right-radius:var(--radius-md);text-align:left}
+  .compare-table td{padding:16px 18px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4;background:var(--white)}
+  .compare-table tr:last-child td{border-bottom:none}
+  .compare-table tr:last-child td:first-child{border-bottom-left-radius:var(--radius-md)}
+  .compare-table tr:last-child td:last-child{border-bottom-right-radius:var(--radius-md)}
+  .compare-table .muted{color:var(--mist);font-size:12.5px;font-weight:400}
+  .compare-table .check{color:var(--moss);font-weight:600}
+  .compare-table .cross{color:var(--blush);font-weight:500}
+  .compare-table tr.featured-row td{background:rgba(255,182,39,0.10);border-top:2px solid var(--amber);border-bottom:2px solid var(--amber)}
+  .compare-table tr.featured-row td:first-child{border-left:2px solid var(--amber)}
+  .compare-table tr.featured-row td:last-child{border-right:2px solid var(--amber)}
+  .compare-note{text-align:center;color:var(--mist);font-size:13.5px;margin:18px 0 0;font-style:italic}
 
   /* ---------- FAQ ---------- */
   .faq{background:var(--white)}
@@ -607,7 +695,7 @@
     <div class="section-head reveal">
       <span class="section-eyebrow">Miten se toimii</span>
       <h2>Hyrrä käyttöön kolmella askeleella</h2>
-      <p class="lead">Käyttöönotto kestää alle 15 minuuttia. Ei IT-osastoa, ei integraatioprojektia, ei piilokustannuksia.</p>
+      <p class="lead">Käyttöönotto saman päivän aikana. Ei IT-osastoa, ei integraatioprojektia, ei piilokustannuksia.</p>
     </div>
 
     <div class="steps-grid">
@@ -771,13 +859,19 @@
       <span class="section-eyebrow">Hinnoittelu</span>
       <h2>Selkeää hinnoittelua, ilman yllätyksiä</h2>
       <p class="lead">Valitse paketti, joka sopii volyymiisi. Vaihda ylös tai alas milloin tahansa.</p>
+
+      <div class="billing-toggle" role="group" aria-label="Laskutusjakso">
+        <button type="button" class="bt-btn active" data-cycle="monthly">Kuukausittain</button>
+        <button type="button" class="bt-btn" data-cycle="annual">Vuosittain <span class="bt-badge">−10 %</span></button>
+      </div>
     </div>
 
     <div class="price-grid">
       <div class="price reveal">
         <h3>Mikro</h3>
         <p class="price-desc">Yhden hengen yritykselle, jolla on alle 100 puhelua kuukaudessa.</p>
-        <div class="price-amount">149 €<span class="per">/kk</span></div>
+        <div class="price-amount" data-monthly="149" data-annual="134"><span class="amount">149</span> €<span class="per">/kk</span></div>
+        <span class="price-annual-note" data-note></span>
         <ul class="price-feats">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Enintään 100 puhelua / kk</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 puhelinnumero, suomeksi</li>
@@ -792,7 +886,8 @@
         <span class="price-tag">Suosituin</span>
         <h3>Pro</h3>
         <p class="price-desc">Pienelle tiimille — tähän osuvat useimmat 1–8 hengen yritykset.</p>
-        <div class="price-amount">299 €<span class="per">/kk</span></div>
+        <div class="price-amount" data-monthly="299" data-annual="269"><span class="amount">299</span> €<span class="per">/kk</span></div>
+        <span class="price-annual-note" data-note></span>
         <ul class="price-feats">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Enintään 500 puhelua / kk</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Suomi · Ruotsi · Englanti</li>
@@ -807,7 +902,8 @@
       <div class="price reveal">
         <h3>Yritys</h3>
         <p class="price-desc">Useille toimipisteille ja yli 1 000 puhelun kuukausivolyymille.</p>
-        <div class="price-amount">599 €<span class="per">/kk + käyttö</span></div>
+        <div class="price-amount" data-monthly="599" data-annual="539"><span class="amount">599</span> €<span class="per">/kk + käyttö</span></div>
+        <span class="price-annual-note" data-note></span>
         <ul class="price-feats">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Rajaton puhelumäärä</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Useat toimipisteet & numerot</li>
@@ -823,23 +919,53 @@
   </div>
 </section>
 
-<!-- ====================== QUOTE ====================== -->
-<section>
+<!-- ====================== VERTAILU ====================== -->
+<section class="compare">
   <div class="container">
     <div class="section-head reveal">
-      <span class="section-eyebrow">Asiakaskertomus</span>
-      <h2>"Perjantaina meillä oli 14 uutta varausta"</h2>
+      <span class="section-eyebrow">Vertailu</span>
+      <h2>Mitä vaihtoehtoja sinulla on?</h2>
+      <p class="lead">Suomalaisen pk-yrittäjän käytännön valikoima — ja missä Hyrrä asettuu.</p>
     </div>
-    <div class="quote-wrap reveal">
-      <span class="quote-mark" aria-hidden="true">"</span>
-      <p class="quote-text">Hyrrä otti ensimmäisen puhelun maanantaina klo 7:42 — kun olin nostimen alla. Perjantaina meillä oli 14 uutta varausta, joita ei muuten olisi tullut. Vaimo kysyi, miksen tehnyt tätä jo viime vuonna.</p>
-      <div class="quote-author">
-        <div class="quote-avatar" aria-hidden="true">MV</div>
-        <div>
-          <div class="quote-name">Marko V.</div>
-          <div class="quote-role">Yrittäjä, Asentamo Helsinki</div>
-        </div>
-      </div>
+
+    <div class="compare-table reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>Vaihtoehto</th>
+            <th>Kuukausimaksu</th>
+            <th>Saatavuus</th>
+            <th>Varaa ajan asiakkaalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Et tee mitään</strong><br><span class="muted">(nykytila monilla)</span></td>
+            <td>0 €</td>
+            <td>—</td>
+            <td><span class="cross">Asiakas soittaa kilpailijalle</span></td>
+          </tr>
+          <tr>
+            <td><strong>Vastaajakone</strong></td>
+            <td>0 €</td>
+            <td>24/7</td>
+            <td><span class="cross">Vain viesti, ei varausta</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sihteeri tai vastaanottaja</strong></td>
+            <td>3 500–5 000 €</td>
+            <td>Virka-aikaan</td>
+            <td><span class="check">Kyllä</span></td>
+          </tr>
+          <tr class="featured-row">
+            <td><strong>Hyrrä Pro</strong><br><span class="muted">AI-vastaanottaja</span></td>
+            <td><strong>299 €</strong></td>
+            <td><strong>24/7</strong></td>
+            <td><span class="check"><strong>Kyllä, automaattisesti</strong></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="compare-note">Hyrrä maksaa itsensä takaisin yhdellä missatulla työllä kuukaudessa — esim. 200 € öljynvaihto.</p>
     </div>
   </div>
 </section>
@@ -887,6 +1013,36 @@
         <summary>Tukeeko laskutus Y-tunnusta ja ALV-vähennyksiä?</summary>
         <div class="faq-body">Tietysti. Olemme suomalainen yritys ja laskutamme suomalaisella laskulla — Y-tunnus, ALV, viitenumero, verkkolaskuosoite, kaikki. Voit vähentää ALV:n normaalisti.</div>
       </details>
+
+      <details class="faq-item reveal">
+        <summary>Tarvitseeko Hyrrä lupaa asiakkaan puhelun tallentamiseen?</summary>
+        <div class="faq-body">Suomen tietosuojalaki ja GDPR vaativat, että asiakasta informoidaan tallennuksesta. Hyrrä ilmoittaa siitä jokaisen puhelun ensimmäisessä lauseessa: "Puhelu voidaan nauhoittaa palvelun kehittämistä varten." Tämä on automaattinen — sinun ei tarvitse tehdä mitään.</div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary>Mihin kalenterijärjestelmiin Hyrrä integroituu?</summary>
+        <div class="faq-body">Natiivisti Google Calendariin ja Microsoft 365 -kalenteriin. Pro-paketissa lisäksi suorat integraatiot Timmaan ja Velloon (parturit/kampaamot), Diariumiin (lääkärit), Slottiin ja Provetiin (eläinlääkärit). Yritys-paketissa myös räätälöidyt CRM- ja ERP-integraatiot.</div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary>Mitä tapahtuu, jos sähköt menevät tai netti katkeaa?</summary>
+        <div class="faq-body">Jos Hyrrä ei pysty vastaamaan, puhelu ohjautuu automaattisesti takaisin sinulle. Asiakas ei kuule virhettä — vain normaalin ringauksen. Hyrrä on EU-pohjaisella infralla, jonka tavoiteltu saatavuus on 99,9 % (vastaava kuin perinteinen puhelinverkko).</div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary>Voinko muokata mitä Hyrrä sanoo?</summary>
+        <div class="faq-body">Kyllä. Hyrrän persoonallisuus, tervehdys, palveluiden hinnasto ja erikoissäännöt asetetaan asennusvaiheessa yhdessä kanssasi. Voit pyytää muutoksia milloin tahansa — toteutus yleensä saman päivän aikana. Sinun ei tarvitse koodata mitään.</div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary>Voinko perua kesken pilottijakson?</summary>
+        <div class="faq-body">Kyllä, milloin tahansa. Pilottijakso (14 päivää) on ilmainen ilman sitoumusta. Jos haluat lopettaa, lähetät sähköpostin osoitteeseen info@hyrrä.fi tai soitat — käyttö loppuu samana päivänä. Ei piilokuluja, ei automaattisia laskutuksia ennen kuin vahvistat jatkosi.</div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary>Mitä tehdä, jos asiakas valittaa AI-vastaajasta?</summary>
+        <div class="faq-body">Jos asiakas suoraan kysyy, Hyrrä myöntää olevansa AI ja tarjoaa heti takaisinsoittoa sinulta. Asiakkaan tiedot menevät sinulle tekstiviestillä, ja voit soittaa hänelle henkilökohtaisesti. Useimmat asiakkaat eivät edes huomaa puhuvansa AI:lle, kun varaus syntyy nopeasti ja luonnollisesti.</div>
+      </details>
     </div>
   </div>
 </section>
@@ -901,7 +1057,7 @@
           <p>Voit perua koska tahansa. Otamme yhteyttä saman päivän aikana.</p>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 14 päivää ilman maksua</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Käyttöönotto alle 15 min</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Käyttöönotto saman päivän aikana</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Suomalainen tuki</li>
           </ul>
         </div>
@@ -1054,15 +1210,58 @@
     document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
   })();
 
-  // --- Pilot form: ohjaa lomake sähköpostiin ---
+  // --- Billing toggle (kuukausi / vuosi) ---
+  (function(){
+    var btns = document.querySelectorAll('.billing-toggle .bt-btn');
+    if(!btns.length) return;
+    var amountEls = document.querySelectorAll('.price-amount[data-monthly]');
+    var noteEls = document.querySelectorAll('[data-note]');
+
+    function setCycle(cycle){
+      btns.forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-cycle') === cycle);
+      });
+      amountEls.forEach(function(el){
+        var monthly = el.getAttribute('data-monthly');
+        var annual = el.getAttribute('data-annual');
+        var amountSpan = el.querySelector('.amount');
+        if(!amountSpan) return;
+        amountSpan.textContent = (cycle === 'annual') ? annual : monthly;
+      });
+      noteEls.forEach(function(el){
+        var card = el.closest('.price');
+        if(!card) return;
+        var amt = card.querySelector('.price-amount[data-monthly]');
+        if(!amt) return;
+        var annual = amt.getAttribute('data-annual');
+        if(cycle === 'annual'){
+          el.textContent = 'Laskutetaan vuosittain — ' + (annual * 12).toLocaleString('fi-FI') + ' €/v';
+        } else {
+          el.textContent = '';
+        }
+      });
+    }
+
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        setCycle(b.getAttribute('data-cycle'));
+      });
+    });
+    setCycle('monthly'); // oletus
+  })();
+
+  // --- Pilot form: lähetä Formspreellä (varakeino: mailto) ---
   (function(){
     var form = document.getElementById('pilotForm');
     var success = document.getElementById('formSuccess');
     if(!form) return;
 
-    // Sähköpostit, joihin pyyntö lähtee
-    var TO  = 'info@hyrrä.fi';
-    var CC  = 'hyrra.info@gmail.com';
+    // Formspree endpoint — luo oma osoitteessa formspree.io ja korvaa tämä
+    var FORMSPREE_URL = 'https://formspree.io/f/mlgvpvwn';
+
+    // Varakeino: sähköpostit, joihin pyyntö lähtee jos Formspree ei ole konfiguroitu
+    var FALLBACK_TO  = 'info@hyrrä.fi';
+    var FALLBACK_CC  = 'hyrra.info@gmail.com';
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -1072,35 +1271,57 @@
       var phone    = (document.getElementById('phone').value    || '').trim();
       var vertical = (document.getElementById('vertical').value || '').trim();
 
-      var subject = 'Hyrrä — pilottipyyntö';
-      var bodyLines = [
-        'Hei!',
-        '',
-        'Olen kiinnostunut Hyrrän pilottijaksosta. Yhteystietoni:',
-        '',
-        'Y-tunnus: '   + ytunnus,
-        'Sähköposti: ' + email,
-        'Puhelin: '    + phone,
-        'Toimiala: '   + vertical,
-        '',
-        'Lähetetty hyrra.fi-sivun pilottilomakkeesta.'
-      ];
-      var body = bodyLines.join('\n');
+      var payload = {
+        ytunnus: ytunnus,
+        email: email,
+        phone: phone,
+        vertical: vertical,
+        _subject: 'Hyrrä — pilottipyyntö (' + (vertical || 'tuntematon toimiala') + ')',
+        _source: 'hyrrä.fi pilottilomake'
+      };
 
-      // Mailto: vain kysely-osa kuuluu URL-koodata, ei itse osoitteita
-      var mailto = 'mailto:' + TO
-                 + '?cc='     + CC
-                 + '&subject=' + encodeURIComponent(subject)
-                 + '&body='    + encodeURIComponent(body);
+      var showSuccess = function(){
+        Array.prototype.forEach.call(form.querySelectorAll('.form-row, button[type="submit"]'), function(el){
+          el.style.display = 'none';
+        });
+        success.classList.add('show');
+      };
 
-      // Avaa käyttäjän sähköpostiohjelma
-      window.location.href = mailto;
+      // Yritä ensin Formspree (jos konfiguroitu)
+      if (FORMSPREE_URL.indexOf('SINUN_KOODI') === -1) {
+        fetch(FORMSPREE_URL, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(function(resp){
+          if (resp.ok) { showSuccess(); }
+          else { fallbackMailto(); }
+        })
+        .catch(function(){ fallbackMailto(); });
+      } else {
+        // Formspree ei vielä konfiguroitu → suora mailto
+        fallbackMailto();
+      }
 
-      // Näytä kiitosviesti
-      Array.prototype.forEach.call(form.querySelectorAll('.form-row, button[type="submit"]'), function(el){
-        el.style.display = 'none';
-      });
-      success.classList.add('show');
+      function fallbackMailto(){
+        var subject = 'Hyrrä — pilottipyyntö';
+        var bodyLines = [
+          'Hei!','',
+          'Olen kiinnostunut Hyrrän pilottijaksosta. Yhteystietoni:','',
+          'Y-tunnus: '   + ytunnus,
+          'Sähköposti: ' + email,
+          'Puhelin: '    + phone,
+          'Toimiala: '   + vertical,'',
+          'Lähetetty hyrrä.fi-sivun pilottilomakkeesta.'
+        ];
+        var mailto = 'mailto:' + FALLBACK_TO
+                   + '?cc='     + FALLBACK_CC
+                   + '&subject=' + encodeURIComponent(subject)
+                   + '&body='    + encodeURIComponent(bodyLines.join('\n'));
+        window.location.href = mailto;
+        showSuccess();
+      }
     });
   })();
 </script>
