@@ -70,6 +70,116 @@
   .hero-pill{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);padding:6px 12px;border-radius:99px;font-size:13px;display:inline-flex;align-items:center;gap:6px}
   .hero-pill svg{width:13px;height:13px;color:var(--amber)}
 
+  /* Variant B — Voice Waveform */
+  .hero{padding:90px 0 120px;text-align:center}
+  .hero-content{max-width:880px;margin:0 auto;text-align:center}
+  .hero h1{font-size:clamp(44px,7.5vw,104px)}
+  .hero p.lead{margin-left:auto;margin-right:auto}
+  .hero-ctas{justify-content:center}
+  .hero-pills{justify-content:center}
+  .voice-waves{position:relative;height:180px;margin:36px auto 28px;max-width:920px;display:flex;align-items:center;justify-content:center;padding:0 8px}
+  .voice-waves::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent 0%, rgba(255,182,39,0.35) 20%, rgba(255,182,39,0.7) 50%, rgba(255,182,39,0.35) 80%, transparent 100%);pointer-events:none;z-index:1;box-shadow:0 0 12px rgba(255,182,39,0.4)}
+  .voice-waves::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at 50% 50%, rgba(255,182,39,0.15) 0%, transparent 70%);pointer-events:none;z-index:0}
+  .vw-bars{display:flex;gap:4px;align-items:center;justify-content:center;position:relative;z-index:2;width:100%;mask-image:linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);-webkit-mask-image:linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%)}
+  .vbar{width:4px;height:100px;background:linear-gradient(180deg, transparent 0%, var(--amber) 18%, #FFCB52 50%, var(--amber) 82%, transparent 100%);border-radius:99px;transform:scaleY(0.16);transform-origin:center;animation:vwPulse 1.3s ease-in-out infinite;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(255,182,39,0.45))}
+  .vbar:nth-child(2n){animation-duration:1.7s;animation-delay:-0.30s}
+  .vbar:nth-child(3n){animation-duration:1.0s;animation-delay:-0.70s;background:linear-gradient(180deg, transparent 0%, #FFCB52 18%, var(--amber-2) 50%, #FFCB52 82%, transparent 100%)}
+  .vbar:nth-child(5n){animation-duration:1.9s;animation-delay:-0.15s}
+  .vbar:nth-child(7n){animation-duration:0.8s;animation-delay:-0.50s}
+  .vbar:nth-child(11n){animation-duration:1.5s;animation-delay:-0.90s}
+  .vbar:nth-child(13n){animation-duration:1.1s;animation-delay:-1.20s}
+  .vbar:nth-child(4n+1){height:130px}
+  .vbar:nth-child(8n+5){height:150px}
+  .vbar:nth-child(6n+3){height:78px}
+  .vbar:nth-child(9n+2){height:60px}
+  .vbar:nth-child(15n+7){width:5px;background:linear-gradient(180deg, transparent 0%, #FFE9B0 18%, var(--amber) 50%, #FFE9B0 82%, transparent 100%)}
+  @keyframes vwPulse{0%,100%{transform:scaleY(0.14);opacity:0.65}50%{transform:scaleY(1);opacity:1}}
+  @media (max-width:640px){.voice-waves{height:140px}.vbar{height:80px}.vbar:nth-child(4n+1){height:105px}.vbar:nth-child(8n+5){height:120px}}
+  .audio-pills{display:flex;justify-content:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .audio-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);color:rgba(255,255,255,0.85);padding:6px 14px;border-radius:99px;font-size:12.5px;letter-spacing:0.02em}
+  .audio-pill .freq{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+  .audio-pill .bar{width:2px;background:var(--amber);border-radius:1px;animation:freqPulse 1.1s ease-in-out infinite}
+  .audio-pill .bar:nth-child(1){height:30%;animation-delay:0s}
+  .audio-pill .bar:nth-child(2){height:70%;animation-delay:0.15s}
+  .audio-pill .bar:nth-child(3){height:50%;animation-delay:0.3s}
+  .audio-pill .bar:nth-child(4){height:90%;animation-delay:0.45s}
+  .audio-pill .bar:nth-child(5){height:40%;animation-delay:0.6s}
+  @keyframes freqPulse{0%,100%{transform:scaleY(0.5)}50%{transform:scaleY(1)}}
+
+  /* Spinning hyrrä icon — Levy */
+  .hero-logo{display:inline-flex;align-items:center;gap:10px}
+  .spin-top-wrap{display:inline-block;line-height:0}
+  .spin-top{width:28px;height:28px;display:block;animation:hyrraSpin 1.8s linear infinite;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.30));transform-origin:50% 50%}
+  @keyframes hyrraSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+  /* Live-status pill in nav */
+  .live-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);color:rgba(255,255,255,0.85);padding:5px 11px 5px 9px;border-radius:99px;font-size:12px;font-weight:500;letter-spacing:0.01em}
+  .live-pill .lp-dot{width:7px;height:7px;border-radius:50%;background:#5BD178;box-shadow:0 0 0 3px rgba(91,209,120,0.20);animation:livePulse 1.6s ease-in-out infinite}
+  .live-pill .lp-count{font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums}
+  @keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.45}}
+  @media (max-width:680px){.live-pill .lp-text{display:none}}
+
+  /* Tech stats ticker */
+  .ticker{background:linear-gradient(180deg, rgba(15,37,56,1) 0%, rgba(27,58,92,1) 100%);color:rgba(255,255,255,0.92);border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08);padding:18px 0;position:relative;overflow:hidden}
+  .ticker::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle, rgba(255,182,39,0.05) 1px, transparent 1px);background-size:24px 24px;opacity:0.5;pointer-events:none}
+  .ticker-grid{display:grid;grid-template-columns:repeat(5, 1fr);gap:24px;position:relative;z-index:2}
+  @media (max-width:780px){.ticker-grid{grid-template-columns:repeat(2, 1fr);gap:16px}}
+  .ticker-item{display:flex;align-items:center;gap:10px;font-size:13.5px}
+  .ticker-item .ti-icon{width:32px;height:32px;border-radius:9px;background:rgba(255,182,39,0.14);color:var(--amber);display:grid;place-items:center;flex-shrink:0}
+  .ticker-item .ti-icon svg{width:16px;height:16px}
+  .ticker-item .ti-num{font-size:18px;font-weight:900;color:var(--amber);line-height:1;letter-spacing:-0.01em;font-variant-numeric:tabular-nums}
+  .ticker-item .ti-lbl{font-size:12px;color:rgba(255,255,255,0.65);font-weight:500;margin-top:2px}
+
+  /* How section — live call demo */
+  .howcall{padding:80px 0;background:linear-gradient(180deg, var(--kerma) 0%, #ECE7DC 100%);position:relative;overflow:hidden}
+  .howcall::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle, rgba(27,58,92,0.05) 1px, transparent 1px);background-size:28px 28px;opacity:0.7;pointer-events:none}
+  .howcall-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:2}
+  @media (max-width:980px){.howcall-grid{grid-template-columns:1fr;gap:40px}}
+  .howcall-text h2{font-size:clamp(28px,4vw,42px);font-weight:900;color:var(--deep);margin:14px 0 14px;letter-spacing:-0.02em;line-height:1.1}
+  .howcall-text p{color:var(--ink);font-size:16px;line-height:1.6;margin:0 0 22px;max-width:480px}
+  .howcall-flow{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+  .flow-step{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:12px 0;position:relative}
+  .flow-step::after{content:"";position:absolute;left:15px;top:34px;bottom:-10px;width:2px;background:linear-gradient(180deg, rgba(255,182,39,0.5), rgba(255,182,39,0));pointer-events:none}
+  .flow-step:last-child::after{display:none}
+  .flow-step .fs-num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0;box-shadow:0 4px 10px -2px rgba(255,182,39,0.4);position:relative;z-index:2}
+  .flow-step .fs-body strong{display:block;color:var(--deep);font-weight:800;font-size:15px;margin-bottom:3px}
+  .flow-step .fs-body span{color:var(--mist);font-size:13.5px;line-height:1.5}
+
+  /* Live phone (reused from A) */
+  .live-phone{position:relative}
+  .phone-frame{background:linear-gradient(180deg, #0F2538 0%, #1B3A5C 100%);border-radius:32px;padding:18px;border:1px solid rgba(255,255,255,0.10);box-shadow:0 32px 64px -16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,182,39,0.15);position:relative;overflow:hidden}
+  .phone-frame::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%, rgba(255,182,39,0.12) 0%, transparent 40%);pointer-events:none}
+  .phone-header{display:flex;align-items:center;justify-content:space-between;padding:0 6px 14px;border-bottom:1px solid rgba(255,255,255,0.10);margin-bottom:14px;position:relative;z-index:2}
+  .phone-biz{display:flex;align-items:center;gap:10px}
+  .phone-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:800;font-size:14px}
+  .phone-name{color:var(--white);font-weight:700;font-size:14px;line-height:1.1}
+  .phone-sub{color:rgba(255,255,255,0.6);font-size:11.5px;margin-top:2px}
+  .phone-status{display:inline-flex;align-items:center;gap:7px;background:rgba(63,125,88,0.18);color:#9FE2B8;padding:5px 10px;border-radius:99px;font-size:11.5px;font-weight:600}
+  .phone-status .dot{width:7px;height:7px;border-radius:50%;background:#3FB373;box-shadow:0 0 0 3px rgba(63,179,115,0.25);animation:livePulse 1.4s ease-in-out infinite}
+  .transcript{display:flex;flex-direction:column;gap:10px;min-height:300px;max-height:360px;overflow:hidden;position:relative;z-index:2;padding:2px 4px}
+  .msg{padding:9px 13px;border-radius:14px;font-size:13.5px;line-height:1.45;max-width:88%;animation:msgIn 0.45s cubic-bezier(.34,1.3,.64,1) both;opacity:0;color:rgba(255,255,255,0.95)}
+  .msg-ai{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.10);border-bottom-left-radius:5px;align-self:flex-start}
+  .msg-user{background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);font-weight:600;border-bottom-right-radius:5px;align-self:flex-end}
+  .msg .who{font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:block;margin-bottom:3px;opacity:0.7}
+  .typing{display:inline-flex;gap:4px;padding:11px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.10);border-radius:14px;border-bottom-left-radius:5px;align-self:flex-start;animation:msgIn 0.4s ease both}
+  .typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.6);animation:typingBlink 1.2s ease-in-out infinite}
+  .typing span:nth-child(2){animation-delay:0.2s}
+  .typing span:nth-child(3){animation-delay:0.4s}
+  @keyframes typingBlink{0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .phone-footer{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:rgba(255,255,255,0.55);position:relative;z-index:2}
+  .phone-footer .sms-badge{background:rgba(255,182,39,0.15);color:var(--amber);padding:3px 9px;border-radius:99px;font-weight:700;font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase}
+
+  /* Bento polish — accent glow on featured icons */
+  .bento-card .icon{box-shadow:0 8px 18px -8px rgba(255,182,39,0.5)}
+  .bento-large .icon{position:relative}
+  .bento-large .icon::after{content:"";position:absolute;inset:-6px;border-radius:18px;border:1.5px solid var(--amber);opacity:0;animation:iconPing 2.6s ease-out infinite}
+  @keyframes iconPing{0%{transform:scale(1);opacity:0.45}80%,100%{transform:scale(1.7);opacity:0}}
+
+  /* Pricing — featured card glow border */
+  .price-card.featured::before{content:"";position:absolute;inset:-1.5px;border-radius:20px;background:linear-gradient(135deg, var(--amber), transparent 40%, var(--amber-2));z-index:-1;opacity:0.6}
+  .price-card.featured{position:relative}
+
   /* ROI CALCULATOR */
   .roi{background:var(--white);padding:80px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .roi-card{max-width:980px;margin:0 auto;background:var(--kerma);border-radius:24px;padding:40px;border:1px solid var(--line)}
@@ -255,7 +365,18 @@
   <div class="container">
     <header class="hero-nav">
       <a href="/" class="hero-logo" aria-label="Hyrrä etusivu">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0">
+        <span class="spin-top-wrap" aria-hidden="true">
+          <svg class="spin-top" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="27" fill="#FFB627"/>
+            <circle cx="32" cy="32" r="27" fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="1"/>
+            <circle cx="32" cy="32" r="20" fill="none" stroke="rgba(15,37,56,0.12)" stroke-width="0.8"/>
+            <circle cx="32" cy="32" r="14" fill="none" stroke="rgba(15,37,56,0.12)" stroke-width="0.8"/>
+            <circle cx="32" cy="32" r="10" fill="#1B3A5C"/>
+            <circle cx="32" cy="32" r="2" fill="#FFB627"/>
+            <circle cx="32" cy="11" r="3.2" fill="#1B3A5C"/>
+          </svg>
+        </span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" style="height:30px;width:auto;display:block">
           <g transform="translate(0 72.00) scale(0.06857 -0.06857)" class="deep-fill" fill="#FFFFFF">
             <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
             <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
@@ -269,6 +390,7 @@
         </svg>
       </a>
       <nav class="hero-nav-links">
+        <span class="live-pill"><span class="lp-dot"></span><span class="lp-text">Hyrrä on aktiivinen ·</span><span class="lp-count" id="liveCount">247</span><span class="lp-text"> puhelua tänään</span></span>
         <a href="#bento">Tuote</a>
         <a href="#hinta">Hinta</a>
         <a href="/demo">Demo</a>
@@ -283,6 +405,22 @@
         <span class="line">Vastaa, varaa, vahvistaa.</span>
         <span class="line line-3">Sinä saat työrauhan.</span>
       </h1>
+
+      <div class="voice-waves" aria-hidden="true">
+        <div class="vw-bars" id="vwBars"></div>
+      </div>
+
+      <div class="audio-pills">
+        <span class="audio-pill">
+          <span class="freq"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
+          Aurora · suomi · luonnollinen
+        </span>
+        <span class="audio-pill">
+          <span class="freq"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
+          Miika · suomi · lämmin
+        </span>
+      </div>
+
       <p class="lead">Suomalainen AI-puhelinvastaanottaja, joka palvelee asiakkaitasi 24/7, varaa ajat kalenteriisi ja lähettää SMS-vahvistuksen — sillä aikaa, kun sinä keskityt työhösi.</p>
       <div class="hero-ctas">
         <a href="#yhteys" class="btn-amber">Varaa 14 päivän pilotti →</a>
@@ -296,6 +434,34 @@
         <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> EU-data + GDPR</span>
         <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Suomi · Ruotsi · Englanti</span>
         <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> 14 päivää ilmaiseksi</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STATS TICKER -->
+<section class="ticker" aria-label="Tekniset tunnusluvut">
+  <div class="container">
+    <div class="ticker-grid">
+      <div class="ticker-item">
+        <span class="ti-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div><div class="ti-num">24/7</div><div class="ti-lbl">Tavoitettavissa</div></div>
+      </div>
+      <div class="ticker-item">
+        <span class="ti-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+        <div><div class="ti-num">&lt; 700 ms</div><div class="ti-lbl">Vastauslatenssi</div></div>
+      </div>
+      <div class="ticker-item">
+        <span class="ti-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        <div><div class="ti-num">99,9 %</div><div class="ti-lbl">Uptime SLA</div></div>
+      </div>
+      <div class="ticker-item">
+        <span class="ti-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></svg></span>
+        <div><div class="ti-num">3 kieltä</div><div class="ti-lbl">FI · SV · EN</div></div>
+      </div>
+      <div class="ticker-item">
+        <span class="ti-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg></span>
+        <div><div class="ti-num">EU</div><div class="ti-lbl">Data Suomessa</div></div>
       </div>
     </div>
   </div>
@@ -406,6 +572,45 @@
   </div>
 </section>
 
+<!-- HOW IT SOUNDS — live call demo -->
+<section class="howcall" id="kuuntele">
+  <div class="container">
+    <div class="howcall-grid">
+      <div class="howcall-text">
+        <span class="section-eyebrow">Näin keskustelu sujuu</span>
+        <h2>Esimerkki puhelusta.</h2>
+        <p>Asiakas soittaa, Hyrrä vastaa luonnollisella suomella, ymmärtää tarpeen, varaa ajan kalenteriisi ja lähettää vahvistuksen — ilman että sinä kosket puhelimeen.</p>
+        <div class="howcall-flow">
+          <div class="flow-step"><div class="fs-num">1</div><div class="fs-body"><strong>Vastaus 0,7 sekunnissa</strong><span>Hyrrä tervehtii yrityksesi nimellä ja kysyy, miten voi auttaa.</span></div></div>
+          <div class="flow-step"><div class="fs-num">2</div><div class="fs-body"><strong>Ymmärtää tarpeen</strong><span>Tunnistaa palvelun, kysyy tarvittavat tiedot — myös auton rekisteritunnuksen tai potilastietoja.</span></div></div>
+          <div class="flow-step"><div class="fs-num">3</div><div class="fs-body"><strong>Tarjoaa ajan</strong><span>Tarkistaa kalenterisi reaaliajassa, ehdottaa kahta tai kolmea vapaata aikaa.</span></div></div>
+          <div class="flow-step"><div class="fs-num">4</div><div class="fs-body"><strong>Varaa ja vahvistaa</strong><span>Kirjaa varauksen kalenteriin ja lähettää SMS-vahvistuksen asiakkaalle.</span></div></div>
+        </div>
+      </div>
+
+      <div class="live-phone">
+        <div class="phone-frame">
+          <div class="phone-header">
+            <div class="phone-biz">
+              <div class="phone-avatar">A</div>
+              <div>
+                <div class="phone-name">Asentamo Helsinki</div>
+                <div class="phone-sub">Saapuva puhelu · Hyrrä vastaa</div>
+              </div>
+            </div>
+            <span class="phone-status"><span class="dot"></span>Live</span>
+          </div>
+          <div class="transcript" id="liveTranscript"></div>
+          <div class="phone-footer">
+            <span>Kesto 00:42</span>
+            <span class="sms-badge">SMS lähetetty</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- COMPARE — feature matrix table -->
 <section class="compare">
   <div class="container">
@@ -483,7 +688,7 @@
     <div class="billing-toggle">
       <div class="bt-wrap">
         <button type="button" class="bt-btn active" data-cycle="monthly">Kuukausittain</button>
-        <button type="button" class="bt-btn" data-cycle="annual">Vuosittain <span class="bt-badge">−10 %</span></button>
+        <button type="button" class="bt-btn" data-cycle="annual">Vuosittain <span class="bt-badge">1 kk ilmaiseksi</span></button>
       </div>
     </div>
 
@@ -491,7 +696,7 @@
       <div class="price-card">
         <h3>Kevyt</h3>
         <p class="desc">Soolo­yrittäjälle</p>
-        <div class="amount" data-monthly="149" data-annual="134"><span class="num">149</span> €<span class="per">/kk</span></div>
+        <div class="amount" data-monthly="149" data-annual="137"><span class="num">149</span> €<span class="per">/kk</span></div>
         <span class="note" data-note></span>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>100 puhelua/kk</li>
@@ -506,7 +711,7 @@
         <span class="badge">Suosituin</span>
         <h3>Plus</h3>
         <p class="desc">1–8 hengen tiimille</p>
-        <div class="amount" data-monthly="299" data-annual="269"><span class="num">299</span> €<span class="per">/kk</span></div>
+        <div class="amount" data-monthly="299" data-annual="274"><span class="num">299</span> €<span class="per">/kk</span></div>
         <span class="note" data-note></span>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>500 puhelua/kk</li>
@@ -521,7 +726,7 @@
       <div class="price-card">
         <h3>Pro</h3>
         <p class="desc">Useammalle toimipisteelle</p>
-        <div class="amount" data-monthly="599" data-annual="539"><span class="num">599</span> €<span class="per">/kk</span></div>
+        <div class="amount" data-monthly="599" data-annual="549"><span class="num">599</span> €<span class="per">/kk</span></div>
         <span class="note" data-note></span>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Rajaton puhelumäärä</li>
@@ -702,6 +907,77 @@
 </div>
 
 <script>
+// Hero audio spectrum bars
+(function(){
+  var c = document.getElementById('vwBars');
+  if(!c) return;
+  for(var i=0;i<58;i++){
+    var b = document.createElement('div');
+    b.className = 'vbar';
+    c.appendChild(b);
+  }
+})();
+
+// Live nav counter — gently ticks up
+(function(){
+  var el = document.getElementById('liveCount');
+  if(!el) return;
+  var n = parseInt(el.textContent, 10) || 247;
+  setInterval(function(){
+    if(Math.random() < 0.6){ n += 1; el.textContent = n; }
+  }, 9000 + Math.random()*4000);
+})();
+
+// Live call transcript (under bento)
+(function(){
+  var t = document.getElementById('liveTranscript');
+  if(!t) return;
+  var script = [
+    { who:'Hyrrä',   side:'ai',   text:'Asentamo, Hyrrä puhelimessa, kuinka voin auttaa?' },
+    { who:'Asiakas', side:'user', text:'Hei, tarvitsisin renkaanvaihdon ensi viikolle.' },
+    { who:'Hyrrä',   side:'ai',   text:'Selvä. Tiistai kello yhdeksän tai torstai kello kolmetoista, kumpi sopii?' },
+    { who:'Asiakas', side:'user', text:'Tiistai aamu käy.' },
+    { who:'Hyrrä',   side:'ai',   text:'Hyvä. Mikä on auton rekisteritunnus?' },
+    { who:'Asiakas', side:'user', text:'ABC-123.' },
+    { who:'Hyrrä',   side:'ai',   text:'Kiitos. Varaus tehty — saat vahvistuksen tekstiviestillä.' }
+  ];
+  function clear(){ t.innerHTML=''; }
+  function addTyping(){
+    var d = document.createElement('div');
+    d.className = 'typing';
+    d.innerHTML = '<span></span><span></span><span></span>';
+    t.appendChild(d);
+    return d;
+  }
+  function addMsg(m){
+    var d = document.createElement('div');
+    d.className = 'msg msg-'+m.side;
+    d.innerHTML = '<span class="who">'+m.who+'</span>'+m.text;
+    t.appendChild(d);
+    while(t.children.length > 5) t.removeChild(t.firstChild);
+  }
+  function run(){
+    clear();
+    var i = 0;
+    function step(){
+      if(i >= script.length){ setTimeout(run, 2500); return; }
+      var typing = addTyping();
+      setTimeout(function(){
+        if(typing.parentNode) typing.parentNode.removeChild(typing);
+        addMsg(script[i]); i++;
+        setTimeout(step, 1300 + Math.random()*400);
+      }, 750 + Math.random()*400);
+    }
+    step();
+  }
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ run(); io.disconnect(); }});
+    });
+    io.observe(t);
+  } else run();
+})();
+
 // ROI Calculator
 (function(){
   var callsSlider = document.getElementById('callsSlider');
@@ -744,7 +1020,9 @@
       if(!card) return;
       var amt = card.querySelector('.amount');
       if(!amt) return;
-      el.textContent = c === 'annual' ? 'Laskutetaan vuosittain — ' + (amt.getAttribute('data-annual')*12).toLocaleString('fi-FI') + ' €/v' : '';
+      var monthly = parseInt(amt.getAttribute('data-monthly'), 10);
+      var yearTotal = monthly * 11;
+      el.textContent = c === 'annual' ? '1 kk ilmaiseksi · ' + yearTotal.toLocaleString('fi-FI') + ' €/v' : '';
     });
   }
   btns.forEach(function(b){ b.addEventListener('click', function(){ setCycle(b.getAttribute('data-cycle')); }); });
