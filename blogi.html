@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hyrrä blogi — AI-vastaaja, ajanvaraus ja pk-yrityksen arki</title>
+<meta name="description" content="Hyrrän blogi: artikkeleita AI-puhelinvastaanottajista, ajanvarauksesta, pk-yrityksen arjesta ja siitä, miten teknologia voi vapauttaa yrittäjän puhelimesta.">
+<meta name="theme-color" content="#1B3A5C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hyrrä blogi">
+<meta property="og:url" content="https://hyrrä.fi/blogi">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:site_name" content="Hyrrä">
+<link rel="canonical" href="https://hyrrä.fi/blogi">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Source+Serif+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --kerma:#F4F1EB; --white:#FFFFFF;
+    --ink:#1A1A1A; --mist:#6B7280;
+    --line:rgba(27,58,92,0.10);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',-apple-system,sans-serif;background:var(--kerma);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+  .topnav{background:var(--deep);color:var(--white);padding:18px 0}
+  .topnav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .topnav-logo{display:inline-flex;align-items:center;gap:10px}
+  .topnav-links{display:flex;gap:24px;align-items:center;font-size:14.5px;font-weight:500;color:rgba(255,255,255,0.85)}
+  .topnav-links a:hover{color:var(--amber)}
+  .topnav-cta{background:var(--amber);color:var(--deep);padding:8px 16px;border-radius:8px;font-weight:700;font-size:14px}
+  @media (max-width:680px){.topnav-links a:not(.topnav-cta){display:none}}
+
+  .bhero{padding:60px 0 30px;text-align:center;background:linear-gradient(180deg, var(--deep) 0%, var(--deep-2) 100%);color:var(--white)}
+  .bhero-eyebrow{display:inline-block;background:rgba(255,182,39,0.15);color:var(--amber);padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px}
+  .bhero h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-0.03em;margin:0 0 14px;line-height:1.05}
+  .bhero p{color:rgba(255,255,255,0.85);max-width:540px;margin:0 auto;font-size:17px}
+
+  .articles{padding:60px 0 90px}
+  .article-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:24px}
+  .article{background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .2s, box-shadow .2s}
+  .article:hover{transform:translateY(-4px);box-shadow:0 24px 48px -16px rgba(27,58,92,0.18)}
+  .article a{display:block}
+  .article-img{aspect-ratio:16/9;background:linear-gradient(135deg, var(--amber), var(--amber-2));position:relative;overflow:hidden;display:grid;place-items:center;color:var(--deep)}
+  .article-img.deep{background:linear-gradient(135deg, var(--deep), var(--deep-2));color:var(--white)}
+  .article-img svg{width:64px;height:64px;opacity:0.8}
+  .article-body{padding:22px 24px 24px}
+  .article-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mist);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .article-meta .cat{color:var(--amber)}
+  .article h2{font-size:20px;font-weight:800;color:var(--deep);margin:0 0 10px;letter-spacing:-0.01em;line-height:1.25}
+  .article p{color:var(--ink);font-size:14.5px;line-height:1.55;margin:0}
+
+  .article.placeholder{opacity:0.5}
+  .article.placeholder:hover{transform:none;box-shadow:none;cursor:default}
+  .article.placeholder .article-img{background:var(--line);color:var(--mist)}
+
+  footer{background:var(--deep-3);color:rgba(255,255,255,0.75);padding:50px 0 28px;font-size:14px}
+  footer a{color:rgba(255,255,255,0.85)}
+  footer a:hover{color:var(--amber)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:32px}
+  @media (max-width:680px){.foot-grid{grid-template-columns:1fr}}
+  .foot-tag{max-width:320px;line-height:1.55;color:rgba(255,255,255,0.7);margin:0}
+  .foot-col h4{color:var(--white);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 12px}
+  .foot-col ul{list-style:none;padding:0;margin:0}
+  .foot-col li{padding:5px 0}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,0.10);padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,0.5)}
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="topnav-logo">
+      <svg viewBox="0 0 64 64" style="width:28px;height:28px"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#FFFFFF"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#FFFFFF"/></svg>
+      <svg viewBox="0 0 194.8 96.0" style="height:24px;width:auto">
+        <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#FFFFFF">
+          <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
+          <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
+          <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
+          <path transform="translate(1734 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
+          <path transform="translate(2162 0)" d="M274 566Q333 566 377.5 542.0Q422 518 446 479V558H617V0H446V79Q421 40 376.5 16.0Q332 -8 273 -8Q205 -8 149.0 27.5Q93 63 60.5 128.5Q28 194 28 280Q28 366 60.5 431.0Q93 496 149.0 531.0Q205 566 274 566ZM324 417Q273 417 237.5 380.5Q202 344 202 280Q202 216 237.5 178.5Q273 141 324 141Q375 141 410.5 178.0Q446 215 446 279Q446 343 410.5 380.0Q375 417 324 417Z"/>
+        </g>
+        <g transform="translate(151.53 18.29) rotate(-12)" fill="#FFB627"><circle cx="-9" cy="0" r="8"/><circle cx="12" cy="2" r="8"/></g>
+      </svg>
+    </a>
+    <nav class="topnav-links">
+      <a href="/#bento">Tuote</a>
+      <a href="/#hinta">Hinta</a>
+      <a href="/blogi">Blogi</a>
+      <a href="/#yhteys" class="topnav-cta">Varaa pilotti</a>
+    </nav>
+  </div>
+</header>
+
+<section class="bhero">
+  <div class="container">
+    <span class="bhero-eyebrow">Blogi</span>
+    <h1>Ajatuksia AI:sta ja pk-yrityksen arjesta.</h1>
+    <p>Käytännön artikkeleita siitä, miten yrittäjä voi vapauttaa itsensä puhelimesta — ja mitä se oikeasti maksaa, jos ei tee mitään.</p>
+  </div>
+</section>
+
+<section class="articles">
+  <div class="container">
+    <div class="article-grid">
+
+      <a href="/blogi-missatut-puhelut" class="article">
+        <div class="article-img">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z" transform="scale(1.5) translate(8 8)"/>
+          </svg>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><span class="cat">Talous</span><span>5 min luku</span></div>
+          <h2>Mitä missatut puhelut oikeasti maksavat?</h2>
+          <p>Pieni Helsingin autokorjaamo menettää 11 000 € kuukaudessa — ja syyttää siitä "huonoa kesäkautta". Todellisuus on hieman erilainen.</p>
+        </div>
+      </a>
+
+      <div class="article placeholder">
+        <div class="article-img deep">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><span class="cat">Tuote</span><span>Tulossa</span></div>
+          <h2>Miltä Hyrrä kuulostaa? — AI-ääni vs. perinteinen vastaaja</h2>
+          <p>Vertaamme natiivin suomenkielisen AI-äänen ja perinteisen vastaajakoneen asiakaskokemusta. Hyrrässä on useita ääniä valittavissa — kerromme miten valitaan sopivin.</p>
+        </div>
+      </div>
+
+      <div class="article placeholder">
+        <div class="article-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><span class="cat">GDPR</span><span>Tulossa</span></div>
+          <h2>GDPR ja AI-puhelut — mitä yrittäjän pitää tietää</h2>
+          <p>Puhelutallenteet, datan säilytys, asiakkaan oikeudet. Suomalainen pk-yritys ei voi sivuuttaa tätä — mutta se on yksinkertaisempaa kuin luulet.</p>
+        </div>
+      </div>
+
+      <div class="article placeholder">
+        <div class="article-img deep">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></svg>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><span class="cat">Vertailu</span><span>Tulossa</span></div>
+          <h2>Suomalainen vs. amerikkalainen AI-vastaaja — onko väliä?</h2>
+          <p>Kaksi näennäisesti samaa tuotetta, kaksi täysin erilaista asiakaskokemusta. Käymme läpi kuusi konkreettista eroa.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><p class="foot-tag">Hyrrä — suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p></div>
+      <div class="foot-col">
+        <h4>Tuote</h4>
+        <ul>
+          <li><a href="/">Etusivu</a></li>
+          <li><a href="/#hinta">Hinta</a></li>
+          <li><a href="/integraatiot">Integraatiot</a></li>
+          <li><a href="/blogi">Blogi</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Lainsäädäntö</h4>
+        <ul>
+          <li><a href="/tietosuoja">Tietosuoja</a></li>
+          <li><a href="/kayttoehdot">Käyttöehdot</a></li>
+          <li><a href="/yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Hyrrä Oy · Y-tunnus 3555902-3</span>
+      <span>info@hyrrä.fi</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
