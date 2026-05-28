@@ -212,29 +212,59 @@
   .flow-step .fs-body strong{display:block;color:var(--deep);font-weight:800;font-size:15px;margin-bottom:3px}
   .flow-step .fs-body span{color:var(--mist);font-size:13.5px;line-height:1.5}
 
-  /* Live phone (reused from A) */
+  /* Live phone — call UI */
   .live-phone{position:relative}
-  .phone-frame{background:linear-gradient(180deg, #0F2538 0%, #1B3A5C 100%);border-radius:32px;padding:18px;border:1px solid rgba(255,255,255,0.10);box-shadow:0 32px 64px -16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,182,39,0.15);position:relative;overflow:hidden}
-  .phone-frame::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%, rgba(255,182,39,0.12) 0%, transparent 40%);pointer-events:none}
-  .phone-header{display:flex;align-items:center;justify-content:space-between;padding:0 6px 14px;border-bottom:1px solid rgba(255,255,255,0.10);margin-bottom:14px;position:relative;z-index:2}
-  .phone-biz{display:flex;align-items:center;gap:10px}
-  .phone-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:800;font-size:14px}
-  .phone-name{color:var(--white);font-weight:700;font-size:14px;line-height:1.1}
-  .phone-sub{color:rgba(255,255,255,0.6);font-size:11.5px;margin-top:2px}
-  .phone-status{display:inline-flex;align-items:center;gap:7px;background:rgba(63,125,88,0.18);color:#9FE2B8;padding:5px 10px;border-radius:99px;font-size:11.5px;font-weight:600}
-  .phone-status .dot{width:7px;height:7px;border-radius:50%;background:#3FB373;box-shadow:0 0 0 3px rgba(63,179,115,0.25);animation:livePulse 1.4s ease-in-out infinite}
-  .transcript{display:flex;flex-direction:column;gap:10px;min-height:300px;max-height:360px;overflow:hidden;position:relative;z-index:2;padding:2px 4px}
-  .msg{padding:9px 13px;border-radius:14px;font-size:13.5px;line-height:1.45;max-width:88%;animation:msgIn 0.45s cubic-bezier(.34,1.3,.64,1) both;opacity:0;color:rgba(255,255,255,0.95)}
-  .msg-ai{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.10);border-bottom-left-radius:5px;align-self:flex-start}
-  .msg-user{background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);font-weight:600;border-bottom-right-radius:5px;align-self:flex-end}
-  .msg .who{font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;display:block;margin-bottom:3px;opacity:0.7}
-  .typing{display:inline-flex;gap:4px;padding:11px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.10);border-radius:14px;border-bottom-left-radius:5px;align-self:flex-start;animation:msgIn 0.4s ease both}
-  .typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.6);animation:typingBlink 1.2s ease-in-out infinite}
+  .phone-frame{background:linear-gradient(180deg, var(--deep-3) 0%, var(--deep) 50%, var(--deep-3) 100%);border-radius:36px;padding:0;border:1px solid rgba(255,255,255,0.10);box-shadow:0 32px 64px -16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);position:relative;overflow:hidden}
+  .phone-frame::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:44%;height:22px;background:#000;border-radius:14px;z-index:5}
+  .pf-statusbar{display:flex;justify-content:space-between;align-items:center;padding:14px 28px 8px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);position:relative;z-index:6;font-variant-numeric:tabular-nums}
+  .pf-statusbar .icons{display:inline-flex;align-items:center;gap:5px}
+  .pf-statusbar .icons svg{width:14px;height:10px;fill:rgba(255,255,255,0.9)}
+  .phone-header{padding:32px 24px 18px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.08);display:block}
+  .phone-biz{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .phone-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:900;font-size:32px;letter-spacing:-0.02em;box-shadow:0 0 0 4px rgba(255,182,39,0.15), 0 0 0 12px rgba(255,182,39,0.05);position:relative}
+  .phone-avatar::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,182,39,0.4);animation:callPulseB 2.2s ease-out infinite}
+  @keyframes callPulseB{0%{transform:scale(1);opacity:1}100%{transform:scale(1.4);opacity:0}}
+  .phone-name{color:var(--white);font-weight:700;font-size:17px;letter-spacing:-0.01em}
+  .phone-sub{color:rgba(255,255,255,0.65);font-size:12.5px;margin-top:2px;display:flex;align-items:center;gap:6px;justify-content:center}
+  .phone-sub::before{content:"";width:8px;height:8px;border-radius:50%;background:#5BD178;box-shadow:0 0 0 4px rgba(91,209,120,0.20);animation:greenPulseB 1.6s ease-in-out infinite}
+  @keyframes greenPulseB{0%,100%{opacity:1}50%{opacity:0.4}}
+  .phone-status{display:none}
+  .pf-wave{display:flex;justify-content:center;align-items:center;gap:3px;padding:12px 0;height:36px}
+  .pf-wave span{width:3px;background:linear-gradient(180deg, transparent, var(--amber), transparent);border-radius:99px;animation:pfWave 1.1s ease-in-out infinite}
+  .pf-wave span:nth-child(1){height:30%;animation-delay:0s}
+  .pf-wave span:nth-child(2){height:65%;animation-delay:0.1s}
+  .pf-wave span:nth-child(3){height:45%;animation-delay:0.2s}
+  .pf-wave span:nth-child(4){height:85%;animation-delay:0.3s}
+  .pf-wave span:nth-child(5){height:55%;animation-delay:0.05s}
+  .pf-wave span:nth-child(6){height:75%;animation-delay:0.15s}
+  .pf-wave span:nth-child(7){height:40%;animation-delay:0.25s}
+  .pf-wave span:nth-child(8){height:90%;animation-delay:0s}
+  .pf-wave span:nth-child(9){height:60%;animation-delay:0.18s}
+  .pf-wave span:nth-child(10){height:35%;animation-delay:0.08s}
+  .pf-wave span:nth-child(11){height:70%;animation-delay:0.22s}
+  .pf-wave span:nth-child(12){height:50%;animation-delay:0.12s}
+  @keyframes pfWave{0%,100%{transform:scaleY(0.4);opacity:0.6}50%{transform:scaleY(1);opacity:1}}
+  .transcript{display:flex;flex-direction:column;gap:0;min-height:240px;max-height:280px;overflow:hidden;position:relative;z-index:2;padding:0 20px 14px}
+  .msg{padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.06);display:grid;grid-template-columns:60px 1fr;gap:12px;align-items:start;font-size:13.5px;line-height:1.4;color:rgba(255,255,255,0.92);max-width:100%;background:transparent;border-radius:0;animation:msgIn 0.45s cubic-bezier(.34,1.3,.64,1) both;opacity:0;align-self:stretch}
+  .msg:last-child{border-bottom:none}
+  .msg-ai{color:rgba(255,255,255,0.95)}
+  .msg-user{color:rgba(255,255,255,0.78);font-weight:500}
+  .msg .who{display:block;font-size:10.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin:0;opacity:1;padding-top:1px}
+  .msg-ai .who{color:var(--amber)}
+  .msg-user .who{color:#7BBCFF}
+  .typing{display:grid;grid-template-columns:60px 1fr;gap:12px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.06);background:transparent;border-radius:0;animation:msgIn 0.4s ease both}
+  .typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);animation:typingBlink 1.2s ease-in-out infinite;display:inline-block;margin-right:4px}
   .typing span:nth-child(2){animation-delay:0.2s}
   .typing span:nth-child(3){animation-delay:0.4s}
-  @keyframes typingBlink{0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  @keyframes typingBlink{0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-2px)}}
   @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  .phone-footer{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:rgba(255,255,255,0.55);position:relative;z-index:2}
+  .pf-controls{display:flex;justify-content:space-around;align-items:center;padding:14px 20px 18px;background:rgba(0,0,0,0.20);border-top:1px solid rgba(255,255,255,0.06)}
+  .pf-ctrl{display:flex;flex-direction:column;align-items:center;gap:4px;color:rgba(255,255,255,0.85);font-size:10.5px}
+  .pf-ctrl-icon{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.08);display:grid;place-items:center}
+  .pf-ctrl-icon svg{width:18px;height:18px;color:rgba(255,255,255,0.85);fill:none;stroke:currentColor;stroke-width:2}
+  .pf-end .pf-ctrl-icon{background:#FF3B30;width:56px;height:56px}
+  .pf-end .pf-ctrl-icon svg{width:24px;height:24px;color:#fff;transform:rotate(135deg)}
+  .phone-footer{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:rgba(0,0,0,0.30);font-size:11.5px;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums}
   .phone-footer .sms-badge{background:rgba(255,182,39,0.15);color:var(--amber);padding:3px 9px;border-radius:99px;font-weight:700;font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase}
 
   /* Bento polish — accent glow on featured icons */
@@ -313,6 +343,20 @@
   .sms-preview{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:12px 14px;font-size:13px;color:rgba(255,255,255,0.95);margin-top:14px;line-height:1.5}
   .sms-preview .from{font-size:11px;color:var(--amber);font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em}
 
+  /* LEARNS — itse-oppiva osio */
+  .learns{padding:80px 0;background:linear-gradient(180deg, var(--kerma) 0%, var(--white) 100%);position:relative;overflow:hidden}
+  .learns::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle, rgba(255,182,39,0.06) 1px, transparent 1px);background-size:24px 24px;opacity:0.7;pointer-events:none}
+  .learns .container{position:relative;z-index:2}
+  .learns-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:18px;margin-top:36px}
+  @media (max-width:780px){.learns-grid{grid-template-columns:1fr}}
+  .learns-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:24px;position:relative;overflow:hidden;transition:transform .2s, box-shadow .2s}
+  .learns-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px -12px rgba(27,58,92,0.15)}
+  .learns-card .lc-num{position:absolute;top:14px;right:18px;font-size:48px;font-weight:900;color:rgba(255,182,39,0.18);letter-spacing:-0.04em;line-height:1}
+  .learns-card h3{font-size:18px;font-weight:800;color:var(--deep);margin:0 0 10px;letter-spacing:-0.01em}
+  .learns-card p{color:var(--ink);font-size:14.5px;line-height:1.55;margin:0}
+  .learns-card .lc-icon{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;margin-bottom:14px}
+  .learns-card .lc-icon svg{width:22px;height:22px}
+
   /* COMPARE — feature matrix table */
   .compare{padding:100px 0;background:var(--white)}
   .compare-wrap{overflow-x:auto;border-radius:18px;border:1px solid var(--line);background:var(--kerma)}
@@ -365,6 +409,26 @@
   .pricing-note{text-align:center;color:var(--mist);font-size:13px;margin:28px auto 0;max-width:680px;line-height:1.55}
   .pricing-note a{color:var(--deep);text-decoration:underline;text-underline-offset:2px}
 
+  /* Vs ulkomainen */
+  .vsforeign{padding:80px 0;background:var(--white)}
+  .vsforeign-table{max-width:980px;margin:32px auto 0;border-radius:18px;border:1px solid var(--line);background:var(--kerma);overflow:hidden}
+  .vsforeign-row{display:grid;grid-template-columns:1.2fr 1fr 1fr;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line);gap:18px}
+  .vsforeign-row:last-child{border-bottom:none}
+  .vsforeign-row.header{background:var(--white);font-weight:700;padding:18px 24px}
+  .vsforeign-row.header .vs-h{color:var(--deep);font-size:13px;text-transform:uppercase;letter-spacing:0.06em}
+  .vsforeign-row.header .vs-h.foreign{color:var(--mist)}
+  .vsforeign-row.header .vs-h.hyrra{color:var(--deep);background:linear-gradient(180deg, rgba(255,182,39,0.20), rgba(255,182,39,0.05));padding:8px 14px;border-radius:10px;border:1px solid rgba(255,182,39,0.4);text-align:center;font-size:14px}
+  .vsforeign-row .vs-label{font-weight:700;color:var(--deep);font-size:14.5px}
+  .vsforeign-row .vs-foreign{color:var(--mist);font-size:13.5px;font-weight:500}
+  .vsforeign-row .vs-hyrra{color:var(--deep);font-size:14px;font-weight:700;background:rgba(255,182,39,0.06);padding:8px 12px;border-radius:8px;border-left:3px solid var(--amber)}
+  @media (max-width:680px){
+    .vsforeign-row{grid-template-columns:1fr;padding:14px 18px;gap:8px}
+    .vsforeign-row.header{display:none}
+    .vsforeign-row .vs-label{font-size:11px;color:var(--mist);text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
+    .vsforeign-row .vs-foreign::before{content:"Ulkomainen: ";color:var(--mist);font-weight:500;font-size:12px}
+    .vsforeign-row .vs-hyrra::before{content:"Hyrrä: ";color:var(--amber);font-weight:700;font-size:12px}
+  }
+
   /* Demo invitation */
   .demo-invite{padding:80px 0;background:linear-gradient(135deg, var(--deep), var(--deep-2));color:var(--white);position:relative;overflow:hidden}
   .demo-invite::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);background-size:24px 24px;opacity:0.5}
@@ -410,7 +474,8 @@
   footer{background:var(--deep);color:rgba(255,255,255,0.75);padding:60px 0 28px;font-size:14px}
   footer a{color:rgba(255,255,255,0.85)}
   footer a:hover{color:var(--amber)}
-  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:36px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:32px;margin-bottom:36px}
+  @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
   @media (max-width:680px){.foot-grid{grid-template-columns:1fr}}
   .foot-logo svg{height:28px;width:auto;filter:brightness(0) invert(1) opacity(0.9);margin-bottom:16px}
   .foot-tag{max-width:320px;line-height:1.55;color:rgba(255,255,255,0.7);margin:0}
@@ -462,14 +527,15 @@
       <nav class="hero-nav-links">
         <span class="live-pill"><span class="lp-dot"></span><span class="lp-text">Hyrrä on aktiivinen ·</span><span class="lp-count" id="liveCount">247</span><span class="lp-text"> puhelua tänään</span></span>
         <a href="#bento">Tuote</a>
+        <a href="/integraatiot">Integraatiot</a>
         <a href="#hinta">Hinta</a>
-        <a href="/demo">Demo</a>
+        <a href="/blogi">Blogi</a>
         <a href="#yhteys" class="hero-nav-cta">Varaa pilotti</a>
       </nav>
     </header>
 
     <div class="hero-content">
-      <span class="hero-eyebrow">Suomalainen AI-puhelinvastaanottaja</span>
+      <span class="hero-eyebrow">Suomalainen AI · Oppii koko ajan</span>
       <h1>
         <span class="line">Hyrrä pyörii.</span>
         <span class="line">Vastaa, varaa, vahvistaa.</span>
@@ -618,7 +684,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         </div>
         <h3>Suorat kalenteri-integraatiot.</h3>
-        <p>Timma, Vello, Diarium, Google, Microsoft 365.</p>
+        <p>Timma, Vello, Diarium, Google, Microsoft 365 — ja muut järjestelmät pyynnöstä. <a href="/integraatiot" style="color:var(--amber);text-decoration:underline">Katso kaikki →</a></p>
       </div>
 
       <!-- GDPR -->
@@ -652,7 +718,7 @@
         <p>Asiakas soittaa, Hyrrä vastaa luonnollisella suomella, ymmärtää tarpeen, varaa ajan kalenteriisi ja lähettää vahvistuksen — ilman että sinä kosket puhelimeen.</p>
         <div class="howcall-flow">
           <div class="flow-step"><div class="fs-num">1</div><div class="fs-body"><strong>Vastaus 0,7 sekunnissa</strong><span>Hyrrä tervehtii yrityksesi nimellä ja kysyy, miten voi auttaa.</span></div></div>
-          <div class="flow-step"><div class="fs-num">2</div><div class="fs-body"><strong>Ymmärtää tarpeen</strong><span>Tunnistaa palvelun, kysyy tarvittavat tiedot — myös auton rekisteritunnuksen tai potilastietoja.</span></div></div>
+          <div class="flow-step"><div class="fs-num">2</div><div class="fs-body"><strong>Ymmärtää tarpeen</strong><span>Tunnistaa palvelun, kysyy tarvittavat tiedot — esimerkiksi auton rekisteritunnuksen, eläimen lajin tai työn osoitteen.</span></div></div>
           <div class="flow-step"><div class="fs-num">3</div><div class="fs-body"><strong>Tarjoaa ajan</strong><span>Tarkistaa kalenterisi reaaliajassa, ehdottaa kahta tai kolmea vapaata aikaa.</span></div></div>
           <div class="flow-step"><div class="fs-num">4</div><div class="fs-body"><strong>Varaa ja vahvistaa</strong><span>Kirjaa varauksen kalenteriin ja lähettää SMS-vahvistuksen asiakkaalle.</span></div></div>
         </div>
@@ -660,22 +726,60 @@
 
       <div class="live-phone">
         <div class="phone-frame">
+          <div class="pf-statusbar">
+            <span>19:30</span>
+            <span class="icons">5G <svg viewBox="0 0 18 12"><rect x="2" y="2" width="14" height="8" rx="2" stroke="rgba(255,255,255,0.7)" stroke-width="1" fill="none"/><rect x="3.5" y="3.5" width="9" height="5" rx="0.5" fill="rgba(255,255,255,0.9)"/></svg></span>
+          </div>
           <div class="phone-header">
             <div class="phone-biz">
               <div class="phone-avatar">A</div>
-              <div>
-                <div class="phone-name">Asentamo Helsinki</div>
-                <div class="phone-sub">Saapuva puhelu · Hyrrä vastaa</div>
-              </div>
+              <div class="phone-name">Asentamo Helsinki</div>
+              <div class="phone-sub">Hyrrä vastaa · 00:42</div>
             </div>
-            <span class="phone-status"><span class="dot"></span>Live</span>
           </div>
+          <div class="pf-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
           <div class="transcript" id="liveTranscript"></div>
+          <div class="pf-controls">
+            <div class="pf-ctrl"><div class="pf-ctrl-icon"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div><span>Mykistä</span></div>
+            <div class="pf-ctrl"><div class="pf-ctrl-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></svg></div><span>Näppäimet</span></div>
+            <div class="pf-ctrl pf-end"><div class="pf-ctrl-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></div></div>
+            <div class="pf-ctrl"><div class="pf-ctrl-icon"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div><span>Kaiutin</span></div>
+          </div>
           <div class="phone-footer">
             <span>Kesto 00:42</span>
             <span class="sms-badge">SMS lähetetty</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARNS — Hyrrä oppii koko ajan -->
+<section class="learns" id="oppii">
+  <div class="container">
+    <span class="section-eyebrow">Hyrrä paranee joka päivä</span>
+    <h2 class="section-title">Hyrrä oppii käytön mukaan.</h2>
+    <p class="section-sub">Tekoälysi mukautuu yrityksesi puheluihin viikko viikolta — ilman että sinä koulutat sitä erikseen.</p>
+
+    <div class="learns-grid">
+      <div class="learns-card">
+        <span class="lc-num">1</span>
+        <div class="lc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+        <h3>Analysoi puhelut yöllä</h3>
+        <p>Joka yö tekoäly käy läpi päivän puhelut ja löytää kohdat, joissa Hyrrä voisi vastata paremmin tai luonnollisemmin.</p>
+      </div>
+      <div class="learns-card">
+        <span class="lc-num">2</span>
+        <div class="lc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3>Tietopankki kasvaa itsestään</h3>
+        <p>Uudet palvelut, hinnat ja vastaukset kysymyksiin lisätään tietopankkiin — Hyrrä alkaa käyttää niitä seuraavasta puhelusta lähtien.</p>
+      </div>
+      <div class="learns-card">
+        <span class="lc-num">3</span>
+        <div class="lc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="17" cy="11" r="3"/></svg></div>
+        <h3>Muistaa palaavat asiakkaat</h3>
+        <p>Hyrrä tunnistaa soittajan puhelinnumerosta ja näkee edellisen käynnin historiasta. Asiakas saa sujuvamman palvelun, ja sinä säästät aikaa toistuvilta kysymyksiltä.</p>
       </div>
     </div>
   </div>
@@ -813,6 +917,58 @@
   </div>
 </section>
 
+<!-- VS ULKOMAINEN -->
+<section class="vsforeign">
+  <div class="container">
+    <span class="section-eyebrow">Miksi suomalainen</span>
+    <h2 class="section-title">Hyrrä on Suomen oma AI-vastaaja.</h2>
+    <p class="section-sub">Pohjoismaisilla markkinoilla toimii muutamia ulkomaisia AI-vastaajia. Hyrrä on toistaiseksi ainoa, joka on rakennettu suomenkieliseen pk-yrittäjyyteen alusta loppuun saakka.</p>
+
+    <div class="vsforeign-table">
+      <div class="vsforeign-row header">
+        <div class="vs-h">Ominaisuus</div>
+        <div class="vs-h foreign">Ulkomainen AI-vastaaja</div>
+        <div class="vs-h hyrra">Hyrrä</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">Suomen kieli</div>
+        <div class="vs-foreign">Käännetty tai synteettinen</div>
+        <div class="vs-hyrra">Natiivi Aurora-ääni</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">Asiakastuki</div>
+        <div class="vs-foreign">Englanniksi, eri aikavyöhyke</div>
+        <div class="vs-hyrra">Suomeksi, saman päivän aikana</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">Kalenteri-integraatiot</div>
+        <div class="vs-foreign">Vain Google ja Outlook</div>
+        <div class="vs-hyrra">+ Timma, Vello, Diarium, Slotti, Provet</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">Laskutus</div>
+        <div class="vs-foreign">Kortti USD-/EUR-hinnoittelulla</div>
+        <div class="vs-hyrra">Suomalainen lasku, Y-tunnus, ALV</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">Data-sijainti</div>
+        <div class="vs-foreign">Vaihtelee — usein USA</div>
+        <div class="vs-hyrra">EU (Suomi/Saksa), DPA suomeksi</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">GDPR</div>
+        <div class="vs-foreign">Yleisluontoinen</div>
+        <div class="vs-hyrra">DPIA Suomen lain mukaisesti</div>
+      </div>
+      <div class="vsforeign-row">
+        <div class="vs-label">Vasteaika tukeen</div>
+        <div class="vs-foreign">24–72 h, englanniksi</div>
+        <div class="vs-hyrra">Saman päivän aikana, suomeksi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- DEMO INVITATION -->
 <section class="demo-invite">
   <div class="container">
@@ -882,10 +1038,10 @@
         <h2>Aloita säästäminen <span class="accent">tällä viikolla.</span></h2>
         <p>14 päivän ilmainen pilotti. Käyttöönotto saman päivän aikana. Ei sitoumusta, voit perua koska tahansa.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>14 päivää ilman maksua</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>14 päivän ilmainen pilotti — ei maksua, ei sitoumusta</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Tai osta suoraan + 30 päivän rahat-takaisin -takuu</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Käyttöönotto saman päivän aikana</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Suomalainen tuki</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Voit perua koska tahansa</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Suomalainen tuki, voit perua koska tahansa</li>
         </ul>
       </div>
       <form id="pilotForm" novalidate>
@@ -950,7 +1106,17 @@
         <ul>
           <li><a href="#hinta">Hinta</a></li>
           <li><a href="/demo">Demo</a></li>
+          <li><a href="/integraatiot">Integraatiot</a></li>
+          <li><a href="/blogi">Blogi</a></li>
           <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Toimialoille</h4>
+        <ul>
+          <li><a href="/autokorjaamoille">Autokorjaamoille</a></li>
+          <li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li>
+          <li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -1017,16 +1183,16 @@
   function addTyping(){
     var d = document.createElement('div');
     d.className = 'typing';
-    d.innerHTML = '<span></span><span></span><span></span>';
+    d.innerHTML = '<span class="who"></span><span><span></span><span></span><span></span></span>';
     t.appendChild(d);
     return d;
   }
   function addMsg(m){
     var d = document.createElement('div');
     d.className = 'msg msg-'+m.side;
-    d.innerHTML = '<span class="who">'+m.who+'</span>'+m.text;
+    d.innerHTML = '<span class="who">'+m.who+'</span><span class="said">'+m.text+'</span>';
     t.appendChild(d);
-    while(t.children.length > 5) t.removeChild(t.firstChild);
+    while(t.children.length > 4) t.removeChild(t.firstChild);
   }
   function run(){
     clear();
