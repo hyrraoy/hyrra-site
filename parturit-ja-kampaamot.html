@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hyrrä partureille ja kampaamoille — AI vastaa puheluihin, varaa leikkaukset ja värjäykset</title>
+<meta name="description" content="Hyrrä on AI-puhelinvastaanottaja partureille ja kampaamoille. Vastaa puheluihin sakset kädessä, varaa leikkaukset ja värjäykset Timmaan, lähettää SMS-vahvistuksen. 14 päivää ilmaiseksi.">
+<meta name="theme-color" content="#1B3A5C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hyrrä partureille ja kampaamoille — AI-puhelinvastaanottaja">
+<meta property="og:description" content="Vastaa puheluihin sakset kädessä. Varaa leikkaukset Timmaan.">
+<meta property="og:url" content="https://hyrrä.fi/parturit-ja-kampaamot">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:site_name" content="Hyrrä">
+<link rel="canonical" href="https://hyrrä.fi/parturit-ja-kampaamot">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "name":"Hyrrä partureille ja kampaamoille",
+  "description":"AI-puhelinvastaanottaja partureille ja kampaamoille — varaa leikkaukset, värjäykset ja kampaukset 24/7. Timma-integraatio.",
+  "provider":{"@type":"Organization","name":"Hyrrä Oy","url":"https://hyrrä.fi"},
+  "areaServed":"FI",
+  "audience":{"@type":"BusinessAudience","name":"Parturit ja kampaamot"}
+}
+</script>
+<style>
+  :root{
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --kerma:#F4F1EB; --white:#FFFFFF;
+    --ink:#1A1A1A; --mist:#6B7280; --moss:#3F7D58; --blush:#E07A6A;
+    --line:rgba(27,58,92,0.10);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',-apple-system,sans-serif;background:var(--kerma);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+  .topnav{background:var(--deep);color:var(--white);padding:18px 0}
+  .topnav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .topnav-logo{display:inline-flex;align-items:center;gap:10px}
+  .topnav-logo svg{display:block}
+  .topnav-links{display:flex;gap:24px;align-items:center;font-size:14.5px;font-weight:500;color:rgba(255,255,255,0.85)}
+  .topnav-links a:hover{color:var(--amber)}
+  .topnav-cta{background:var(--amber);color:var(--deep);padding:8px 16px;border-radius:8px;font-weight:700;font-size:14px}
+  @media (max-width:680px){.topnav-links a:not(.topnav-cta){display:none}}
+
+  /* Hero */
+  .hero{padding:70px 0 80px;background:linear-gradient(135deg, var(--deep) 0%, var(--deep-2) 50%, var(--deep-3) 100%);color:var(--white);position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);background-size:32px 32px;opacity:0.4;pointer-events:none}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative;z-index:2}
+  @media (max-width:980px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+  .hero-eyebrow{display:inline-block;background:rgba(255,182,39,0.15);color:var(--amber);padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px}
+  .hero h1{font-size:clamp(36px,5.5vw,64px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin:0 0 22px;color:var(--white)}
+  .hero h1 em{font-style:normal;color:var(--amber)}
+  .hero p.lead{font-size:18px;color:rgba(255,255,255,0.88);max-width:520px;margin:0 0 28px;line-height:1.55}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+  .btn-amber{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:var(--deep);padding:14px 24px;border-radius:10px;font-weight:700;font-size:15px;border:none;cursor:pointer}
+  .btn-amber:hover{background:var(--amber-2)}
+  .btn-line{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--white);padding:14px 24px;border-radius:10px;font-weight:600;font-size:15px;border:1.5px solid rgba(255,255,255,0.25)}
+  .btn-line:hover{background:rgba(255,255,255,0.08)}
+  .hero-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .hero-pill{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);padding:5px 11px;border-radius:99px;font-size:12.5px;display:inline-flex;align-items:center;gap:5px}
+  .hero-pill svg{width:12px;height:12px;color:var(--amber)}
+
+  /* Pain section - hand on tool image with quote */
+  .scene{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);border-radius:20px;padding:28px;backdrop-filter:blur(4px)}
+  .scene .scene-quote{font-size:22px;line-height:1.4;font-weight:700;color:var(--white);margin:0 0 18px;letter-spacing:-0.01em}
+  .scene .scene-quote::before{content:"\"";color:var(--amber);font-size:36px;line-height:0;vertical-align:-8px;margin-right:4px}
+  .scene .scene-quote::after{content:"\"";color:var(--amber);font-size:36px;line-height:0;vertical-align:-8px;margin-left:4px}
+  .scene .scene-attr{display:flex;align-items:center;gap:12px;margin-top:18px}
+  .scene .scene-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:800;font-size:14px}
+  .scene .scene-name{color:var(--white);font-weight:700;font-size:14px;line-height:1.2}
+  .scene .scene-role{color:rgba(255,255,255,0.6);font-size:12px;margin-top:2px}
+  .scene-stats{display:grid;grid-template-columns:repeat(3, 1fr);gap:14px;margin-top:22px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.10)}
+  .scene-stat{text-align:center}
+  .scene-stat .v{font-size:24px;font-weight:900;color:var(--amber);letter-spacing:-0.02em;line-height:1}
+  .scene-stat .l{font-size:11.5px;color:rgba(255,255,255,0.7);margin-top:5px;letter-spacing:0.04em}
+
+  /* Section bases */
+  .section-eyebrow{display:inline-block;background:var(--white);border:1px solid var(--line);color:var(--deep);padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px}
+  .section-title{font-size:clamp(28px,4.5vw,46px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;color:var(--deep);margin:0 0 14px}
+  .section-sub{color:var(--mist);font-size:16.5px;max-width:580px;margin:0 0 36px}
+
+  /* Pain points */
+  .pain{padding:90px 0;background:var(--white)}
+  .pain-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:18px;margin-top:36px}
+  @media (max-width:880px){.pain-grid{grid-template-columns:1fr}}
+  .pain-card{background:var(--kerma);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+  .pain-card .pc-icon{width:42px;height:42px;border-radius:11px;background:rgba(224,122,106,0.13);color:var(--blush);display:grid;place-items:center;margin-bottom:14px}
+  .pain-card .pc-icon svg{width:22px;height:22px}
+  .pain-card h3{font-size:17px;font-weight:800;color:var(--deep);margin:0 0 8px;letter-spacing:-0.01em}
+  .pain-card p{color:var(--ink);font-size:14px;line-height:1.55;margin:0}
+
+  /* Palvelukatalogi */
+  .services{padding:90px 0;background:var(--kerma)}
+  .services-list{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;margin-top:36px;max-width:880px}
+  @media (max-width:680px){.services-list{grid-template-columns:1fr}}
+  .service-row{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .service-row .sn{font-weight:700;color:var(--deep);font-size:14.5px}
+  .service-row .sd{font-size:13px;font-weight:700;color:var(--amber);background:rgba(255,182,39,0.13);padding:4px 10px;border-radius:99px;white-space:nowrap}
+
+  /* Esimerkki puhelusta — call UI */
+  .demo-call{padding:90px 0;background:linear-gradient(180deg, var(--white) 0%, var(--kerma) 100%)}
+  .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  @media (max-width:980px){.demo-grid{grid-template-columns:1fr}}
+  .demo-phone{background:linear-gradient(180deg, var(--deep-3) 0%, var(--deep) 50%, var(--deep-3) 100%);border-radius:36px;padding:0;border:1px solid rgba(255,255,255,0.10);box-shadow:0 32px 64px -16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);overflow:hidden;position:relative}
+  .demo-phone::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:44%;height:22px;background:#000;border-radius:14px;z-index:5}
+  .dp-statusbar{display:flex;justify-content:space-between;align-items:center;padding:14px 28px 8px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);position:relative;z-index:6;font-variant-numeric:tabular-nums}
+  .dp-statusbar .icons{display:inline-flex;align-items:center;gap:5px}
+  .dp-statusbar .icons svg{width:14px;height:10px;fill:rgba(255,255,255,0.9)}
+  .demo-phone-header{padding:36px 24px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.08)}
+  .demo-phone-biz{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .demo-phone-avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:900;font-size:34px;letter-spacing:-0.02em;box-shadow:0 0 0 4px rgba(255,182,39,0.15), 0 0 0 12px rgba(255,182,39,0.05);position:relative}
+  .demo-phone-avatar::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,182,39,0.4);animation:callPulse 2.2s ease-out infinite}
+  @keyframes callPulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.4);opacity:0}}
+  .demo-phone-name{font-weight:700;font-size:18px;color:var(--white);letter-spacing:-0.01em}
+  .demo-phone-sub{color:rgba(255,255,255,0.65);font-size:13px;margin-top:2px;display:flex;align-items:center;gap:6px;justify-content:center}
+  .demo-phone-sub::before{content:"";width:8px;height:8px;border-radius:50%;background:#5BD178;box-shadow:0 0 0 4px rgba(91,209,120,0.20);animation:greenPulse 1.6s ease-in-out infinite}
+  @keyframes greenPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .dp-wave{display:flex;justify-content:center;align-items:center;gap:3px;padding:14px 0;height:38px}
+  .dp-wave span{width:3px;background:linear-gradient(180deg, transparent, var(--amber), transparent);border-radius:99px;animation:dpWave 1.1s ease-in-out infinite}
+  .dp-wave span:nth-child(1){height:30%;animation-delay:0s}
+  .dp-wave span:nth-child(2){height:65%;animation-delay:0.1s}
+  .dp-wave span:nth-child(3){height:45%;animation-delay:0.2s}
+  .dp-wave span:nth-child(4){height:85%;animation-delay:0.3s}
+  .dp-wave span:nth-child(5){height:55%;animation-delay:0.05s}
+  .dp-wave span:nth-child(6){height:75%;animation-delay:0.15s}
+  .dp-wave span:nth-child(7){height:40%;animation-delay:0.25s}
+  .dp-wave span:nth-child(8){height:90%;animation-delay:0s}
+  .dp-wave span:nth-child(9){height:60%;animation-delay:0.18s}
+  .dp-wave span:nth-child(10){height:35%;animation-delay:0.08s}
+  .dp-wave span:nth-child(11){height:70%;animation-delay:0.22s}
+  .dp-wave span:nth-child(12){height:50%;animation-delay:0.12s}
+  @keyframes dpWave{0%,100%{transform:scaleY(0.4);opacity:0.6}50%{transform:scaleY(1);opacity:1}}
+  .demo-transcript-wrap{padding:0 20px 14px;max-height:280px;overflow:hidden;position:relative;display:flex;flex-direction:column;gap:0}
+  .demo-msg{padding:11px 4px;border-bottom:1px solid rgba(255,255,255,0.06);display:grid;grid-template-columns:60px 1fr;gap:12px;align-items:start;font-size:13.5px;line-height:1.4;color:rgba(255,255,255,0.92);max-width:100%;background:transparent;border-radius:0;animation:none;opacity:1;align-self:stretch}
+  .demo-msg:last-child{border-bottom:none}
+  .demo-msg .w{display:block;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin:0;opacity:1;align-self:start;padding-top:1px}
+  .demo-msg.ai{color:rgba(255,255,255,0.95)}
+  .demo-msg.ai .w{color:var(--amber)}
+  .demo-msg.user{color:rgba(255,255,255,0.78)}
+  .demo-msg.user .w{color:#7BBCFF}
+  .dp-controls{display:flex;justify-content:space-around;align-items:center;padding:14px 20px 18px;background:rgba(0,0,0,0.20);border-top:1px solid rgba(255,255,255,0.06)}
+  .dp-ctrl{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:rgba(255,255,255,0.85);cursor:default;padding:0;font-size:10.5px}
+  .dp-ctrl-icon{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.08);display:grid;place-items:center}
+  .dp-ctrl-icon svg{width:18px;height:18px;color:rgba(255,255,255,0.85);fill:none;stroke:currentColor;stroke-width:2}
+  .dp-end .dp-ctrl-icon{background:#FF3B30;width:56px;height:56px}
+  .dp-end .dp-ctrl-icon svg{width:24px;height:24px;color:#fff;transform:rotate(135deg)}
+  .dp-meta{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:rgba(0,0,0,0.30);font-size:11.5px;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums}
+  .dp-meta .sms-badge{background:rgba(255,182,39,0.15);color:var(--amber);padding:3px 9px;border-radius:99px;font-weight:700;font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase}
+
+  /* ROI laskuri */
+  .roi{padding:90px 0;background:var(--white)}
+  .roi-card{max-width:920px;margin:0 auto;background:var(--kerma);border-radius:24px;padding:40px;border:1px solid var(--line)}
+  @media (max-width:520px){.roi-card{padding:24px}}
+  .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:32px 0 24px}
+  @media (max-width:720px){.roi-grid{grid-template-columns:1fr}}
+  .roi-input{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .roi-input label{display:block;font-size:12.5px;font-weight:600;color:var(--mist);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em}
+  .roi-input .val{font-size:30px;font-weight:900;color:var(--deep);margin-bottom:14px;letter-spacing:-0.02em}
+  .roi-input .val span:last-child{font-size:15px;color:var(--mist);font-weight:600;margin-left:4px;letter-spacing:0}
+  .roi-input input[type="range"]{width:100%;accent-color:var(--amber);height:6px}
+  .roi-output{background:linear-gradient(135deg, var(--deep), var(--deep-2));color:var(--white);border-radius:18px;padding:26px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+  @media (max-width:720px){.roi-output{grid-template-columns:1fr}}
+  .roi-loss .lbl, .roi-save .lbl{font-size:12.5px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:600}
+  .roi-loss .amt{font-size:clamp(28px,4.5vw,40px);font-weight:900;color:var(--blush);letter-spacing:-0.02em;line-height:1}
+  .roi-save{padding-left:24px;border-left:1px solid rgba(255,255,255,0.18)}
+  @media (max-width:720px){.roi-save{padding-left:0;padding-top:20px;border-left:none;border-top:1px solid rgba(255,255,255,0.18)}}
+  .roi-save .amt{font-size:clamp(28px,4.5vw,40px);font-weight:900;color:var(--amber);letter-spacing:-0.02em;line-height:1}
+  .roi-save .small{font-size:13px;color:rgba(255,255,255,0.7);margin-top:6px}
+  .roi-cta{text-align:center;margin-top:24px}
+
+  /* CTA */
+  .ctasec{padding:90px 0;background:linear-gradient(135deg, var(--deep), var(--deep-2));color:var(--white);text-align:center;position:relative;overflow:hidden}
+  .ctasec::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);background-size:24px 24px;opacity:0.5}
+  .ctasec h2{font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.02em;margin:0 0 14px;color:var(--white);position:relative;z-index:2}
+  .ctasec p{color:rgba(255,255,255,0.85);max-width:540px;margin:0 auto 24px;font-size:16.5px;position:relative;z-index:2}
+  .ctasec .ctas{position:relative;z-index:2;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* Footer */
+  footer{background:var(--deep-3);color:rgba(255,255,255,0.75);padding:50px 0 28px;font-size:14px}
+  footer a{color:rgba(255,255,255,0.85)}
+  footer a:hover{color:var(--amber)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:32px}
+  @media (max-width:680px){.foot-grid{grid-template-columns:1fr}}
+  .foot-tag{max-width:320px;line-height:1.55;color:rgba(255,255,255,0.7);margin:0}
+  .foot-col h4{color:var(--white);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 12px}
+  .foot-col ul{list-style:none;padding:0;margin:0}
+  .foot-col li{padding:5px 0}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,0.10);padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,0.5)}
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="topnav-logo" aria-label="Hyrrä etusivu">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px">
+        <circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#FFFFFF"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#FFFFFF"/>
+      </svg>
+      <svg viewBox="0 0 194.8 96.0" style="height:24px;width:auto" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#FFFFFF">
+          <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
+          <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
+          <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
+          <path transform="translate(1734 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
+          <path transform="translate(2162 0)" d="M274 566Q333 566 377.5 542.0Q422 518 446 479V558H617V0H446V79Q421 40 376.5 16.0Q332 -8 273 -8Q205 -8 149.0 27.5Q93 63 60.5 128.5Q28 194 28 280Q28 366 60.5 431.0Q93 496 149.0 531.0Q205 566 274 566ZM324 417Q273 417 237.5 380.5Q202 344 202 280Q202 216 237.5 178.5Q273 141 324 141Q375 141 410.5 178.0Q446 215 446 279Q446 343 410.5 380.0Q375 417 324 417Z"/>
+        </g>
+        <g transform="translate(151.53 18.29) rotate(-12)" fill="#FFB627"><circle cx="-9" cy="0" r="8"/><circle cx="12" cy="2" r="8"/></g>
+      </svg>
+    </a>
+    <nav class="topnav-links">
+      <a href="/#bento">Tuote</a>
+      <a href="/#hinta">Hinta</a>
+      <a href="/demo">Demo</a>
+      <a href="/#yhteys" class="topnav-cta">Varaa pilotti</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-eyebrow">Hyrrä partureille ja kampaamoille</span>
+        <h1>Vastaa puheluihin <em>kesken värjäyksen.</em></h1>
+        <p class="lead">Asiakkaat soittavat varatakseen hiustenleikkuun tai värjäyksen, mutta sinä olet keskellä työtä etkä ehdi puhelimeen. Hyrrä vastaa, varaa ajan Timmaan ja lähettää SMS-vahvistuksen — myös perjantaina ennen häitä ja juhlapyhinä.</p>
+        <div class="hero-ctas">
+          <a href="/#yhteys" class="btn-amber">Varaa pilotti — 14 päivää ilmaiseksi →</a>
+          <a href="/demo" class="btn-line">Kuule esimerkki</a>
+        </div>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>24/7</span>
+          <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Timma-integraatio</span>
+          <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Värjäys + leikkaus 2 h varaus</span>
+        </div>
+      </div>
+
+      <div class="scene">
+        <p class="scene-quote">Perjantai-iltapäivisin puhelin soi koko ajan — sakset kädessä, ei pysty vastaamaan. Kalenteri täyttyy silti.</p>
+        <div class="scene-attr">
+          <div class="scene-avatar">A</div>
+          <div>
+            <div class="scene-name">Salonki Sata (esimerkki)</div>
+            <div class="scene-role">Kampaamo Helsinki, 4 kampaajaa</div>
+          </div>
+        </div>
+        <div class="scene-stats">
+          <div class="scene-stat"><div class="v">87 %</div><div class="l">VASTATTUJA</div></div>
+          <div class="scene-stat"><div class="v">38</div><div class="l">VARAUSTA/VKO</div></div>
+          <div class="scene-stat"><div class="v">1 240 €</div><div class="l">SÄÄSTÖ/KK</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KIPUPISTEET -->
+<section class="pain">
+  <div class="container">
+    <span class="section-eyebrow">Tunnistatko nämä?</span>
+    <h2 class="section-title">Kampaamon arki ja puhelin.</h2>
+    <p class="section-sub">Puhelu osuu aina huonoon hetkeen. Hyrrä ratkaisee kolme yleisintä kampaamon kipupistettä.</p>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+        <h3>Kädet ovat täynnä</h3>
+        <p>Et voi keskeyttää värjäystä puhelua varten. Hyrrä vastaa puolestasi ja varaa ajan asiakkaalle suoraan Timmaan.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+        <h3>Iltapäivän ruuhkapiikki</h3>
+        <p>Kello 15–17 on perjantain vilkkain hetki — kaikki haluavat ajan viikonlopuksi. Hyrrä hoitaa kymmenen puhelua peräkkäin ilman jonoa.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+        <h3>Häät, juhlat ja viime hetken kampaukset</h3>
+        <p>Häät ovat usein viikonloppuna — asiakas haluaa kampauksen lauantaina aamulla. Hyrrä vastaa silloinkin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PALVELUKATALOGI -->
+<section class="services">
+  <div class="container">
+    <span class="section-eyebrow">Mitä Hyrrä osaa</span>
+    <h2 class="section-title">Kampaamon palvelut, oikealla kestolla.</h2>
+    <p class="section-sub">Hyrrä tietää, että miesten hiustenleikkuu on 30 minuuttia ja värjäys-leikkaus-yhdistelmä 2 tuntia — ja varaa Timmasta oikean pituisen ajan.</p>
+
+    <div class="services-list">
+      <div class="service-row"><span class="sn">Lasten hiustenleikkuu</span><span class="sd">20 min</span></div>
+      <div class="service-row"><span class="sn">Parranajo</span><span class="sd">20 min</span></div>
+      <div class="service-row"><span class="sn">Miesten hiustenleikkuu</span><span class="sd">30 min</span></div>
+      <div class="service-row"><span class="sn">Naisten hiustenleikkuu</span><span class="sd">45 min</span></div>
+      <div class="service-row"><span class="sn">Juhlakampaus</span><span class="sd">60 min</span></div>
+      <div class="service-row"><span class="sn">Värjäys</span><span class="sd">90 min</span></div>
+      <div class="service-row"><span class="sn">Värjäys + leikkuu</span><span class="sd">2 h</span></div>
+      <div class="service-row"><span class="sn">Permanentti</span><span class="sd">3 h</span></div>
+    </div>
+    <p style="margin-top:20px;color:var(--mist);font-size:14px">Palvelut räätälöidään yrityksesi mukaan kickoff-puhelussa. Kerro mitä teet, niin Hyrrä osaa.</p>
+  </div>
+</section>
+
+<!-- ESIMERKKIPUHELU -->
+<section class="demo-call">
+  <div class="container">
+    <div class="demo-grid">
+      <div>
+        <span class="section-eyebrow">Näin se kuulostaa</span>
+        <h2 class="section-title">Asiakas soittaa kesken värjäyksen.</h2>
+        <p style="color:var(--ink);font-size:16px;line-height:1.65;margin:0 0 16px">Asiakas tuolissa, värin sekoittaminen kesken, puhelin soi tiskillä. Hyrrä hoitaa keskustelun puolessa minuutissa — kysyy palvelun, ehdottaa aikoja ja varaa ajan suoraan Timmaan.</p>
+        <p style="color:var(--ink);font-size:16px;line-height:1.65;margin:0 0 16px">Saat puhelimeesi push-ilmoituksen: <em>"Anna Virtanen varasi värjäyksen ja hiustenleikkuun lauantaiksi 31.5. kello 11."</em></p>
+        <p style="color:var(--mist);font-size:14px;margin:0">Värjäys jatkuu. Tuolissa istuva asiakas ei häiriinny. Soittaja sai varauksensa.</p>
+      </div>
+
+      <div class="demo-phone">
+        <div class="dp-statusbar">
+          <span>14:12</span>
+          <span class="icons">5G <svg viewBox="0 0 18 12"><rect x="2" y="2" width="14" height="8" rx="2" stroke="rgba(255,255,255,0.7)" stroke-width="1" fill="none"/><rect x="3.5" y="3.5" width="9" height="5" rx="0.5" fill="rgba(255,255,255,0.9)"/></svg></span>
+        </div>
+        <div class="demo-phone-header">
+          <div class="demo-phone-biz">
+            <div class="demo-phone-avatar">S</div>
+            <div class="demo-phone-name">Salonki Sata</div>
+            <div class="demo-phone-sub">Hyrrä vastaa · 00:52</div>
+          </div>
+        </div>
+        <div class="dp-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="demo-transcript-wrap">
+        <div class="demo-msg ai"><span class="w">Hyrrä</span><span>Salonki Sata, Hyrrä puhelimessa, kuinka voin auttaa?</span></div>
+        <div class="demo-msg user"><span class="w">Asiakas</span><span>Hei, tarvitsisin värjäyksen ja hiustenleikkuun ensi lauantaiksi.</span></div>
+        <div class="demo-msg ai"><span class="w">Hyrrä</span><span>Selvä, varaan kahden tunnin ajan. Lauantai kello yksitoista tai kolmetoista, kumpi sopii?</span></div>
+        <div class="demo-msg user"><span class="w">Asiakas</span><span>Yksitoista käy.</span></div>
+        <div class="demo-msg ai"><span class="w">Hyrrä</span><span>Hyvä. Onko kyseessä tumma vai vaalea väri?</span></div>
+        <div class="demo-msg user"><span class="w">Asiakas</span><span>Vaalea, kuparilla.</span></div>
+        <div class="demo-msg ai"><span class="w">Hyrrä</span><span>Kiitos. Varaus tehty Timmaan — saat vahvistuksen tekstiviestillä.</span></div>
+        </div>
+        <div class="dp-controls">
+          <div class="dp-ctrl"><div class="dp-ctrl-icon"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div><span>Mykistä</span></div>
+          <div class="dp-ctrl"><div class="dp-ctrl-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></svg></div><span>Näppäimet</span></div>
+          <div class="dp-ctrl dp-end"><div class="dp-ctrl-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></div></div>
+          <div class="dp-ctrl"><div class="dp-ctrl-icon"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div><span>Kaiutin</span></div>
+        </div>
+        <div class="dp-meta">
+          <span>Kesto 00:52</span>
+          <span class="sms-badge">SMS lähetetty</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section class="roi">
+  <div class="container">
+    <div class="roi-card">
+      <span class="section-eyebrow">ROI-laskuri</span>
+      <h2 class="section-title">Paljonko menetät juuri nyt?</h2>
+      <p class="section-sub">Kampaamopalvelun keskimääräinen arvo on 50–120 €. Liu'uta arvot omille luvuillesi.</p>
+      <div class="roi-grid">
+        <div class="roi-input">
+          <label>Vastaamattomia puheluja päivässä</label>
+          <div class="val"><span id="callsVal">7</span><span>kpl/päivä</span></div>
+          <input type="range" id="callsSlider" min="1" max="20" step="1" value="7">
+        </div>
+        <div class="roi-input">
+          <label>Keskimääräinen työn arvo</label>
+          <div class="val"><span id="valueVal">65</span><span>€</span></div>
+          <input type="range" id="valueSlider" min="30" max="250" step="5" value="65">
+        </div>
+      </div>
+      <div class="roi-output">
+        <div class="roi-loss">
+          <div class="lbl">Menetät kuukaudessa</div>
+          <div class="amt" id="lossAmt">5 005 €</div>
+        </div>
+        <div class="roi-save">
+          <div class="lbl">Säästät Hyrrällä</div>
+          <div class="amt" id="saveAmt">4 706 €</div>
+          <div class="small">Plus-paketti 299 €/kk vähennettynä. Voitto kasvaa joka päivä.</div>
+        </div>
+      </div>
+      <div class="roi-cta">
+        <a href="/#yhteys" class="btn-amber">Aloita säästäminen — 14 päivää ilmaiseksi →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="ctasec">
+  <div class="container">
+    <h2>Anna Hyrrän vastata, jatka asiakkaan kanssa.</h2>
+    <p>14 päivän ilmainen pilotti. Käyttöönotto saman päivän aikana. Suora Timma-integraatio.</p>
+    <div class="ctas">
+      <a href="/#yhteys" class="btn-amber">Varaa pilotti →</a>
+      <a href="tel:+358458047224" class="btn-line">Soita demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><p class="foot-tag">Hyrrä — suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p></div>
+      <div class="foot-col">
+        <h4>Toimialoille</h4>
+        <ul>
+          <li><a href="/autokorjaamoille">Autokorjaamoille</a></li>
+          <li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li>
+          <li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Lainsäädäntö</h4>
+        <ul>
+          <li><a href="/tietosuoja">Tietosuoja</a></li>
+          <li><a href="/kayttoehdot">Käyttöehdot</a></li>
+          <li><a href="/dpa">DPA</a></li>
+          <li><a href="/yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Hyrrä Oy · Y-tunnus 3555902-3</span>
+      <span>info@hyrrä.fi</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var c = document.getElementById('callsSlider');
+  var v = document.getElementById('valueSlider');
+  var cv = document.getElementById('callsVal');
+  var vv = document.getElementById('valueVal');
+  var la = document.getElementById('lossAmt');
+  var sa = document.getElementById('saveAmt');
+  if(!c) return;
+  function fmt(n){ return Math.round(n).toLocaleString('fi-FI') + ' €'; }
+  function update(){
+    var calls = parseInt(c.value, 10);
+    var val = parseInt(v.value, 10);
+    cv.textContent = calls;
+    vv.textContent = val;
+    var loss = calls * val * 22 * 0.5;
+    var save = Math.max(0, loss - 299);
+    la.textContent = fmt(loss);
+    sa.textContent = fmt(save);
+  }
+  c.addEventListener('input', update);
+  v.addEventListener('input', update);
+  update();
+})();
+</script>
+</body>
+</html>
