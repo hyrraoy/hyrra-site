@@ -3,276 +3,195 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Käyttöehdot — Hyrrä</title>
-<meta name="description" content="Käyttöehdot – Hyrrä, suomalainen AI-vastaanottaja pk-yrityksille.">
-<meta name="theme-color" content="#1B3A5C">
+<title>Hyrrä — Käyttöehdot</title>
+<meta name="description" content="Hyrrän käyttöehdot.">
+<meta name="theme-color" content="#0A1628">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hyrrä — Käyttöehdot">
+<meta property="og:description" content="Käyttöehdot.">
+<meta property="og:url" content="https://hyrrä.fi/kayttoehdot">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:site_name" content="Hyrrä">
+<link rel="canonical" href="https://hyrrä.fi/kayttoehdot">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="shortcut icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
   :root{
-    --deep:#1B3A5C; --amber:#FFB627; --cream:#FAF7F2; --white:#FFFFFF;
-    --ink:#1A1A1A; --mist:#6B7280; --moss:#3F7D58; --line:rgba(27,58,92,0.10);
-    --shadow-sm: 0 1px 2px rgba(27,58,92,0.06);
-    --radius-md:14px;
+    --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --white:#FFFFFF; --gray:#9FAFC4; --gray-2:#6B7E92;
+    --cyan:#6EB9E8; --green:#5BD178;
+    --line:rgba(255,255,255,0.08); --line-strong:rgba(255,255,255,0.14);
   }
-  *{box-sizing:border-box}
+  *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    margin:0; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
-    color:var(--ink); background:var(--cream); font-size:16px; line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-  }
-  a{color:var(--deep); text-decoration:underline; text-underline-offset:2px}
-  a:hover{opacity:0.8}
-  .container{max-width:780px; margin:0 auto; padding:0 24px}
-  /* Nav */
-  .nav{position:sticky; top:0; z-index:50; background:rgba(250,247,242,0.96); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line)}
-  .nav-inner{display:flex; align-items:center; justify-content:space-between; height:64px}
-  .nav-logo{display:flex; align-items:center; gap:8px}
-  .nav-logo svg{height:28px; width:auto}
-  .nav-back{color:var(--deep); font-weight:600; font-size:14px; text-decoration:none; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:#fff}
-  .nav-back:hover{background:var(--cream)}
-  .nav-back .arrow{margin-right:6px}
-  /* Article */
-  main{padding:48px 0 80px}
-  .eyebrow{display:inline-block; font-size:13px; font-weight:600; color:var(--deep); letter-spacing:0.08em; text-transform:uppercase; padding:6px 12px; border:1px solid var(--line); border-radius:99px; background:#fff; margin-bottom:18px}
-  h1{font-size:38px; font-weight:800; letter-spacing:-0.02em; color:var(--deep); margin:0 0 12px}
-  .lead{font-size:17px; color:var(--mist); margin:0 0 32px; max-width:640px}
-  h2{font-size:22px; font-weight:700; color:var(--deep); margin:40px 0 12px; letter-spacing:-0.01em}
-  h3{font-size:17px; font-weight:700; color:var(--ink); margin:24px 0 8px}
-  p{margin:0 0 14px}
-  ul, ol{margin:0 0 14px; padding-left:22px}
-  li{margin:6px 0}
-  strong{font-weight:700}
-  hr{border:none; border-top:1px solid var(--line); margin:32px 0}
-  .meta{font-size:13px; color:var(--mist); border-left:3px solid var(--amber); padding:6px 0 6px 14px; margin:24px 0; background:#fff; border-radius:0 8px 8px 0; padding:12px 16px}
-  .meta strong{color:var(--ink)}
-  table{width:100%; border-collapse:collapse; margin:18px 0}
-  th, td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:top}
-  th{font-weight:700; color:var(--deep); background:#fff}
-  /* Footer (sama kuin laskeutumissivulla, hieman pelkistettynä) */
-  footer{background:var(--deep); color:rgba(255,255,255,0.85); padding:48px 0 24px; margin-top:80px}
-  footer .container{max-width:1080px}
-  .foot-top{display:flex; justify-content:space-between; align-items:flex-start; gap:32px; flex-wrap:wrap}
-  .foot-logo svg{height:26px; width:auto; margin-bottom:14px; filter:brightness(0) invert(1) opacity(0.9)}
-  .foot-tag{font-size:14px; color:rgba(255,255,255,0.7); max-width:280px; margin:0}
-  .foot-links{display:flex; gap:32px; flex-wrap:wrap; font-size:14px}
-  .foot-links a{color:rgba(255,255,255,0.85); text-decoration:none}
-  .foot-links a:hover{color:#fff}
-  .foot-bottom{border-top:1px solid rgba(255,255,255,0.15); padding-top:18px; margin-top:32px; display:flex; justify-content:space-between; font-size:12px; color:rgba(255,255,255,0.5); flex-wrap:wrap; gap:10px}
-  /* Contact tile */
-  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:24px 0}
-  .contact-tile{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px}
-  .contact-tile .lbl{font-size:12px; color:var(--mist); font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px}
-  .contact-tile a{font-size:18px; font-weight:600; color:var(--deep)}
-  @media (max-width:600px){
-    h1{font-size:28px}
-    .contact-grid{grid-template-columns:1fr}
-    .foot-top{flex-direction:column}
-  }
+  html,body{background:var(--bg);color:var(--white);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{min-height:100vh;line-height:1.55}
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+  .container-narrow{max-width:760px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);background-size:120px 120px, 200px 200px;background-position:0 0, 60px 80px;opacity:0.10;mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%);-webkit-mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%)}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,182,39,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,182,39,0.025) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;opacity:0.6}
+  .bg-aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bg-aurora::before,.bg-aurora::after{content:"";position:absolute;border-radius:50%;filter:blur(140px)}
+  .bg-aurora::before{width:720px;height:720px;background:radial-gradient(circle, rgba(27,58,92,0.75) 0%, transparent 70%);top:-200px;left:-150px;animation:drift1 30s ease-in-out infinite}
+  .bg-aurora::after{width:600px;height:600px;background:radial-gradient(circle, rgba(255,182,39,0.22) 0%, transparent 70%);top:20%;right:-150px;animation:drift2 36s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,60px)}}
+  .cursor-glow{position:fixed;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle, rgba(255,182,39,0.08) 0%, transparent 60%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);will-change:transform;mix-blend-mode:screen}
+  nav.top{position:sticky;top:14px;z-index:50;padding:0 14px}
+  .nav-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;background:rgba(10,22,40,0.65);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;box-shadow:0 8px 32px -8px rgba(0,0,0,0.4)}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--white)}
+  .logo .spin-mark{width:24px;height:24px;display:inline-block;animation:spinMark 1.8s linear infinite}
+  @keyframes spinMark{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .nav-links{display:flex;gap:24px;align-items:center;font-size:13.5px;color:var(--gray)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg) !important;padding:10px 18px;border-radius:99px;font-weight:700;font-size:13px;transition:transform .15s, box-shadow .15s;box-shadow:0 4px 14px -2px rgba(255,182,39,0.4)}
+  .nav-cta:hover{transform:scale(1.04);box-shadow:0 8px 20px -4px rgba(255,182,39,0.6)}
+  .nav-burger{display:none;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,0.04);cursor:pointer;padding:0;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background .15s}
+  .nav-burger:hover{background:rgba(255,255,255,0.08)}
+  .nav-burger span{width:18px;height:2px;background:var(--white);border-radius:2px}
+  @media (max-width:780px){.nav-links a:not(.nav-cta){display:none} .nav-burger{display:flex}}
+  @media (max-width:480px){.nav-cta{display:none}}
+  .menu-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.96);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s ease;overflow-y:auto;padding:24px 24px 60px}
+  .menu-overlay.open{opacity:1;pointer-events:auto}
+  .menu-overlay .menu-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
+  .menu-overlay .menu-logo{font-size:20px;font-weight:800;letter-spacing:-0.02em;display:inline-flex;align-items:center;gap:10px;color:var(--white)}
+  .menu-overlay .menu-logo .spin-mark{width:24px;height:24px}
+  .menu-overlay .menu-close{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;color:var(--white);font-size:18px}
+  .menu-overlay .menu-section{margin-bottom:32px}
+  .menu-overlay .menu-label{font-family:'JetBrains Mono', monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;font-weight:600}
+  .menu-overlay .menu-links{display:flex;flex-direction:column;gap:0;list-style:none;padding:0;margin:0}
+  .menu-overlay .menu-links li{border-bottom:1px solid var(--line)}
+  .menu-overlay .menu-links a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;color:var(--white);font-size:18px;font-weight:600;letter-spacing:-0.01em;transition:color .15s}
+  .menu-overlay .menu-links a:hover{color:var(--amber)}
+  .menu-overlay .menu-links a::after{content:"→";color:var(--gray-2);font-size:18px}
+  .menu-overlay .menu-cta{display:block;text-align:center;background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);padding:18px 24px;border-radius:14px;font-weight:700;font-size:16px;margin-top:24px;text-decoration:none;box-shadow:0 12px 30px -10px rgba(255,182,39,0.5)}
+  .menu-overlay .menu-foot{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray-2)}
+  body.menu-open{overflow:hidden}
+  section{position:relative;z-index:2}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.08);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
+  .eyebrow::before{content:"//";color:var(--amber);opacity:0.6}
+  .btn{padding:14px 24px;border-radius:12px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;transition:transform .2s, box-shadow .2s;text-decoration:none}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);box-shadow:0 12px 30px -10px rgba(255,182,39,0.5);border:none}
+  .btn-secondary{background:rgba(255,255,255,0.05);color:var(--white);border:1px solid var(--line)}
+  footer{background:var(--bg-3);color:rgba(255,255,255,0.65);padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
+  footer a:hover{color:var(--amber)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:32px;margin-bottom:32px}
+  @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.foot-grid{grid-template-columns:1fr}}
+  .foot-tag{max-width:320px;line-height:1.55;color:var(--gray);margin-top:14px}
+  .foot-col h4{color:var(--white);font-family:'JetBrains Mono', monospace;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+  .foot-col ul{list-style:none;padding:0;margin:0}
+  .foot-col li{padding:5px 0}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--gray-2);font-family:'JetBrains Mono', monospace}
+
+.lhero{padding:50px 0 30px}
+.lhero h1{font-size:clamp(36px,5vw,56px);font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:12px;color:var(--white)}
+.lhero .lupdated{font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.05em}
+.lcontent{padding:30px 0 100px}
+.lcontent h2{font-size:24px;font-weight:700;color:var(--white);margin:40px 0 14px;letter-spacing:-0.015em}
+.lcontent h3{font-size:17px;font-weight:600;color:var(--white);margin:24px 0 10px}
+.lcontent p, .lcontent li{color:var(--gray);font-size:15px;line-height:1.65;margin-bottom:14px}
+.lcontent ul{padding-left:24px;margin-bottom:14px}
+.lcontent strong{color:var(--white);font-weight:600}
+.lcontent a{color:var(--amber);text-decoration:underline;text-underline-offset:3px}
+.lcontent a:hover{color:var(--amber-2)}
+.linfobox{background:rgba(255,182,39,0.06);border:1px solid rgba(255,182,39,0.25);border-radius:14px;padding:22px;margin:24px 0;backdrop-filter:blur(10px)}
+.linfobox p{margin:0}
+
 </style>
 </head>
 <body>
-<header class="nav">
-  <div class="container nav-inner">
-    <a href="/" class="nav-logo" aria-label="Hyrrä etusivu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" role="img" aria-label="hyrrä">
-  <title>hyrrä</title>
-  <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#1B3A5C">
-    <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
-    <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
-    <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
-    <path transform="translate(1734 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
-    <path transform="translate(2162 0)" d="M274 566Q333 566 377.5 542.0Q422 518 446 479V558H617V0H446V79Q421 40 376.5 16.0Q332 -8 273 -8Q205 -8 149.0 27.5Q93 63 60.5 128.5Q28 194 28 280Q28 366 60.5 431.0Q93 496 149.0 531.0Q205 566 274 566ZM324 417Q273 417 237.5 380.5Q202 344 202 280Q202 216 237.5 178.5Q273 141 324 141Q375 141 410.5 178.0Q446 215 446 279Q446 343 410.5 380.0Q375 417 324 417Z"/>
-  </g>
-  <g transform="translate(151.53 18.29) rotate(-12)" fill="#FFB627">
-    <circle cx="-9" cy="0" r="8"/>
-    <circle cx="12" cy="2" r="8"/>
-  </g>
-</svg></a>
-    <a href="/" class="nav-back"><span class="arrow">←</span>Etusivulle</a>
-  </div>
-</header>
-
-<main>
-  <div class="container">
-    <span class="eyebrow">Käyttöehdot</span>
-    <h1>Hyrrän käyttöehdot</h1>
-    <p class="lead">Nämä ehdot määrittelevät, miten Hyrrä-palvelua käytetään ja mitä molemmat osapuolet voivat odottaa toisiltaan. Yritämme pitää ehdot mahdollisimman selkeinä — kysy jos jokin on epäselvää.</p>
-    <div class="meta">
-      <strong>Päivitetty:</strong> Toukokuu 2026 · <strong>Rekisterinpitäjä:</strong> Hyrrä Oy · <strong>Y-tunnus:</strong> 3555902-3
+<div class="bg-stars"></div>
+<div class="bg-grid"></div>
+<div class="bg-aurora"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<nav class="top">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg>
+      <span>hyrrä</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#mita-tekee">Tuote</a>
+      <a href="/integraatiot">Integraatiot</a>
+      <a href="/#hinta">Hinta</a>
+      <a href="/demo">Demo</a>
+      <a href="/blogi">Blogi</a>
+      <a href="/#yhteys" class="nav-cta">Aloita pilotti →</a>
+      <button class="nav-burger" id="navBurger" aria-label="Avaa valikko"><span></span><span></span><span></span></button>
     </div>
-    
-<h2>1. Yleistä</h2>
-<p>Näitä käyttöehtoja sovelletaan Hyrrä Oy:n (Y-tunnus 3555902-3, jäljempänä "<strong>Hyrrä</strong>") tarjoamaan Hyrrä-palveluun. Käyttämällä palvelua hyväksyt nämä ehdot. Jos et hyväksy ehtoja, älä käytä palvelua.</p>
-
-<h2>2. Palvelun kuvaus</h2>
-<p>Hyrrä on tekoälypohjainen puhelinvastaanottaja, joka vastaa asiakaspuhelimeen yrittäjäasiakkaan puolesta, ottaa varauksia ja lähettää tekstivahvistuksia. Palvelua käytetään selainpohjaisen paneelin kautta, ja asiakkaiden puhelut reititetään Hyrrän järjestelmään yrittäjäasiakkaan valitseman puhelinoperaattorin kautta.</p>
-
-<h2>3. Palvelun käyttöoikeus</h2>
-<ul>
-  <li>Asiakkuus alkaa, kun yrittäjäasiakas vahvistaa tilauksen ja maksaa ensimmäisen kuukausimaksun (tai kun ilmainen pilottijakso alkaa).</li>
-  <li>Käyttöoikeus on henkilökohtainen yrittäjäasiakkaan yritykselle eikä siirrettävissä ilman Hyrrän suostumusta.</li>
-  <li>Yrittäjäasiakas vastaa siitä, että käytön piirissä olevat henkilöt tuntevat ja noudattavat näitä ehtoja.</li>
-</ul>
-
-<h2>4. Hinnat ja maksut</h2>
-<ul>
-  <li>Voimassa olevat hinnat löytyvät osoitteesta <a href="/#hinnoittelu">hyrrä.fi/#hinnoittelu</a>.</li>
-  <li>Pilottijakso (14 päivää) on maksuton. Sen jälkeen palvelu jatkuu maksullisena, ellei sopimusta irtisanota.</li>
-  <li>Laskutus tapahtuu kuukausittain etukäteen verkkolaskuna tai sähköpostitse.</li>
-  <li>Hintoihin lisätään lainmukainen arvonlisävero.</li>
-  <li>Maksuviiveistä peritään korkolaissa määritelty viivästyskorko. 14 päivän maksuviiveen jälkeen palvelu voidaan keskeyttää.</li>
-</ul>
-
-<h2>5. Yrittäjäasiakkaan velvollisuudet</h2>
-<ul>
-  <li>Antaa Hyrrälle oikeat ja ajantasaiset tiedot yrityksen toiminnasta (palvelut, hinnat, aukioloajat).</li>
-  <li>Vastaa siitä, että puhelinnumeron ohjaus Hyrrälle on lainmukaista ja että soittajille voidaan tarjota automaattinen vastaaja.</li>
-  <li>Ilmoittaa soittajille, että puhelu voidaan tallentaa.</li>
-  <li>Ei käytä palvelua laittomaan toimintaan, häirintään tai harhaanjohtavaan asiakaspalveluun.</li>
-  <li>Hoitaa salasanansa ja pääsyoikeudet huolellisesti.</li>
-</ul>
-
-<h2>6. Palvelun saatavuus</h2>
-<p>Hyrrä pyrkii ylläpitämään palvelua mahdollisimman keskeytyksettä. Tavoiteltava saatavuus on 99,5 % kuukausitasolla. Huollot ilmoitetaan etukäteen mahdollisuuksien mukaan.</p>
-<p>Hyrrä ei vastaa katkoksista, jotka johtuvat:</p>
-<ul>
-  <li>kolmansien osapuolten palveluista (esim. operaattori, ElevenLabs, Twilio)</li>
-  <li>force majeure -tilanteista</li>
-  <li>yrittäjäasiakkaan omasta toiminnasta tai laitteistosta</li>
-</ul>
-
-<h2>7. Vastuunrajoitus</h2>
-<p>Hyrrän vastuu yrittäjäasiakkaalle on rajattu enintään kolmen (3) kuukauden palvelumaksujen suuruiseen määrään. Hyrrä ei vastaa välillisistä vahingoista, kuten menetetyistä tuloista, asiakassuhteen vahingoittumisesta tai liiketoiminnan keskeytymisestä.</p>
-<p>Vastuunrajoitus ei sovellu, jos vahinko on aiheutettu tahallisesti tai törkeällä huolimattomuudella.</p>
-
-<h2>8. Tekoälyn rajoitukset</h2>
-<p>Hyrrä on tekoälypohjainen palvelu. Se voi tehdä virheitä, esimerkiksi väärin kuullessaan asiakkaan toiveen tai antaessaan vanhentunutta hintatietoa. Yrittäjäasiakas hyväksyy palvelun käyttöönotossa, että:</p>
-<ul>
-  <li>Hyrrä ei korvaa ammatti- tai lääketieteellistä neuvontaa</li>
-  <li>Yrittäjäasiakas tarkastaa varaukset säännöllisesti</li>
-  <li>Virheet ilmoitetaan tukeen, jotta järjestelmää voidaan kehittää</li>
-</ul>
-
-<h2>9. Sopimuksen kesto ja irtisanominen</h2>
-<ul>
-  <li>Palvelu on kuukausisopimus ilman määräaikaa.</li>
-  <li>Yrittäjäasiakas voi irtisanoa palvelun milloin tahansa paneelista tai sähköpostilla. Irtisanominen astuu voimaan kuluvan laskutuskauden lopussa; ei rahanpalautuksia kesken kauden.</li>
-  <li>Hyrrällä on oikeus irtisanoa palvelu 30 päivän irtisanomisajalla. Olennaisen sopimusrikkomuksen yhteydessä irtisanominen voidaan tehdä ilman irtisanomisaikaa.</li>
-</ul>
-
-<h2>10. Immateriaalioikeudet</h2>
-<p>Hyrrä-palvelun kaikki immateriaalioikeudet, mukaan lukien ohjelmistot, tekstit, kuvat, brändi ja äänitallenteet, kuuluvat Hyrrä Oy:lle tai sen lisenssinantajille. Yrittäjäasiakas saa palvelun käyttöoikeuden sopimuksen voimassaolon ajaksi, ei muita oikeuksia.</p>
-<p>Yrittäjäasiakkaan toimittama sisältö (esim. yritystiedot, hinnasto) pysyy yrittäjäasiakkaan omistuksessa. Hyrrällä on oikeus käyttää sisältöä palvelun toimittamiseksi.</p>
-
-<h2>11. Tietosuoja</h2>
-<p>Henkilötietojen käsittely on kuvattu erillisessä <a href="/tietosuoja">tietosuojaselosteessa</a> ja yrittäjäasiakkaan kanssa solmittavassa <a href="/dpa">DPA-sopimuksessa</a>.</p>
-
-<h2>12. Muutokset käyttöehtoihin</h2>
-<p>Hyrrä voi muuttaa näitä ehtoja. Olennaisista muutoksista ilmoitamme yrittäjäasiakkaille vähintään 30 päivää ennen muutosten voimaantuloa sähköpostitse. Jos asiakas ei hyväksy muutoksia, hänellä on oikeus irtisanoa sopimus ennen muutosten voimaantuloa.</p>
-
-<h2>13. Sovellettava laki ja riidanratkaisu</h2>
-<p>Sopimukseen sovelletaan Suomen lakia. Riidat ratkaistaan ensisijaisesti sovittelemalla. Mikäli sovinto ei synny, riidat ratkaistaan Helsingin käräjäoikeudessa.</p>
-
   </div>
-</main>
+</nav>
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <span class="menu-logo"><svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg><span>hyrrä</span></span>
+    <button class="menu-close" id="menuClose" aria-label="Sulje valikko">✕</button>
+  </div>
+  <div class="menu-section"><div class="menu-label">// TUOTE</div><ul class="menu-links"><li><a href="/#mita-tekee">Mitä Hyrrä tekee</a></li><li><a href="/#laskuri">ROI-laskuri</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/demo">Kokeile demoa</a></li><li><a href="/#hinta">Hinnoittelu</a></li></ul></div>
+  <div class="menu-section"><div class="menu-label">// TOIMIALAT</div><ul class="menu-links"><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+  <a href="/#yhteys" class="menu-cta">Aloita pilotti →</a>
+  <div class="menu-foot"><span><a href="/tietosuoja">Tietosuoja</a> · <a href="/kayttoehdot">Käyttöehdot</a></span><span>info@hyrrä.fi</span></div>
+</div>
 
-
+<section class="lhero">
+  <div class="container-narrow">
+    <div class="eyebrow">// KÄYTTÖEHDOT</div>
+    <h1>Käyttöehdot</h1>
+    <div class="lupdated">Päivitetty 1.6.2026</div>
+  </div>
+</section>
+<section class="lcontent">
+  <div class="container-narrow">
+    <div class="linfobox">
+      <p><strong>Lyhyesti:</strong> 14 päivän pilotti on ilmainen, voit perua koska tahansa. Vuosi­sopimukseen sisältyy yksi kuukausi ilmaiseksi. Pakettirajan ylittyvä käyttö 0,15 €/min. Suomalainen lasku, ALV-vähennys normaalisti.</p>
+    </div>
+    <h2>1. Palveluntarjoaja</h2>
+    <p>Hyrrä Oy (Y-tunnus 3555902-3), Helsinki, Suomi. <a href="mailto:info@hyrrä.fi">info@hyrrä.fi</a></p>
+    <h2>2. Palvelun kuvaus</h2>
+    <p>Hyrrä on AI-puhelinvastaanottajapalvelu, joka vastaa asiakasyrityksen puheluihin, varaa aikoja kalenteriin ja lähettää tekstiviesti­vahvistuksia. Tarkka kuvaus löytyy <a href="/">etusivulta</a> ja <a href="/integraatiot">integraatiosivulta</a>.</p>
+    <h2>3. Pilotti</h2>
+    <p>14 päivän pilotti on maksuton. Voit perua pilotin milloin tahansa ilman seuraamuksia. Pilotin päätyttyä asiakas voi siirtyä maksulliseen pakettiin Stripe-maksulinkin kautta.</p>
+    <h2>4. Maksulliset paketit</h2>
+    <p>Voimassa olevat hinnat: <a href="/#hinta">hyrrä.fi/#hinta</a>. Hinnat ALV 0 %. Vuosi­sopimuksessa yksi kuukausi ilmaiseksi (laskutus 11 kuukaudelta).</p>
+    <h2>5. Käytön rajoitukset</h2>
+    <p>Sisältyy tavanomainen käyttö. Pakettirajan ylittävät puhelut 0,15 €/min. Suuremmat volyymit ja Enterprise-paketti: sopimus erikseen.</p>
+    <h2>6. Sopimuksen päättäminen</h2>
+    <p>Kuukausi­sopimus: irtisanominen kuukauden varoituksella. Vuosi­sopimus: irtisanominen voi tapahtua sopimuskauden päättyessä. 30 päivän rahat-takaisin -takuu kuukausi­paketin aloittaessa.</p>
+    <h2>7. Hyrrän vastuu</h2>
+    <p>Pyrimme 99,9 % uptime-tasoon. Häiriötilanteissa korvaus enintään yhden kuukausi­hinnan suuruinen.</p>
+    <h2>8. Sovellettava laki</h2>
+    <p>Suomen laki. Erimielisyydet ratkaistaan Helsingin käräjäoikeudessa.</p>
+    <h2>9. Yhteystiedot</h2>
+    <p><a href="mailto:info@hyrrä.fi">info@hyrrä.fi</a></p>
+  </div>
+</section>
 <footer>
   <div class="container">
-    <div class="foot-top">
+    <div class="foot-grid">
       <div>
-        <a href="/" aria-label="Hyrrä etusivu" class="foot-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194.8 96.0" role="img" aria-label="hyrrä">
-  <title>hyrrä</title>
-  <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#1B3A5C">
-    <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
-    <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
-    <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
-    <path transform="translate(1734 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
-    <path transform="translate(2162 0)" d="M274 566Q333 566 377.5 542.0Q422 518 446 479V558H617V0H446V79Q421 40 376.5 16.0Q332 -8 273 -8Q205 -8 149.0 27.5Q93 63 60.5 128.5Q28 194 28 280Q28 366 60.5 431.0Q93 496 149.0 531.0Q205 566 274 566ZM324 417Q273 417 237.5 380.5Q202 344 202 280Q202 216 237.5 178.5Q273 141 324 141Q375 141 410.5 178.0Q446 215 446 279Q446 343 410.5 380.0Q375 417 324 417Z"/>
-  </g>
-  <g transform="translate(151.53 18.29) rotate(-12)" fill="#FFB627">
-    <circle cx="-9" cy="0" r="8"/>
-    <circle cx="12" cy="2" r="8"/>
-  </g>
-</svg></a>
-        <p class="foot-tag">Suomalainen AI-vastaanottaja pk-yrityksille. Pyörii silloinkin, kun sinä et.</p>
+        <a href="/" class="logo" style="font-size:22px"><svg class="spin-mark" viewBox="0 0 64 64" style="width:28px;height:28px"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#06101A"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#06101A"/></svg><span>hyrrä</span></a>
+        <p class="foot-tag">Suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p>
       </div>
-      <div class="foot-links">
-        <a href="/">Etusivu</a>
-        <a href="/demo">Demo</a>
-        <a href="/tietosuoja">Tietosuoja</a>
-        <a href="/kayttoehdot">Käyttöehdot</a>
-        <a href="/dpa">DPA</a>
-        <a href="/yhteystiedot">Yhteystiedot</a>
-      </div>
+      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
+      <div class="foot-col"><h4>// TOIMIALAT</h4><ul><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+      <div class="foot-col"><h4>// LAKI</h4><ul><li><a href="/tietosuoja">Tietosuoja</a></li><li><a href="/kayttoehdot">Käyttöehdot</a></li><li><a href="/dpa">DPA</a></li><li><a href="/yhteystiedot">Yhteystiedot</a></li></ul></div>
     </div>
-    <div class="foot-bottom">
-      <span>&copy; 2026 Hyrrä Oy · Y-tunnus 3555902-3 · Tehty Suomessa.</span>
-      <span>EU-datasijainti · GDPR · ISO 27001 -valmius</span>
-    </div>
+    <div class="foot-bottom"><span>// © 2026 Hyrrä Oy · Y-tunnus 3555902-3 · Tehty Suomessa</span><span>info@hyrrä.fi</span></div>
   </div>
 </footer>
-
-
-<!-- ====== Cookie consent (Hyrrä) ====== -->
-<div id="hyrraCookie" role="region" aria-label="Evästehuomautus" hidden>
-  <div class="hc-inner">
-    <p class="hc-text">
-      Hyrrä.fi käyttää vain teknisesti välttämättömiä evästeitä. Sivu lataa typografisen fontin Googlen palvelusta. Emme seuraa sinua emmekä jaa tietojasi markkinointitarkoituksiin. <a href="/tietosuoja">Lue tietosuojaseloste</a>.
-    </p>
-    <button id="hyrraCookieOk" class="hc-btn" type="button">Selvä</button>
-  </div>
-</div>
-<style>
-  #hyrraCookie {
-    position: fixed; left: 16px; right: 16px; bottom: 16px;
-    z-index: 99999; max-width: 720px; margin: 0 auto;
-    background: #1B3A5C; color: #FFFFFF;
-    border-radius: 14px; padding: 16px 20px;
-    box-shadow: 0 18px 50px rgba(27,58,92,0.28), 0 4px 14px rgba(27,58,92,0.18);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-    line-height: 1.5;
-    animation: hyrraCookieIn .35s ease-out both;
-  }
-  @keyframes hyrraCookieIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-  #hyrraCookie .hc-inner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  #hyrraCookie .hc-text { font-size: 14px; flex: 1; min-width: 240px; margin: 0; color: rgba(255,255,255,0.95); }
-  #hyrraCookie .hc-text a { color: #FFB627; text-decoration: underline; text-underline-offset: 2px; }
-  #hyrraCookie .hc-btn {
-    background: #FFB627; color: #1B3A5C; border: none;
-    padding: 10px 22px; border-radius: 8px;
-    font-family: inherit; font-weight: 700; font-size: 14px;
-    cursor: pointer; transition: opacity .15s;
-  }
-  #hyrraCookie .hc-btn:hover { opacity: 0.92; }
-  #hyrraCookie .hc-btn:active { transform: translateY(1px); }
-  @media (max-width: 520px) {
-    #hyrraCookie .hc-inner { flex-direction: column; align-items: stretch; }
-    #hyrraCookie .hc-btn { width: 100%; }
-  }
-</style>
 <script>
-(function(){
-  var KEY = 'hyrra-cookie-ok';
-  try { if (localStorage.getItem(KEY) === '1') return; } catch(e) {}
-  var el = document.getElementById('hyrraCookie');
-  if (!el) return;
-  el.hidden = false;
-  var btn = document.getElementById('hyrraCookieOk');
-  if (btn) btn.addEventListener('click', function(){
-    try { localStorage.setItem(KEY, '1'); } catch(e) {}
-    el.hidden = true;
-  });
-})();
+(function(){var burger=document.getElementById('navBurger');var overlay=document.getElementById('menuOverlay');var close=document.getElementById('menuClose');if(!burger||!overlay)return;function open(){overlay.classList.add('open');document.body.classList.add('menu-open');overlay.setAttribute('aria-hidden','false');}function shut(){overlay.classList.remove('open');document.body.classList.remove('menu-open');overlay.setAttribute('aria-hidden','true');}burger.addEventListener('click',open);close.addEventListener('click',shut);overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',shut);});document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});})();
+(function(){var glow=document.getElementById('cursorGlow');if(!glow)return;var x=window.innerWidth/2,y=window.innerHeight/2,tx=x,ty=y;document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});function loop(){x+=(tx-x)*0.08;y+=(ty-y)*0.08;glow.style.transform='translate('+x+'px,'+y+'px) translate(-50%,-50%)';requestAnimationFrame(loop);}loop();})();
 </script>
-<!-- ====== /Cookie consent ====== -->
-
 </body>
 </html>
