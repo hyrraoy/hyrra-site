@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mitä missatut puhelut oikeasti maksavat? — Hyrrä blogi</title>
 <meta name="description" content="Pieni Helsingin autokorjaamo menettää 11 000 € kuukaudessa missatuihin puheluihin. Todellinen kustannuslaskelma ja miten sen voi pysäyttää.">
-<meta name="theme-color" content="#1B3A5C">
+<meta name="theme-color" content="#0A1628">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mitä missatut puhelut oikeasti maksavat?">
 <meta property="og:description" content="11 000 € kuukaudessa — tarina pienestä autokorjaamosta, joka ymmärsi mitä oli menettämässä.">
@@ -20,9 +20,10 @@
 <meta property="article:tag" content="ROI">
 <link rel="canonical" href="https://hyrrä.fi/blogi/missatut-puhelut">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Source+Serif+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -38,93 +39,156 @@
 </script>
 <style>
   :root{
+    --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
     --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
     --amber:#FFB627; --amber-2:#F4A700;
-    --kerma:#F4F1EB; --white:#FFFFFF;
-    --ink:#1A1A1A; --mist:#6B7280; --moss:#3F7D58; --blush:#E07A6A;
-    --line:rgba(27,58,92,0.10);
+    --white:#FFFFFF; --gray:#9FAFC4; --gray-2:#6B7E92;
+    --cyan:#6EB9E8; --green:#5BD178;
+    --line:rgba(255,255,255,0.08); --line-strong:rgba(255,255,255,0.14);
   }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:'Inter',-apple-system,sans-serif;background:var(--kerma);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bg);color:var(--white);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{min-height:100vh;line-height:1.55}
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+  .container-narrow{max-width:740px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
   a{color:inherit;text-decoration:none}
-  .container{max-width:760px;margin:0 auto;padding:0 24px}
-  .container-wide{max-width:1100px;margin:0 auto;padding:0 24px}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);background-size:120px 120px, 200px 200px;background-position:0 0, 60px 80px;opacity:0.10;mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%);-webkit-mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%)}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,182,39,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,182,39,0.025) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;opacity:0.6}
+  .bg-aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bg-aurora::before,.bg-aurora::after{content:"";position:absolute;border-radius:50%;filter:blur(140px)}
+  .bg-aurora::before{width:720px;height:720px;background:radial-gradient(circle, rgba(27,58,92,0.75) 0%, transparent 70%);top:-200px;left:-150px;animation:drift1 30s ease-in-out infinite}
+  .bg-aurora::after{width:600px;height:600px;background:radial-gradient(circle, rgba(255,182,39,0.22) 0%, transparent 70%);top:20%;right:-150px;animation:drift2 36s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,60px)}}
+  .cursor-glow{position:fixed;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle, rgba(255,182,39,0.08) 0%, transparent 60%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);will-change:transform;mix-blend-mode:screen}
+  nav.top{position:sticky;top:14px;z-index:50;padding:0 14px}
+  .nav-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;background:rgba(10,22,40,0.65);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;box-shadow:0 8px 32px -8px rgba(0,0,0,0.4)}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--white)}
+  .logo .spin-mark{width:24px;height:24px;display:inline-block;animation:spinMark 1.8s linear infinite}
+  @keyframes spinMark{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .nav-links{display:flex;gap:24px;align-items:center;font-size:13.5px;color:var(--gray)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg) !important;padding:10px 18px;border-radius:99px;font-weight:700;font-size:13px;transition:transform .15s, box-shadow .15s;box-shadow:0 4px 14px -2px rgba(255,182,39,0.4)}
+  .nav-cta:hover{transform:scale(1.04);box-shadow:0 8px 20px -4px rgba(255,182,39,0.6)}
+  .nav-burger{display:none;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,0.04);cursor:pointer;padding:0;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background .15s}
+  .nav-burger:hover{background:rgba(255,255,255,0.08)}
+  .nav-burger span{width:18px;height:2px;background:var(--white);border-radius:2px}
+  @media (max-width:780px){.nav-links a:not(.nav-cta){display:none} .nav-burger{display:flex}}
+  @media (max-width:480px){.nav-cta{display:none}}
+  .menu-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.96);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s ease;overflow-y:auto;padding:24px 24px 60px}
+  .menu-overlay.open{opacity:1;pointer-events:auto}
+  .menu-overlay .menu-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
+  .menu-overlay .menu-logo{font-size:20px;font-weight:800;letter-spacing:-0.02em;display:inline-flex;align-items:center;gap:10px;color:var(--white)}
+  .menu-overlay .menu-logo .spin-mark{width:24px;height:24px}
+  .menu-overlay .menu-close{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;color:var(--white);font-size:18px}
+  .menu-overlay .menu-section{margin-bottom:32px}
+  .menu-overlay .menu-label{font-family:'JetBrains Mono', monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;font-weight:600}
+  .menu-overlay .menu-links{display:flex;flex-direction:column;gap:0;list-style:none;padding:0;margin:0}
+  .menu-overlay .menu-links li{border-bottom:1px solid var(--line)}
+  .menu-overlay .menu-links a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;color:var(--white);font-size:18px;font-weight:600;letter-spacing:-0.01em;transition:color .15s}
+  .menu-overlay .menu-links a:hover{color:var(--amber)}
+  .menu-overlay .menu-links a::after{content:"→";color:var(--gray-2);font-size:18px}
+  .menu-overlay .menu-cta{display:block;text-align:center;background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);padding:18px 24px;border-radius:14px;font-weight:700;font-size:16px;margin-top:24px;text-decoration:none;box-shadow:0 12px 30px -10px rgba(255,182,39,0.5)}
+  .menu-overlay .menu-foot{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray-2)}
+  body.menu-open{overflow:hidden}
+  section{position:relative;z-index:2}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.08);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
+  .eyebrow::before{content:"//";color:var(--amber);opacity:0.6}
+  .btn{padding:14px 24px;border-radius:12px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;transition:transform .2s, box-shadow .2s;text-decoration:none}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);box-shadow:0 12px 30px -10px rgba(255,182,39,0.5);border:none}
+  .btn-secondary{background:rgba(255,255,255,0.05);color:var(--white);border:1px solid var(--line)}
+  footer{background:var(--bg-3);color:rgba(255,255,255,0.65);padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
+  footer a:hover{color:var(--amber)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:32px;margin-bottom:32px}
+  @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.foot-grid{grid-template-columns:1fr}}
+  .foot-tag{max-width:320px;line-height:1.55;color:var(--gray);margin-top:14px}
+  .foot-col h4{color:var(--white);font-family:'JetBrains Mono', monospace;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+  .foot-col ul{list-style:none;padding:0;margin:0}
+  .foot-col li{padding:5px 0}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--gray-2);font-family:'JetBrains Mono', monospace}
 
-  .topnav{background:var(--deep);color:var(--white);padding:18px 0}
-  .topnav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
-  .topnav-logo{display:inline-flex;align-items:center;gap:10px}
-  .topnav-links{display:flex;gap:24px;align-items:center;font-size:14.5px;font-weight:500;color:rgba(255,255,255,0.85)}
-  .topnav-links a:hover{color:var(--amber)}
-  .topnav-cta{background:var(--amber);color:var(--deep);padding:8px 16px;border-radius:8px;font-weight:700;font-size:14px}
-  @media (max-width:680px){.topnav-links a:not(.topnav-cta):not(.back){display:none}}
-
-  .ahero{padding:50px 0 30px;background:var(--white);border-bottom:1px solid var(--line)}
-  .ahero-meta{display:flex;gap:12px;align-items:center;font-size:13px;color:var(--mist);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:18px}
+  .ahero{padding:40px 0 24px}
+  .ahero .back-link{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:24px;transition:color .15s}
+  .ahero .back-link:hover{color:var(--amber)}
+  .ahero-meta{display:flex;gap:10px;align-items:center;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:18px}
   .ahero-meta .cat{color:var(--amber)}
-  .ahero-meta .dot{width:4px;height:4px;background:var(--mist);border-radius:50%}
-  .ahero h1{font-family:'Source Serif Pro', serif;font-size:clamp(32px,4.5vw,48px);font-weight:600;color:var(--deep);margin:0 0 16px;line-height:1.15;letter-spacing:-0.01em}
-  .ahero .subhead{font-size:18px;color:var(--mist);line-height:1.55;margin:0 0 24px;max-width:600px}
-  .ahero .byline{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mist)}
-  .ahero .byline .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--deep);display:grid;place-items:center;font-weight:800;font-size:13px}
-  .ahero .byline strong{color:var(--deep);font-weight:700}
-  .back{font-size:13px;color:rgba(255,255,255,0.7);display:inline-flex;align-items:center;gap:5px}
-  .back:hover{color:var(--amber)}
+  .ahero-meta .dot{width:3px;height:3px;background:var(--gray-2);border-radius:50%}
+  .ahero h1{font-family:'Source Serif Pro', serif;font-size:clamp(34px,5vw,56px);font-weight:600;color:var(--white);margin:0 0 18px;line-height:1.12;letter-spacing:-0.02em}
+  .ahero h1 em{font-style:italic;color:var(--amber);font-weight:600}
+  .ahero .subhead{font-size:19px;color:var(--gray);line-height:1.55;margin:0 0 28px;max-width:620px}
+  .ahero .byline{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--gray)}
+  .ahero .byline .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:14px}
+  .ahero .byline strong{color:var(--white);font-weight:700}
 
-  article.content{padding:50px 0}
-  article.content p{font-family:'Source Serif Pro', serif;font-size:18px;line-height:1.7;color:var(--ink);margin:0 0 22px}
-  article.content p.lead{font-size:21px;color:var(--deep);font-weight:500;line-height:1.5;margin-bottom:32px;border-left:3px solid var(--amber);padding-left:18px}
-  article.content h2{font-family:'Source Serif Pro', serif;font-size:28px;font-weight:600;color:var(--deep);margin:48px 0 16px;letter-spacing:-0.01em;line-height:1.25}
-  article.content h3{font-size:20px;font-weight:800;color:var(--deep);margin:32px 0 12px;letter-spacing:-0.005em}
-  article.content blockquote{margin:32px 0;padding:20px 24px;background:var(--white);border-left:4px solid var(--amber);border-radius:0 12px 12px 0;font-family:'Source Serif Pro', serif;font-size:20px;font-style:italic;color:var(--deep);line-height:1.5}
-  article.content blockquote footer{font-size:13px;font-style:normal;color:var(--mist);margin-top:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;font-family:'Inter',sans-serif}
-  article.content ul{margin:0 0 22px;padding-left:24px;font-family:'Source Serif Pro', serif;font-size:18px;line-height:1.7}
+  article.content{padding:30px 0 70px}
+  article.content p{font-family:'Source Serif Pro', serif;font-size:18px;line-height:1.75;color:rgba(255,255,255,0.88);margin:0 0 22px}
+  article.content p em{color:var(--amber);font-style:italic}
+  article.content p.lead{font-size:22px;color:var(--white);font-weight:500;line-height:1.55;margin-bottom:34px;border-left:3px solid var(--amber);padding-left:20px}
+  article.content p.lead em{color:var(--amber)}
+  article.content h2{font-family:'Source Serif Pro', serif;font-size:30px;font-weight:600;color:var(--white);margin:50px 0 18px;letter-spacing:-0.015em;line-height:1.25}
+  article.content h3{font-family:'Inter', sans-serif;font-size:19px;font-weight:700;color:var(--white);margin:34px 0 12px;letter-spacing:-0.005em}
+  article.content blockquote{margin:36px 0;padding:24px 26px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:0 14px 14px 0;font-family:'Source Serif Pro', serif;font-size:20px;font-style:italic;color:var(--white);line-height:1.5}
+  article.content blockquote footer{font-family:'JetBrains Mono', monospace;font-size:12px;font-style:normal;color:var(--gray-2);margin-top:12px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;background:none;border:none;padding:0}
+  article.content ul{margin:0 0 22px;padding-left:24px;font-family:'Source Serif Pro', serif;font-size:18px;line-height:1.7;color:rgba(255,255,255,0.88)}
   article.content ul li{margin-bottom:8px}
-  article.content .stat-block{background:linear-gradient(135deg, var(--deep), var(--deep-2));color:var(--white);border-radius:16px;padding:28px;margin:32px 0;text-align:center}
-  article.content .stat-block .v{font-size:48px;font-weight:900;color:var(--amber);letter-spacing:-0.03em;line-height:1}
-  article.content .stat-block .l{color:rgba(255,255,255,0.85);font-size:15px;margin-top:8px;font-family:'Inter',sans-serif}
-  article.content table{width:100%;border-collapse:collapse;margin:24px 0;font-family:'Inter', sans-serif;font-size:15px;background:var(--white);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
-  article.content table th,article.content table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line)}
-  article.content table th{background:var(--kerma);font-weight:700;color:var(--deep);font-size:13px;text-transform:uppercase;letter-spacing:0.04em}
+  article.content ul li::marker{color:var(--amber)}
+  article.content .stat-block{background:linear-gradient(135deg, rgba(255,182,39,0.10), rgba(27,58,92,0.30));border:1px solid rgba(255,182,39,0.30);border-radius:18px;padding:32px;margin:34px 0;text-align:center;backdrop-filter:blur(10px)}
+  article.content .stat-block .v{font-family:'Inter', sans-serif;font-size:54px;font-weight:900;color:var(--amber);letter-spacing:-0.035em;line-height:1}
+  article.content .stat-block .l{color:var(--gray);font-size:14px;margin-top:10px;font-family:'JetBrains Mono', monospace;text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
+  article.content table{width:100%;border-collapse:collapse;margin:26px 0;font-family:'Inter', sans-serif;font-size:15px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  article.content table th,article.content table td{padding:13px 18px;text-align:left;border-bottom:1px solid var(--line);color:rgba(255,255,255,0.88)}
+  article.content table th{background:rgba(255,255,255,0.04);font-family:'JetBrains Mono', monospace;font-weight:600;color:var(--gray);font-size:11.5px;text-transform:uppercase;letter-spacing:0.06em}
   article.content table tr:last-child td{border-bottom:none}
+  article.content table tr td:last-child{font-weight:600;color:var(--white);text-align:right;font-variant-numeric:tabular-nums}
+  article.content table tr:last-child td{color:var(--amber);font-weight:700}
 
-  .cta-bottom{background:linear-gradient(135deg, var(--deep), var(--deep-2));color:var(--white);padding:60px 0;text-align:center;margin-top:40px}
-  .cta-bottom h2{font-size:28px;font-weight:900;color:var(--white);margin:0 0 12px;letter-spacing:-0.02em}
-  .cta-bottom p{color:rgba(255,255,255,0.85);font-size:16px;margin:0 0 22px}
-  .btn-amber{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:var(--deep);padding:14px 26px;border-radius:10px;font-weight:700;font-size:15px}
-  .btn-amber:hover{background:var(--amber-2)}
-
-  footer.site{background:var(--deep-3);color:rgba(255,255,255,0.75);padding:40px 0 24px;font-size:14px}
-  footer.site a{color:rgba(255,255,255,0.85)}
-  footer.site a:hover{color:var(--amber)}
-  .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,0.5)}
+  .cta-bottom{padding:60px 0 80px;text-align:center;position:relative}
+  .cta-card{max-width:720px;margin:0 auto;background:linear-gradient(180deg, rgba(255,182,39,0.06), rgba(255,255,255,0.02));border:1px solid rgba(255,182,39,0.25);border-radius:22px;padding:48px 32px;backdrop-filter:blur(10px)}
+  .cta-card h2{font-family:'Inter', sans-serif;font-size:32px;font-weight:800;color:var(--white);margin:0 0 12px;letter-spacing:-0.025em}
+  .cta-card p{color:var(--gray);font-size:16px;margin:0 0 26px}
 </style>
 </head>
 <body>
-
-<header class="topnav">
-  <div class="container-wide topnav-inner">
-    <a href="/" class="topnav-logo">
-      <svg viewBox="0 0 64 64" style="width:28px;height:28px"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#FFFFFF"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#FFFFFF"/></svg>
-      <svg viewBox="0 0 194.8 96.0" style="height:24px;width:auto">
-        <g transform="translate(0 72.00) scale(0.06857 -0.06857)" fill="#FFFFFF">
-          <path transform="translate(0 0)" d="M617 326V0H447V303Q447 359 418.0 390.0Q389 421 340 421Q291 421 262.0 390.0Q233 359 233 303V0H62V740H233V483Q259 520 304.0 542.0Q349 564 405 564Q501 564 559.0 500.5Q617 437 617 326Z"/>
-          <path transform="translate(674 0)" d="M632 558 282 -265H98L226 19L-1 558H190L319 209L447 558Z"/>
-          <path transform="translate(1306 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
-          <path transform="translate(1734 0)" d="M408 564V383H361Q297 383 265.0 355.5Q233 328 233 259V0H62V558H233V465Q263 511 308.0 537.5Q353 564 408 564Z"/>
-          <path transform="translate(2162 0)" d="M274 566Q333 566 377.5 542.0Q422 518 446 479V558H617V0H446V79Q421 40 376.5 16.0Q332 -8 273 -8Q205 -8 149.0 27.5Q93 63 60.5 128.5Q28 194 28 280Q28 366 60.5 431.0Q93 496 149.0 531.0Q205 566 274 566ZM324 417Q273 417 237.5 380.5Q202 344 202 280Q202 216 237.5 178.5Q273 141 324 141Q375 141 410.5 178.0Q446 215 446 279Q446 343 410.5 380.0Q375 417 324 417Z"/>
-        </g>
-        <g transform="translate(151.53 18.29) rotate(-12)" fill="#FFB627"><circle cx="-9" cy="0" r="8"/><circle cx="12" cy="2" r="8"/></g>
-      </svg>
+<div class="bg-stars"></div>
+<div class="bg-grid"></div>
+<div class="bg-aurora"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<nav class="top">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg>
+      <span>hyrrä</span>
     </a>
-    <nav class="topnav-links">
-      <a href="/blogi" class="back">← Blogi</a>
-      <a href="/#yhteys" class="topnav-cta">Varaa pilotti</a>
-    </nav>
+    <div class="nav-links">
+      <a href="/#mita-tekee">Tuote</a>
+      <a href="/integraatiot">Integraatiot</a>
+      <a href="/#hinta">Hinta</a>
+      <a href="/demo">Demo</a>
+      <a href="/blogi">Blogi</a>
+      <a href="/#yhteys" class="nav-cta">Aloita pilotti →</a>
+      <button class="nav-burger" id="navBurger" aria-label="Avaa valikko"><span></span><span></span><span></span></button>
+    </div>
   </div>
-</header>
+</nav>
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <span class="menu-logo"><svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg><span>hyrrä</span></span>
+    <button class="menu-close" id="menuClose" aria-label="Sulje valikko">✕</button>
+  </div>
+  <div class="menu-section"><div class="menu-label">// TUOTE</div><ul class="menu-links"><li><a href="/#mita-tekee">Mitä Hyrrä tekee</a></li><li><a href="/#laskuri">ROI-laskuri</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/demo">Kokeile demoa</a></li><li><a href="/#hinta">Hinnoittelu</a></li></ul></div>
+  <div class="menu-section"><div class="menu-label">// TOIMIALAT</div><ul class="menu-links"><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+  <a href="/#yhteys" class="menu-cta">Aloita pilotti →</a>
+  <div class="menu-foot"><span><a href="/tietosuoja">Tietosuoja</a> · <a href="/kayttoehdot">Käyttöehdot</a></span><span>info@hyrrä.fi</span></div>
+</div>
 
 <section class="ahero">
-  <div class="container">
+  <div class="container-narrow">
+    <a href="/blogi" class="back-link">← Takaisin blogiin</a>
     <div class="ahero-meta">
       <span class="cat">Talous</span>
       <span class="dot"></span>
@@ -132,7 +196,7 @@
       <span class="dot"></span>
       <span>5 min luku</span>
     </div>
-    <h1>Mitä missatut puhelut oikeasti maksavat?</h1>
+    <h1>Mitä missatut puhelut <em>oikeasti maksavat?</em></h1>
     <p class="subhead">Pieni Helsingin autokorjaamo menettää 11 000 € kuukaudessa — ja syyttää siitä "huonoa kesäkautta". Todellisuus on hieman erilainen.</p>
     <div class="byline">
       <div class="av">J</div>
@@ -142,7 +206,7 @@
 </section>
 
 <article class="content">
-  <div class="container">
+  <div class="container-narrow">
     <p class="lead">Numero, joka voi yllättää: pieni autokorjaamo Vallilassa, kolme asentajaa, kuukauden mittari osoittaa noin 47 vastaamatonta puhelua. Soittajat ovat enimmäkseen kysyneet aikaa renkaanvaihtoon, öljynvaihtoon tai huoltoon. Niistä noin puolet — eli 23 puhelua — päätyy kilpailijalle. Yhden työn arvo on tyypillisesti 150–250 €. Tee laskutoimitus.</p>
 
     <p>Olen viettänyt viime kuukaudet keskustelemassa kymmenien suomalaisten pk-yrittäjien kanssa: autokorjaajien, kampaajien, putkimiesten ja eläinlääkäreiden. Kaikki sanovat saman asian eri tavoin: <em>"Puhelin soi liian usein väärällä hetkellä."</em> Joku on ryöminyt auton alle. Joku on värin annostelu kesken. Joku korjaa vesivuotoa keskellä yötä.</p>
@@ -201,7 +265,7 @@
 
     <h3>3. "AI ei toimi suomeksi."</h3>
 
-    <p>Tämä oli totta vielä kaksi vuotta sitten — ei enää. ElevenLabsin natiivien suomenkielisten äänten taso on niin korkea, että useimmat asiakkaat eivät huomaa puhuvansa AI:lle ensimmäisten 30 sekunnin aikana. Ja huipputason kielimallit (Claude 3.5, GPT-4o) ymmärtävät puhuttua suomea sujuvasti, mukaan lukien murrevariaatiot ja epäselvät kysymykset.</p>
+    <p>Tämä oli totta vielä kaksi vuotta sitten — ei enää. Natiivin suomenkielisen tekoälyäänen taso on niin korkea, että useimmat asiakkaat eivät huomaa puhuvansa tekoälylle ensimmäisten 30 sekunnin aikana. Ja huipputason kielenymmärrys ymmärtää puhuttua suomea sujuvasti, mukaan lukien murrevariaatiot ja epäselvät kysymykset.</p>
 
     <p>AI-vastaanottaja ei ole enää kompromissi — se on usein <em>parempi</em> kuin kiireinen ihminen, koska se:</p>
 
@@ -241,19 +305,31 @@
 
 <section class="cta-bottom">
   <div class="container">
-    <h2>Aloita 14 päivän pilotti</h2>
-    <p>Käyttöönotto saman päivän aikana. Sopii kalenteriin, jota jo käytät.</p>
-    <a href="/#yhteys" class="btn-amber">Varaa pilotti →</a>
+    <div class="cta-card">
+      <h2>Aloita 14 päivän pilotti</h2>
+      <p>Käyttöönotto saman päivän aikana. Sopii kalenteriin, jota jo käytät.</p>
+      <a href="/#yhteys" class="btn btn-primary">Varaa pilotti →</a>
+    </div>
   </div>
 </section>
 
-<footer class="site">
-  <div class="container-wide">
-    <div class="foot-bottom">
-      <span>&copy; 2026 Hyrrä Oy · Y-tunnus 3555902-3</span>
-      <span>info@hyrrä.fi · <a href="/blogi">Blogi</a> · <a href="/integraatiot">Integraatiot</a></span>
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a href="/" class="logo" style="font-size:22px"><svg class="spin-mark" viewBox="0 0 64 64" style="width:28px;height:28px"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#06101A"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#06101A"/></svg><span>hyrrä</span></a>
+        <p class="foot-tag">Suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p>
+      </div>
+      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
+      <div class="foot-col"><h4>// TOIMIALAT</h4><ul><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+      <div class="foot-col"><h4>// LAKI</h4><ul><li><a href="/tietosuoja">Tietosuoja</a></li><li><a href="/kayttoehdot">Käyttöehdot</a></li><li><a href="/dpa">DPA</a></li><li><a href="/yhteystiedot">Yhteystiedot</a></li></ul></div>
     </div>
+    <div class="foot-bottom"><span>// © 2026 Hyrrä Oy · Y-tunnus 3555902-3 · Tehty Suomessa</span><span>info@hyrrä.fi</span></div>
   </div>
 </footer>
+<script>
+(function(){var burger=document.getElementById('navBurger');var overlay=document.getElementById('menuOverlay');var close=document.getElementById('menuClose');if(!burger||!overlay)return;function open(){overlay.classList.add('open');document.body.classList.add('menu-open');overlay.setAttribute('aria-hidden','false');}function shut(){overlay.classList.remove('open');document.body.classList.remove('menu-open');overlay.setAttribute('aria-hidden','true');}burger.addEventListener('click',open);close.addEventListener('click',shut);overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',shut);});document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});})();
+(function(){var glow=document.getElementById('cursorGlow');if(!glow)return;var x=window.innerWidth/2,y=window.innerHeight/2,tx=x,ty=y;document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});function loop(){x+=(tx-x)*0.08;y+=(ty-y)*0.08;glow.style.transform='translate('+x+'px,'+y+'px) translate(-50%,-50%)';requestAnimationFrame(loop);}loop();})();
+</script>
 </body>
 </html>
