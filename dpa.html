@@ -15,9 +15,6 @@
 <link rel="canonical" href="https://hyrrä.fi/dpa">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -77,13 +74,13 @@
   .menu-overlay .menu-foot{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray-2)}
   body.menu-open{overflow:hidden}
   section{position:relative;z-index:2}
-  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.08);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
   .eyebrow::before{content:"//";color:var(--amber);opacity:0.6}
   .btn{padding:14px 24px;border-radius:12px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;transition:transform .2s, box-shadow .2s;text-decoration:none}
   .btn:hover{transform:translateY(-2px)}
   .btn-primary{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);box-shadow:0 12px 30px -10px rgba(255,182,39,0.5);border:none}
-  .btn-secondary{background:rgba(255,255,255,0.05);color:var(--white);border:1px solid var(--line)}
-  footer{background:var(--bg-3);color:rgba(255,255,255,0.65);padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
+  .btn-secondary{background:#FFFFFF;color:var(--white);border:1px solid var(--line)}
+  footer{background:var(--bg-3);color:#4B5563;padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
   footer a:hover{color:var(--amber)}
   .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:32px;margin-bottom:32px}
   @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
@@ -108,6 +105,7 @@
 .linfobox{background:rgba(255,182,39,0.06);border:1px solid rgba(255,182,39,0.25);border-radius:14px;padding:22px;margin:24px 0;backdrop-filter:blur(10px)}
 .linfobox p{margin:0}
 
+
 </style>
 </head>
 <body>
@@ -127,6 +125,7 @@
       <a href="/#hinta">Hinta</a>
       <a href="/demo">Demo</a>
       <a href="/blogi">Blogi</a>
+      <a href="/portaali-kirjautuminen">Portaali</a>
       <a href="/#yhteys" class="nav-cta">Aloita pilotti →</a>
       <button class="nav-burger" id="navBurger" aria-label="Avaa valikko"><span></span><span></span><span></span></button>
     </div>
@@ -139,6 +138,7 @@
   </div>
   <div class="menu-section"><div class="menu-label">// TUOTE</div><ul class="menu-links"><li><a href="/#mita-tekee">Mitä Hyrrä tekee</a></li><li><a href="/#laskuri">ROI-laskuri</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/demo">Kokeile demoa</a></li><li><a href="/#hinta">Hinnoittelu</a></li></ul></div>
   <div class="menu-section"><div class="menu-label">// TOIMIALAT</div><ul class="menu-links"><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+  <div class="menu-section"><div class="menu-label">// PORTAALI</div><ul class="menu-links"><li><a href="/portaali-kirjautuminen">Kirjaudu portaaliin</a></li><li><a href="mailto:info@hyrr%C3%A4.fi">Pyydä tunnukset</a></li></ul></div>
   <a href="/#yhteys" class="menu-cta">Aloita pilotti →</a>
   <div class="menu-foot"><span><a href="/tietosuoja">Tietosuoja</a> · <a href="/kayttoehdot">Käyttöehdot</a></span><span>info@hyrrä.fi</span></div>
 </div>
@@ -156,7 +156,7 @@
       <p><strong>Lyhyesti:</strong> Tämä on standardi DPA-sopimus, joka GDPR vaatii kun käytät Hyrrää asiakasyrityksesi nimissä. Saat sen automaattisesti pilotin aloituksessa.</p>
     </div>
     <h2>1. Osapuolet</h2>
-    <p><strong>Rekisterinpitäjä:</strong> Hyrrän asiakas­yritys (palvelua käyttävä yrittäjä).<br><strong>Käsittelijä:</strong> Hyrrä Oy, Y-tunnus 3555902-3.</p>
+    <p><strong>Rekisterinpitäjä:</strong> Hyrrän asiakas­yritys (palvelua käyttävä yrittäjä).<br><strong>Käsittelijä:</strong> Wrty Clothing Oy (tuleva Hyrrä Oy), Y-tunnus 3555902-3.</p>
     <h2>2. Käsiteltävät tiedot</h2>
     <ul>
       <li>Soittajan puhelinnumero ja nimi (kun annettu)</li>
@@ -193,11 +193,11 @@
         <a href="/" class="logo" style="font-size:22px"><svg class="spin-mark" viewBox="0 0 64 64" style="width:28px;height:28px"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#06101A"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#06101A"/></svg><span>hyrrä</span></a>
         <p class="foot-tag">Suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p>
       </div>
-      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
+      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/portaali-kirjautuminen">Portaali</a></li><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
       <div class="foot-col"><h4>// TOIMIALAT</h4><ul><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
       <div class="foot-col"><h4>// LAKI</h4><ul><li><a href="/tietosuoja">Tietosuoja</a></li><li><a href="/kayttoehdot">Käyttöehdot</a></li><li><a href="/dpa">DPA</a></li><li><a href="/yhteystiedot">Yhteystiedot</a></li></ul></div>
     </div>
-    <div class="foot-bottom"><span>// © 2026 Hyrrä Oy · Y-tunnus 3555902-3 · Tehty Suomessa</span><span>info@hyrrä.fi</span></div>
+    <div class="foot-bottom"><span>// © 2026 Wrty Clothing Oy (Hyrrä) · Y-tunnus 3555902-3 · Tehty Suomessa</span><span>info@hyrrä.fi</span></div>
   </div>
 </footer>
 <script>

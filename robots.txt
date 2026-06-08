@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
 
-# Pidetään pois indeksoinnista
-Disallow: /demo
 
 Sitemap: https://hyrrä.fi/sitemap.xml

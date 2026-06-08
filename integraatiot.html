@@ -15,9 +15,6 @@
 <link rel="canonical" href="https://hyrrä.fi/integraatiot">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
@@ -83,7 +80,7 @@
 
   /* Section bases */
   section{position:relative;z-index:2}
-  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.08);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
   .eyebrow::before{content:"//";color:var(--amber);opacity:0.6}
   h1{font-size:clamp(40px,6vw,76px);font-weight:800;letter-spacing:-0.045em;line-height:0.95;margin-bottom:20px;color:var(--white)}
   h1 .gradient{background:linear-gradient(135deg, #FFD75A 0%, var(--amber) 50%, var(--amber-2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -111,12 +108,12 @@
   .int-name{font-size:16px;font-weight:700;color:var(--white);margin:0;letter-spacing:-0.01em}
   .int-tag{font-family:'JetBrains Mono', monospace;font-size:10.5px;font-weight:700;color:var(--green);background:rgba(91,209,120,0.10);padding:3px 9px;border-radius:99px;border:1px solid rgba(91,209,120,0.25);align-self:flex-start;text-transform:uppercase;letter-spacing:0.04em}
   .int-tag.beta{color:var(--amber);background:rgba(255,182,39,0.10);border-color:rgba(255,182,39,0.25)}
-  .int-tag.soon{color:var(--gray);background:rgba(255,255,255,0.04);border-color:var(--line)}
+  .int-tag.soon{color:var(--gray);background:#FFFFFF;border-color:var(--line)}
   .int-desc{color:var(--gray);font-size:13.5px;line-height:1.5;margin:0;flex:1}
 
   /* Request */
   .request{padding:80px 0;text-align:center}
-  .request .reqbox{max-width:680px;margin:0 auto;background:linear-gradient(180deg, rgba(255,182,39,0.08), rgba(255,182,39,0.02));border:1px solid rgba(255,182,39,0.30);border-radius:24px;padding:48px 36px;backdrop-filter:blur(20px)}
+  .request .reqbox{max-width:680px;margin:0 auto;background:linear-gradient(180deg, rgba(255,182,39,0.10), rgba(255,182,39,0.02));border:1px solid rgba(255,182,39,0.30);border-radius:24px;padding:48px 36px;backdrop-filter:blur(20px)}
   .request h2{margin-bottom:14px}
   .request p{color:var(--gray);font-size:16px;line-height:1.55;margin-bottom:24px}
 
@@ -126,7 +123,7 @@
   .ctasec p{color:var(--gray);font-size:16px;margin-bottom:24px}
 
   /* FOOTER */
-  footer{background:var(--bg-3);color:rgba(255,255,255,0.65);padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
+  footer{background:var(--bg-3);color:#4B5563;padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
   footer a:hover{color:var(--amber)}
   .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:32px;margin-bottom:32px}
   @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
@@ -136,6 +133,7 @@
   .foot-col ul{list-style:none;padding:0;margin:0}
   .foot-col li{padding:5px 0}
   .foot-bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--gray-2);font-family:'JetBrains Mono', monospace}
+
 </style>
 </head>
 <body>
@@ -158,6 +156,7 @@
       <a href="/#hinta">Hinta</a>
       <a href="/demo">Demo</a>
       <a href="/blogi">Blogi</a>
+      <a href="/portaali-kirjautuminen">Portaali</a>
       <a href="/#yhteys" class="nav-cta">Aloita pilotti →</a>
       <button class="nav-burger" id="navBurger" aria-label="Avaa valikko"><span></span><span></span><span></span></button>
     </div>
@@ -191,6 +190,7 @@
       <li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li>
     </ul>
   </div>
+  <div class="menu-section"><div class="menu-label">// PORTAALI</div><ul class="menu-links"><li><a href="/portaali-kirjautuminen">Kirjaudu portaaliin</a></li><li><a href="mailto:info@hyrr%C3%A4.fi">Pyydä tunnukset</a></li></ul></div>
   <a href="/#yhteys" class="menu-cta">Aloita pilotti →</a>
   <div class="menu-foot">
     <span><a href="/tietosuoja">Tietosuoja</a> · <a href="/kayttoehdot">Käyttöehdot</a></span>
@@ -386,12 +386,12 @@
         </a>
         <p class="foot-tag">Suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p>
       </div>
-      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
+      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/portaali-kirjautuminen">Portaali</a></li><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
       <div class="foot-col"><h4>// TOIMIALAT</h4><ul><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
       <div class="foot-col"><h4>// LAKI</h4><ul><li><a href="/tietosuoja">Tietosuoja</a></li><li><a href="/kayttoehdot">Käyttöehdot</a></li><li><a href="/dpa">DPA</a></li><li><a href="/yhteystiedot">Yhteystiedot</a></li></ul></div>
     </div>
     <div class="foot-bottom">
-      <span>// © 2026 Hyrrä Oy · Y-tunnus 3555902-3 · Tehty Suomessa</span>
+      <span>// © 2026 Wrty Clothing Oy (Hyrrä) · Y-tunnus 3555902-3 · Tehty Suomessa</span>
       <span>info@hyrrä.fi</span>
     </div>
   </div>
