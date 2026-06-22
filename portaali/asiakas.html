@@ -163,6 +163,24 @@
           </div>
         </div>
 
+        <!-- Integraatiot: kalenteri + CRM -->
+        <div class="grid g-2" style="margin-bottom:18px">
+          <div class="card">
+            <div class="card-h"><h2>Kalenteri</h2><span id="calStatusPill"></span></div>
+            <div class="sub" style="color:var(--muted);margin-bottom:12px">Yhdistä kalenterisi, niin Hyrrä varaa ajat suoraan siihen.</div>
+            <div class="btn-row">
+              <button type="button" class="btn btn-ghost btn-sm" data-calconn="google">Yhdistä Google</button>
+              <button type="button" class="btn btn-ghost btn-sm" data-calconn="microsoft">Yhdistä Microsoft</button>
+              <button type="button" class="btn btn-deep btn-sm" id="calCheckBtn">Tarkista tila</button>
+            </div>
+            <div class="banner err" id="calErr" style="display:none;margin-top:10px"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h2>CRM</h2><span id="crmStatusPill"></span></div>
+            <div class="sub" style="color:var(--muted)" id="crmInfo">CRM-integraatiota hallinnoi Hyrrän ylläpito.</div>
+          </div>
+        </div>
+
         <!-- Aukioloajat -->
         <div class="card" style="margin-bottom:18px">
           <div class="card-h"><h2>Aukioloajat</h2><span class="card-h-meta meta-line">Esim. 8:00-17:00 tai "suljettu" / "24h"</span></div>
@@ -469,7 +487,49 @@
       '<div class="field" style="margin-bottom:0"><label>'+label+'</label><input class="input hour-input" data-day="'+k+'" value="'+esc(hours[k]||'')+'" placeholder="8:00-17:00 / suljettu / 24h"></div>'
     ).join('');
     renderServices(); renderProducts(); renderTemplates();
+    renderIntegrations();
   }
+
+  /* ---------- Integraatiot: kalenteri + CRM ---------- */
+  function renderIntegrations(){
+    // Kalenteri
+    const connected = !!CUSTOMER.calendar_connected;
+    const provLbl = CUSTOMER.calendar_provider==='microsoft' ? 'Microsoft' : (CUSTOMER.calendar_provider==='google' ? 'Google' : '');
+    document.getElementById('calStatusPill').innerHTML = '<span class="pill '+(connected?'good':'warn')+'">'+
+      (connected ? ('Yhdistetty'+(provLbl?' ('+esc(provLbl)+')':'')) : 'Ei yhdistetty')+'</span>';
+    // CRM (vain tila, EI salaisuuksia)
+    const provider = CUSTOMER.crm_provider || 'none';
+    const crmConnected = !!CUSTOMER.crm_connected;
+    const crmLbl = { none:'Ei käytössä', webhook:'Yleinen webhook', hubspot:'HubSpot', pipedrive:'Pipedrive', salesforce:'Salesforce' }[provider] || provider;
+    document.getElementById('crmStatusPill').innerHTML = '<span class="pill '+(provider==='none'?'gray':(crmConnected?'good':'amber'))+'">'+
+      esc(crmLbl)+(provider==='none'?'':(crmConnected?' · Yhdistetty':' · Ei yhdistetty'))+'</span>';
+    document.getElementById('crmInfo').textContent = provider==='none'
+      ? 'CRM-integraatiota ei ole käytössä. Ota yhteyttä Hyrrän ylläpitoon ottaaksesi sen käyttöön.'
+      : 'CRM-integraatio ('+crmLbl+') on määritetty. Salaisia avaimia ei näytetä turvallisuussyistä. Muutostarpeet hoitaa Hyrrän ylläpito.';
+  }
+
+  async function connectCalendar(provider, btn){
+    const eb=document.getElementById('calErr'); eb.style.display='none';
+    const orig=btn.textContent; btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Avataan…';
+    try{
+      const res=await H.callFn('cal-connect-link', { customer_id: CUSTOMER.id, provider });
+      if(res && res.url){ window.open(res.url, '_blank', 'noopener'); }
+      else throw new Error('Linkkiä ei saatu.');
+    }catch(e){ eb.innerHTML='<span class="ico">✕</span> Yhdistäminen epäonnistui: '+esc(e.message); eb.style.display='flex'; }
+    finally{ btn.disabled=false; btn.textContent=orig; }
+  }
+  async function checkCalendar(){
+    const eb=document.getElementById('calErr'); eb.style.display='none';
+    const btn=document.getElementById('calCheckBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Tarkistetaan…';
+    try{
+      const res=await H.callFn('cal-connection-status', { customer_id: CUSTOMER.id });
+      CUSTOMER.calendar_connected = !!(res && res.calendar_connected);
+      renderIntegrations();
+    }catch(e){ eb.innerHTML='<span class="ico">✕</span> Tilan tarkistus epäonnistui: '+esc(e.message); eb.style.display='flex'; }
+    finally{ btn.disabled=false; btn.textContent='Tarkista tila'; }
+  }
+  document.querySelectorAll('[data-calconn]').forEach(b=>b.addEventListener('click',()=>connectCalendar(b.dataset.calconn, b)));
+  document.getElementById('calCheckBtn').addEventListener('click', checkCalendar);
 
   function renderServices(){
     const el = document.getElementById('servicesList');

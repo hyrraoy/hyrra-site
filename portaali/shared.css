@@ -217,6 +217,49 @@ textarea.input{resize:vertical;min-height:80px;line-height:1.5}
   main{padding:24px 18px 80px}
 }
 
+/* ---------- Velho (provisiointi) ---------- */
+.wiz-progress{margin-bottom:24px}
+.wiz-bar{height:8px;background:#eef0f2;border-radius:99px;overflow:hidden}
+.wiz-bar-fill{height:100%;background:var(--amber);border-radius:99px;transition:width .3s ease;width:12.5%}
+.wiz-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:12px;flex-wrap:wrap}
+.wiz-meta .step-name{font-size:14px;font-weight:800;color:var(--deep)}
+.wiz-meta .step-count{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+.wiz-steps-dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.wiz-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted-2);padding:4px 10px;border-radius:99px;background:#f3f1ec;border:1px solid var(--line);transition:.15s}
+.wiz-dot .n{width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--line-strong);display:grid;place-items:center;font-size:10.5px;color:var(--muted)}
+.wiz-dot.active{background:var(--deep);color:#fff;border-color:var(--deep)}
+.wiz-dot.active .n{background:var(--amber);border-color:var(--amber);color:var(--deep)}
+.wiz-dot.done{background:rgba(63,125,88,0.12);color:var(--success);border-color:rgba(63,125,88,0.3)}
+.wiz-dot.done .n{background:var(--success);border-color:var(--success);color:#fff}
+.wiz-step{display:none;animation:fadeIn .22s ease}
+.wiz-step.active{display:block}
+.wiz-foot{display:flex;justify-content:space-between;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap}
+.radio-card{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line-strong);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;transition:.15s;margin-bottom:10px;background:#fff}
+.radio-card:hover{border-color:var(--amber)}
+.radio-card.sel{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,182,39,0.16);background:#fffaef}
+.radio-card input{margin-top:3px;accent-color:var(--amber-2);flex-shrink:0}
+.radio-card .rc-body{min-width:0}
+.radio-card .rc-title{font-size:14px;font-weight:700;color:var(--deep)}
+.radio-card .rc-desc{font-size:12.5px;color:var(--muted);margin-top:2px}
+.wiz-summary{display:grid;gap:0}
+.wiz-summary .kv .k{max-width:46%}
+.wiz-summary .kv .vv{text-align:right;word-break:break-word}
+
+/* ---------- Onboarding-checklist ---------- */
+.ob-list{display:flex;flex-direction:column;gap:8px}
+.ob-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
+.ob-item .ob-ico{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:14px;font-weight:800}
+.ob-item.ok .ob-ico{background:rgba(63,125,88,0.14);color:var(--success)}
+.ob-item.miss .ob-ico{background:#eef0f2;color:var(--muted-2)}
+.ob-item .ob-label{font-size:13.5px;font-weight:600;color:var(--ink);flex:1}
+.ob-item .ob-state{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+.ob-item.ok .ob-state{color:var(--success)}
+.ob-item.miss .ob-state{color:var(--muted)}
+
+/* ---------- Salaisuuden peite ---------- */
+.secret-mask{display:flex;align-items:center;gap:10px;background:#f3f1ec;border:1px dashed var(--line-strong);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--muted)}
+.secret-mask code{font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;color:var(--ink)}
+
 /* ---------- Tulostus (päiväkooste-PDF) ---------- */
 @media print{
   .top-nav,.side-nav,.menu-toggle,.nav-scrim,.no-print{display:none !important}

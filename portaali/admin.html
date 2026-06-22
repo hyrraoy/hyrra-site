@@ -82,12 +82,24 @@
       </div>
     </section>
 
-    <!-- ============== PROVISIOINTI ============== -->
+    <!-- ============== PROVISIOINTI (VELHO) ============== -->
     <section class="view" id="view-provisiointi">
-      <div class="page-head"><h1>Provisioi uusi Hyrrä</h1><div class="sub">Luo asiakas, portaalitili ja Hyrrä-konfiguraatio. Backend hoitaa numeron, äänen ja assistantin.</div></div>
+      <div class="page-head"><h1>Provisioi uusi Hyrrä</h1><div class="sub">Luo asiakas vaihe vaiheelta. Backend hoitaa numeron, äänen ja assistantin.</div></div>
       <div class="banner err" id="provErr" style="display:none"></div>
-      <form id="provForm">
-        <div class="grid g-2">
+
+      <!-- Edistymispalkki -->
+      <div class="wiz-progress">
+        <div class="wiz-meta">
+          <span class="step-name" id="wizStepName">Yritys & yhteyshenkilö</span>
+          <span class="step-count"><span id="wizStepNum">1</span> / 8</span>
+        </div>
+        <div class="wiz-bar"><div class="wiz-bar-fill" id="wizBarFill"></div></div>
+        <div class="wiz-steps-dots" id="wizDots"></div>
+      </div>
+
+      <form id="provForm" autocomplete="off">
+        <!-- VAIHE 1: Yritys & yhteyshenkilö -->
+        <div class="wiz-step active" data-step="1">
           <div class="card">
             <div class="card-h"><h2>Yritys & yhteyshenkilö</h2></div>
             <div class="field"><label>Yrityksen nimi *</label><input class="input" id="pvName" required></div>
@@ -98,45 +110,121 @@
             <div class="field"><label>Sähköposti (portaalitili) *</label><input class="input" id="pvEmail" type="email" required></div>
             <div class="field"><label>Salasana (portaalitili) *</label><input class="input" id="pvPassword" type="text" required placeholder="Vähintään 8 merkkiä"><div class="hint">Asiakas voi vaihtaa tämän myöhemmin. Välitä turvallisesti.</div></div>
           </div>
+        </div>
+
+        <!-- VAIHE 2: Numero -->
+        <div class="wiz-step" data-step="2">
           <div class="card">
-            <div class="card-h"><h2>Tilaus & numero</h2></div>
+            <div class="card-h"><h2>Puhelinnumero</h2></div>
+            <div class="sub" style="color:var(--muted);margin-bottom:14px">Mihin numeroon Hyrrä vastaa? Voit ostaa uuden suomalaisen numeron tai liittää yrityksen olemassa olevan.</div>
+            <label class="radio-card sel" id="pvNumModeNew">
+              <input type="radio" name="pvNumberMode" value="new" checked>
+              <div class="rc-body"><div class="rc-title">Osta uusi suomalainen numero</div><div class="rc-desc">Hyrrä varaa ja ottaa käyttöön uuden +358-numeron automaattisesti.</div></div>
+            </label>
+            <label class="radio-card" id="pvNumModeAttach">
+              <input type="radio" name="pvNumberMode" value="attach">
+              <div class="rc-body"><div class="rc-title">Liitä olemassa oleva numero</div><div class="rc-desc">Yrityksellä on jo numero, johon puhelut ohjataan Hyrrälle.</div></div>
+            </label>
+            <div class="field" id="pvNumberField" style="display:none;margin-top:8px"><label>Liitettävä numero *</label><input class="input" id="pvNumber" placeholder="+358 …"></div>
+          </div>
+        </div>
+
+        <!-- VAIHE 3: Ääni & tervehdys -->
+        <div class="wiz-step" data-step="3">
+          <div class="card">
+            <div class="card-h"><h2>Ääni & tervehdys</h2></div>
+            <div class="field"><label>Ääni</label><select class="input" id="pvVoice"><option value="nainen">Naisääni</option><option value="mies">Miesääni</option></select></div>
+            <div class="field">
+              <label>Aloituslause (lukittu) <span class="tag-locked">Lukittu</span></label>
+              <div class="locked-box">Puhelu voidaan nauhoittaa palvelun laadun varmistamiseksi.</div>
+              <div class="locked-note">🔒 Tämä lause on aina mukana — pakotettu tietokannassa, ei muokattavissa.</div>
+            </div>
+            <div class="field"><label>Tervehdys (lukitun lauseen jälkeen)</label><input class="input" id="pvGreeting" placeholder="Esim. Yritys X, Hyrrä vastaa. Miten voin auttaa?"></div>
+            <div class="field"><label>System prompt</label><textarea class="input" id="pvPrompt" style="min-height:120px" placeholder="Kuvaile yritys, palvelut ja miten Hyrrä toimii…"></textarea></div>
+          </div>
+        </div>
+
+        <!-- VAIHE 4: Palvelut & tuotteet -->
+        <div class="wiz-step" data-step="4">
+          <div class="grid g-2">
+            <div class="card">
+              <div class="card-h"><h2>Palvelut</h2><button type="button" class="btn btn-ghost btn-sm" id="pvAddService">+ Lisää</button></div>
+              <div id="pvServices"></div>
+            </div>
+            <div class="card">
+              <div class="card-h"><h2>Tuotteet</h2><button type="button" class="btn btn-ghost btn-sm" id="pvAddProduct">+ Lisää</button></div>
+              <div id="pvProducts"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VAIHE 5: Aukioloajat -->
+        <div class="wiz-step" data-step="5">
+          <div class="card">
+            <div class="card-h"><h2>Aukioloajat</h2><span class="card-h-meta meta-line">Esim. 8:00-17:00 / suljettu / 24h</span></div>
+            <div class="grid g-2" id="pvHoursGrid"></div>
+          </div>
+        </div>
+
+        <!-- VAIHE 6: FAQ + kiireelliset -->
+        <div class="wiz-step" data-step="6">
+          <div class="card" style="margin-bottom:18px">
+            <div class="card-h"><h2>Usein kysytyt (FAQ)</h2><button type="button" class="btn btn-ghost btn-sm" id="pvAddFaq">+ Lisää</button></div>
+            <div class="sub" style="color:var(--muted);margin-bottom:12px">Vastaukset, jotka Hyrrä voi antaa suoraan soittajalle.</div>
+            <div id="pvFaqs"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h2>Kiireellisten puheluiden ohjaus</h2></div>
+            <div class="field">
+              <label>Mihin kiireelliset puhelut ohjataan?</label>
+              <input class="input" id="pvUrgent" placeholder="Esim. +358 40 123 4567 tai 'päivystäjälle'">
+              <div class="hint">Numero tai ohje, johon Hyrrä siirtää puhelun kun soittaja ilmoittaa kiireellisestä asiasta. Jätä tyhjäksi jos ei käytössä.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VAIHE 7: CRM -->
+        <div class="wiz-step" data-step="7">
+          <div class="card">
+            <div class="card-h"><h2>CRM-integraatio</h2></div>
+            <div class="sub" style="color:var(--muted);margin-bottom:14px">Lähetä varaukset ja puhelut automaattisesti asiakkaan CRM-järjestelmään. Voit lisätä tämän myöhemminkin.</div>
+            <div class="field">
+              <label>CRM-järjestelmä</label>
+              <select class="input" id="pvCrmProvider">
+                <option value="none">Ei mitään</option>
+                <option value="webhook">Yleinen webhook</option>
+                <option value="hubspot">HubSpot</option>
+                <option value="pipedrive">Pipedrive</option>
+                <option value="salesforce">Salesforce</option>
+              </select>
+            </div>
+            <div id="pvCrmFields"></div>
+          </div>
+        </div>
+
+        <!-- VAIHE 8: Paketti + yhteenveto -->
+        <div class="wiz-step" data-step="8">
+          <div class="card" style="margin-bottom:18px">
+            <div class="card-h"><h2>Paketti & kieli</h2></div>
             <div class="field-row">
               <div class="field"><label>Paketti</label><select class="input" id="pvPlan"><option>Kevyt</option><option selected>Plus</option><option>Pro</option></select></div>
               <div class="field"><label>Kieli</label><select class="input" id="pvLang"><option value="fi">Suomi</option><option value="sv">Ruotsi</option><option value="en">Englanti</option></select></div>
             </div>
-            <div class="field"><label>Numero</label>
-              <select class="input" id="pvNumberMode"><option value="new">Osta uusi numero</option><option value="provided">Liitä annettu numero</option></select>
-            </div>
-            <div class="field" id="pvNumberField" style="display:none"><label>Annettu numero</label><input class="input" id="pvNumber" placeholder="+358 …"></div>
-            <div class="field"><label>Ääni</label><select class="input" id="pvVoice"><option value="nainen">Naisääni</option><option value="mies">Miesääni</option></select></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:18px">
-          <div class="card-h"><h2>Hyrrän konfiguraatio</h2></div>
-          <div class="field">
-            <label>Aloituslause (lukittu) <span class="tag-locked">Lukittu</span></label>
-            <div class="locked-box">Puhelu voidaan nauhoittaa palvelun laadun varmistamiseksi.</div>
-            <div class="locked-note">🔒 Tämä lause on aina mukana — pakotettu tietokannassa.</div>
-          </div>
-          <div class="field"><label>Tervehdys</label><input class="input" id="pvGreeting" placeholder="Esim. Yritys X, Hyrrä vastaa. Miten voin auttaa?"></div>
-          <div class="field"><label>System prompt</label><textarea class="input" id="pvPrompt" style="min-height:120px" placeholder="Kuvaile yritys, palvelut ja miten Hyrrä toimii…"></textarea></div>
-        </div>
-
-        <div class="grid g-2" style="margin-top:18px">
-          <div class="card">
-            <div class="card-h"><h2>Palvelut</h2><button type="button" class="btn btn-ghost btn-sm" id="pvAddService">+ Lisää</button></div>
-            <div id="pvServices"></div>
+            <div class="field"><label>Läpinäkyvyysteksti (EU AI Act)</label><textarea class="input" id="pvTransp" style="min-height:80px" placeholder="Jätä tyhjäksi käyttääksesi globaalia oletustekstiä."></textarea><div class="hint">Soittajille kerrottava teksti tekoälystä. Tyhjänä käytetään Hyrrän globaalia oletusta.</div></div>
           </div>
           <div class="card">
-            <div class="card-h"><h2>Tuotteet</h2><button type="button" class="btn btn-ghost btn-sm" id="pvAddProduct">+ Lisää</button></div>
-            <div id="pvProducts"></div>
+            <div class="card-h"><h2>Yhteenveto</h2></div>
+            <div class="wiz-summary" id="pvSummary"></div>
           </div>
         </div>
 
-        <div class="btn-row" style="margin-top:20px">
-          <button type="submit" class="btn btn-primary" id="provSubmit">Provisioi Hyrrä</button>
-          <span class="sub" style="color:var(--muted)">Tämä kutsuu backendin provision-customer-toimintoa.</span>
+        <!-- Velhon navigointi -->
+        <div class="wiz-foot">
+          <button type="button" class="btn btn-ghost" id="wizPrev" style="visibility:hidden">← Edellinen</button>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" id="wizNext">Seuraava →</button>
+            <button type="submit" class="btn btn-primary" id="provSubmit" style="display:none">Provisioi Hyrrä</button>
+          </div>
         </div>
       </form>
 
@@ -276,6 +364,7 @@
 
     renderCustomers(); renderUsers(); renderTemplates(); renderTranspAdmin();
     fillCustomerSelect(); renderPvServices(); renderPvProducts();
+    renderPvHours(); renderPvFaqs(); renderPvCrmFields(); showWizStep(WIZ_CUR);
     document.getElementById('qcDate').value = new Date().toISOString().slice(0,10);
     document.getElementById('boot').style.display='none';
   }
@@ -332,10 +421,192 @@
         '<div class="field"><label>Kuukausimaksu €</label><input class="input" id="ecAmount" type="number" value="'+(c.billing_amount_eur??'')+'"></div>'+
       '</div>'+
       '<div class="field"><label>Tervehdys</label><input class="input" id="ecGreeting" value="'+esc(c.greeting||'')+'"></div>'+
-      '<div class="field"><label>System prompt</label><textarea class="input" id="ecPrompt" style="min-height:100px">'+esc(c.system_prompt||'')+'</textarea></div>';
+      '<div class="field"><label>System prompt</label><textarea class="input" id="ecPrompt" style="min-height:100px">'+esc(c.system_prompt||'')+'</textarea></div>'+
+      '<div class="divider"></div>'+
+      onboardingHtml(c)+
+      numberSectionHtml(c)+
+      calendarSectionHtml(c)+
+      crmSectionHtml(c);
     document.getElementById('ecStatus').value = c.status;
     document.getElementById('ecPlan').value = c.plan;
+    bindCustomerCardActions(c);
     openModal('custModal');
+  }
+
+  /* ---------- Asiakaskortti: käyttöönoton tila ---------- */
+  function onboardingHtml(c){
+    const ob = c.onboarding_status || {};
+    const hasNumber = !!(c.twilio_number || c.phone);
+    const items = [
+      ['number', 'Numero', ob.number!=null ? ob.number : hasNumber],
+      ['assistant', 'Assistant', ob.assistant!=null ? ob.assistant : !!c.vapi_assistant_id],
+      ['calendar', 'Kalenteri', ob.calendar!=null ? ob.calendar : !!c.calendar_connected],
+      ['crm', 'CRM', ob.crm!=null ? ob.crm : !!c.crm_connected],
+      ['services', 'Palvelut', ob.services!=null ? ob.services : null],
+      ['billing', 'Laskutus', ob.billing!=null ? ob.billing : (c.billing_amount_eur!=null)]
+    ];
+    const rows = items.map(([key,label,val])=>{
+      const ok = val===true;
+      return '<div class="ob-item '+(ok?'ok':'miss')+'" data-ob="'+key+'"><span class="ob-ico">'+(ok?'✓':'–')+'</span>'+
+        '<span class="ob-label">'+esc(label)+'</span><span class="ob-state">'+(ok?'Valmis':'Puuttuu')+'</span></div>';
+    }).join('');
+    return '<div class="card" style="margin:14px 0;background:var(--cream)"><div class="card-h"><h2>Käyttöönoton tila</h2></div><div class="ob-list">'+rows+'</div></div>';
+  }
+
+  /* ---------- Asiakaskortti: numero ---------- */
+  function numberSectionHtml(c){
+    const num = c.twilio_number || c.phone || '';
+    if (num){
+      return '<div class="card" style="margin:14px 0"><div class="card-h"><h2>Puhelinnumero</h2><span class="pill good">Käytössä</span></div>'+
+        '<div class="kv"><span class="k">Numero</span><span class="vv">'+esc(num)+'</span></div></div>';
+    }
+    return '<div class="card" style="margin:14px 0"><div class="card-h"><h2>Puhelinnumero</h2><span class="pill warn">Puuttuu</span></div>'+
+      '<div class="sub" style="color:var(--muted);margin-bottom:12px">Asiakkaalla ei ole vielä numeroa. Osta uusi tai liitä olemassa oleva.</div>'+
+      '<div class="field"><label>Tila</label>'+
+        '<select class="input" id="cmNumMode"><option value="buy">Osta uusi suomalainen numero</option><option value="attach">Liitä olemassa oleva numero</option></select></div>'+
+      '<div class="field" id="cmNumValField" style="display:none"><label>Numero</label><input class="input" id="cmNumVal" placeholder="+358 …"></div>'+
+      '<button type="button" class="btn btn-deep btn-sm" id="cmNumSave">Tallenna numero</button>'+
+      '<div class="banner err" id="cmNumErr" style="display:none;margin-top:10px"></div></div>';
+  }
+
+  /* ---------- Asiakaskortti: kalenteri ---------- */
+  function calendarSectionHtml(c){
+    const connected = !!c.calendar_connected;
+    const provLbl = c.calendar_provider==='microsoft' ? 'Microsoft' : (c.calendar_provider==='google' ? 'Google' : '');
+    return '<div class="card" style="margin:14px 0"><div class="card-h"><h2>Kalenteri</h2>'+
+      '<span class="pill '+(connected?'good':'warn')+'" id="cmCalPill">'+(connected?('Yhdistetty'+(provLbl?' ('+esc(provLbl)+')':'')):'Ei yhdistetty')+'</span></div>'+
+      '<div class="sub" style="color:var(--muted);margin-bottom:12px">Yhdistä asiakkaan kalenteri, jotta Hyrrä voi varata aikoja suoraan siihen.</div>'+
+      '<div class="btn-row">'+
+        '<button type="button" class="btn btn-ghost btn-sm" id="cmCalGoogle" data-cal="google">Yhdistä Google</button>'+
+        '<button type="button" class="btn btn-ghost btn-sm" id="cmCalMs" data-cal="microsoft">Yhdistä Microsoft</button>'+
+        '<button type="button" class="btn btn-deep btn-sm" id="cmCalCheck">Tarkista tila</button>'+
+      '</div>'+
+      '<div class="banner err" id="cmCalErr" style="display:none;margin-top:10px"></div></div>';
+  }
+
+  /* ---------- Asiakaskortti: CRM ---------- */
+  function crmSectionHtml(c){
+    const provider = c.crm_provider || 'none';
+    const connected = !!c.crm_connected;
+    const provLbl = { none:'Ei mitään', webhook:'Yleinen webhook', hubspot:'HubSpot', pipedrive:'Pipedrive', salesforce:'Salesforce' }[provider] || provider;
+    const cfg = c.crm_config || {};
+    // Näytä tallennetut kentät peitettyinä (•••), ei koskaan varsinaista arvoa
+    let savedHtml='';
+    if (provider!=='none'){
+      const keys = Object.keys(cfg);
+      if (keys.length){
+        savedHtml = '<div class="sub" style="color:var(--muted);margin:8px 0 4px">Tallennetut tiedot:</div>'+
+          keys.map(k=>'<div class="kv"><span class="k">'+esc(k)+'</span><span class="vv"><span class="secret-mask"><code>•••••••</code></span></span></div>').join('');
+      }
+    }
+    return '<div class="card" style="margin:14px 0"><div class="card-h"><h2>CRM</h2>'+
+      '<span class="pill '+(provider==='none'?'gray':(connected?'good':'amber'))+'">'+
+        esc(provLbl)+(provider==='none'?'':(connected?' · Yhdistetty':' · Ei yhdistetty'))+'</span></div>'+
+      savedHtml+
+      '<div class="field" style="margin-top:12px"><label>CRM-järjestelmä</label>'+
+        '<select class="input" id="cmCrmProvider">'+
+          ['none','webhook','hubspot','pipedrive','salesforce'].map(p=>'<option value="'+p+'"'+(p===provider?' selected':'')+'>'+
+            ({none:'Ei mitään',webhook:'Yleinen webhook',hubspot:'HubSpot',pipedrive:'Pipedrive',salesforce:'Salesforce'}[p])+'</option>').join('')+
+        '</select></div>'+
+      '<div id="cmCrmFields"></div>'+
+      '<button type="button" class="btn btn-deep btn-sm" id="cmCrmSave">Tallenna CRM-asetukset</button>'+
+      '<div class="hint" style="margin-top:6px">Salaisuuksia ei näytetä takaisin. Jätä kenttä tyhjäksi säilyttääksesi nykyisen arvon — täytä vain jos haluat vaihtaa.</div>'+
+      '<div class="banner err" id="cmCrmErr" style="display:none;margin-top:10px"></div></div>';
+  }
+
+  function bindCustomerCardActions(c){
+    /* Numero */
+    const numMode=document.getElementById('cmNumMode');
+    if (numMode){
+      numMode.addEventListener('change',function(){ document.getElementById('cmNumValField').style.display = this.value==='attach'?'block':'none'; });
+      document.getElementById('cmNumSave').addEventListener('click',()=>saveNumber(c));
+    }
+    /* Kalenteri */
+    document.querySelectorAll('[data-cal]').forEach(b=>b.addEventListener('click',()=>connectCalendar(c, b.dataset.cal)));
+    const calCheck=document.getElementById('cmCalCheck');
+    if (calCheck) calCheck.addEventListener('click',()=>checkCalendar(c));
+    /* CRM */
+    const crmProv=document.getElementById('cmCrmProvider');
+    if (crmProv){
+      const renderFields=()=>{
+        const fields=crmFieldDefs(crmProv.value);
+        const cfg=c.crm_config||{};
+        document.getElementById('cmCrmFields').innerHTML = fields.map(f=>{
+          const hasSaved = cfg[f.key]!=null && cfg[f.key]!=='';
+          return '<div class="field"><label>'+esc(f.label)+(f.required?' *':'')+'</label>'+
+            '<input class="input" id="cmCrm_'+f.key+'"'+(f.secret?' type="password" autocomplete="new-password"':'')+
+            ' placeholder="'+(hasSaved && f.secret ? '••• (tallennettu — jätä tyhjäksi säilyttääksesi)' : '')+'">'+
+            (f.hint?'<div class="hint">'+esc(f.hint)+'</div>':'')+'</div>';
+        }).join('');
+      };
+      crmProv.addEventListener('change',renderFields);
+      renderFields();
+      document.getElementById('cmCrmSave').addEventListener('click',()=>saveCrm(c));
+    }
+  }
+
+  async function saveNumber(c){
+    const mode=document.getElementById('cmNumMode').value;
+    const val=mode==='attach'?document.getElementById('cmNumVal').value.trim():'';
+    const eb=document.getElementById('cmNumErr'); eb.style.display='none';
+    if(mode==='attach' && !val){ eb.textContent='Anna numero.'; eb.style.display='flex'; return; }
+    const btn=document.getElementById('cmNumSave'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Tallennetaan…';
+    try{
+      const res=await H.callFn('update-customer-config', { customer_id:c.id, number:{ mode, value: mode==='attach'?val:undefined } });
+      if(res && res.customer){ Object.assign(c,res.customer); }
+      else if(mode==='attach'){ c.twilio_number=val; }
+      await reloadCustomers(); openCustomer(c.id);
+    }catch(e){ eb.textContent='Tallennus epäonnistui: '+e.message; eb.style.display='flex'; btn.disabled=false; btn.textContent='Tallenna numero'; }
+  }
+
+  async function connectCalendar(c, provider){
+    const eb=document.getElementById('cmCalErr'); eb.style.display='none';
+    const btn=document.getElementById(provider==='google'?'cmCalGoogle':'cmCalMs');
+    const orig=btn.textContent; btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Avataan…';
+    try{
+      const res=await H.callFn('cal-connect-link', { customer_id:c.id, provider });
+      if(res && res.url){ window.open(res.url, '_blank', 'noopener'); }
+      else throw new Error('Linkkiä ei saatu.');
+    }catch(e){ eb.innerHTML='<span class="ico">✕</span> Yhdistäminen epäonnistui: '+esc(e.message); eb.style.display='flex'; }
+    finally{ btn.disabled=false; btn.textContent=orig; }
+  }
+  async function checkCalendar(c){
+    const eb=document.getElementById('cmCalErr'); eb.style.display='none';
+    const btn=document.getElementById('cmCalCheck'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Tarkistetaan…';
+    try{
+      const res=await H.callFn('cal-connection-status', { customer_id:c.id });
+      const connected=!!(res && res.calendar_connected);
+      c.calendar_connected=connected;
+      document.getElementById('cmCalPill').className='pill '+(connected?'good':'warn');
+      document.getElementById('cmCalPill').textContent=connected?'Yhdistetty':'Ei yhdistetty';
+    }catch(e){ eb.innerHTML='<span class="ico">✕</span> Tilan tarkistus epäonnistui: '+esc(e.message); eb.style.display='flex'; }
+    finally{ btn.disabled=false; btn.textContent='Tarkista tila'; }
+  }
+
+  async function saveCrm(c){
+    const provider=document.getElementById('cmCrmProvider').value;
+    const eb=document.getElementById('cmCrmErr'); eb.style.display='none';
+    const config={};
+    if(provider!=='none'){
+      for(const f of crmFieldDefs(provider)){
+        const el=document.getElementById('cmCrm_'+f.key);
+        const v=el?el.value.trim():'';
+        if(v) config[f.key]=v;                       // lähetä vain uudet arvot; tyhjä = säilytä nykyinen
+        else if(f.required && !((c.crm_config||{})[f.key])){
+          eb.innerHTML='<span class="ico">✕</span> Täytä kenttä: '+esc(f.label); eb.style.display='flex'; return;
+        }
+      }
+    }
+    const btn=document.getElementById('cmCrmSave'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Tallennetaan…';
+    try{
+      await H.callFn('update-customer-config', { customer_id:c.id, crm:{ provider, config } });
+      await reloadCustomers(); openCustomer(c.id);
+    }catch(e){ eb.innerHTML='<span class="ico">✕</span> Tallennus epäonnistui: '+esc(e.message); eb.style.display='flex'; btn.disabled=false; btn.textContent='Tallenna CRM-asetukset'; }
+  }
+
+  async function reloadCustomers(){
+    const { data } = await SB.from('customers').select('*').order('created_at',{ascending:false});
+    if (data){ CUSTOMERS=data; renderCustomers(); fillCustomerSelect(); const cur=CUSTOMERS.find(x=>x.id===(CURRENT_CUST&&CURRENT_CUST.id)); if(cur) CURRENT_CUST=cur; }
   }
 
   document.getElementById('cmSave').addEventListener('click', async function(){
@@ -377,10 +648,153 @@
   document.querySelectorAll('[data-close-modal]').forEach(b=>b.addEventListener('click', closeModal));
   document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) closeModal(); }));
 
-  /* ---------- PROVISIOINTI ---------- */
-  document.getElementById('pvNumberMode').addEventListener('change',function(){
-    document.getElementById('pvNumberField').style.display = this.value==='provided' ? 'block' : 'none';
-  });
+  /* ---------- PROVISIOINTI: VELHO ---------- */
+  const WIZ_STEPS = ['Yritys & yhteyshenkilö','Numero','Ääni & tervehdys','Palvelut & tuotteet','Aukioloajat','FAQ & kiireelliset','CRM','Paketti & yhteenveto'];
+  const WIZ_TOTAL = WIZ_STEPS.length;
+  let WIZ_CUR = 1;
+  let PV_FAQS = [];
+  const PV_DAYS = [['mon','Maanantai'],['tue','Tiistai'],['wed','Keskiviikko'],['thu','Torstai'],['fri','Perjantai'],['sat','Lauantai'],['sun','Sunnuntai']];
+
+  function renderWizDots(){
+    document.getElementById('wizDots').innerHTML = WIZ_STEPS.map((s,i)=>{
+      const n=i+1; const cls = n===WIZ_CUR?'active':(n<WIZ_CUR?'done':'');
+      return '<button type="button" class="wiz-dot '+cls+'" data-jump="'+n+'"><span class="n">'+(n<WIZ_CUR?'✓':n)+'</span>'+esc(s)+'</button>';
+    }).join('');
+    document.querySelectorAll('#wizDots [data-jump]').forEach(b=>b.addEventListener('click',()=>{
+      const target=parseInt(b.dataset.jump,10);
+      if(target<WIZ_CUR){ gotoStep(target); }            // taaksepäin aina sallittu
+      else if(target>WIZ_CUR){ if(validateStep(WIZ_CUR)){ gotoStep(target); } }
+    }));
+  }
+  function showWizStep(n){
+    document.querySelectorAll('.wiz-step').forEach(s=>s.classList.toggle('active', +s.dataset.step===n));
+    document.getElementById('wizStepName').textContent = WIZ_STEPS[n-1];
+    document.getElementById('wizStepNum').textContent = n;
+    document.getElementById('wizBarFill').style.width = Math.round(n/WIZ_TOTAL*100)+'%';
+    document.getElementById('wizPrev').style.visibility = n>1 ? 'visible' : 'hidden';
+    const last = n===WIZ_TOTAL;
+    document.getElementById('wizNext').style.display = last ? 'none' : 'inline-flex';
+    document.getElementById('provSubmit').style.display = last ? 'inline-flex' : 'none';
+    renderWizDots();
+    if (last) renderPvSummary();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function gotoStep(n){ WIZ_CUR=Math.max(1,Math.min(WIZ_TOTAL,n)); showWizStep(WIZ_CUR); }
+  function validateStep(n){
+    document.getElementById('provErr').style.display='none';
+    if (n===1){
+      const name=document.getElementById('pvName').value.trim();
+      const email=document.getElementById('pvEmail').value.trim();
+      const pw=document.getElementById('pvPassword').value;
+      if(!name){ return wizErr('Anna yrityksen nimi.'); }
+      if(!email||!/.+@.+\..+/.test(email)){ return wizErr('Anna kelvollinen sähköposti.'); }
+      if(!pw||pw.length<8){ return wizErr('Salasanan tulee olla vähintään 8 merkkiä.'); }
+    }
+    if (n===2){
+      if(currentNumberMode()==='attach' && !document.getElementById('pvNumber').value.trim()){
+        return wizErr('Anna liitettävä numero tai valitse "Osta uusi".');
+      }
+    }
+    if (n===7){
+      const prov=document.getElementById('pvCrmProvider').value;
+      if(prov!=='none'){
+        const fields=crmFieldDefs(prov);
+        for(const f of fields){
+          const v=(document.getElementById('pvCrm_'+f.key)||{}).value;
+          if(f.required && !(v||'').trim()){ return wizErr('Täytä CRM-kenttä: '+f.label); }
+        }
+      }
+    }
+    return true;
+  }
+  function wizErr(msg){
+    const eb=document.getElementById('provErr');
+    eb.innerHTML='<span class="ico">✕</span> '+esc(msg); eb.style.display='flex';
+    window.scrollTo({top:0,behavior:'smooth'}); return false;
+  }
+  document.getElementById('wizNext').addEventListener('click',()=>{ if(validateStep(WIZ_CUR)) gotoStep(WIZ_CUR+1); });
+  document.getElementById('wizPrev').addEventListener('click',()=>gotoStep(WIZ_CUR-1));
+
+  /* ---- Vaihe 2: numero (radiokortit) ---- */
+  function currentNumberMode(){ const r=document.querySelector('input[name="pvNumberMode"]:checked'); return r?r.value:'new'; }
+  document.querySelectorAll('input[name="pvNumberMode"]').forEach(r=>r.addEventListener('change',function(){
+    document.getElementById('pvNumModeNew').classList.toggle('sel', this.value==='new');
+    document.getElementById('pvNumModeAttach').classList.toggle('sel', this.value==='attach');
+    document.getElementById('pvNumberField').style.display = this.value==='attach' ? 'block' : 'none';
+  }));
+
+  /* ---- Vaihe 5: aukioloajat ---- */
+  function renderPvHours(){
+    document.getElementById('pvHoursGrid').innerHTML = PV_DAYS.map(([k,label])=>
+      '<div class="field" style="margin-bottom:0"><label>'+label+'</label><input class="input pv-hour" data-day="'+k+'" placeholder="8:00-17:00 / suljettu / 24h"></div>'
+    ).join('');
+  }
+
+  /* ---- Vaihe 6: FAQ ---- */
+  function renderPvFaqs(){
+    document.getElementById('pvFaqs').innerHTML = PV_FAQS.map((f,i)=>
+      '<div class="field-row" data-pvfaq="'+i+'" style="grid-template-columns:1fr 1.4fr auto;align-items:end;gap:8px;margin-bottom:8px">'+
+      '<div class="field" style="margin-bottom:0"><label>Kysymys</label><input class="input f-q" value="'+esc(f.q||'')+'"></div>'+
+      '<div class="field" style="margin-bottom:0"><label>Vastaus</label><input class="input f-a" value="'+esc(f.a||'')+'"></div>'+
+      '<button type="button" class="btn btn-danger btn-sm pv-faq-del">×</button></div>'
+    ).join('') || '<div class="sub" style="color:var(--muted)">Ei kysymyksiä.</div>';
+    document.querySelectorAll('.pv-faq-del').forEach((b,i)=>b.addEventListener('click',()=>{PV_FAQS.splice(i,1);renderPvFaqs();}));
+  }
+  document.getElementById('pvAddFaq').addEventListener('click',()=>{PV_FAQS.push({q:'',a:''});renderPvFaqs();});
+
+  /* ---- Vaihe 7: CRM ---- */
+  function crmFieldDefs(provider){
+    switch(provider){
+      case 'webhook':    return [{key:'webhook_url',label:'Webhook-URL',required:true,hint:'POST-osoite, johon Hyrrä lähettää JSON-tapahtumat.'}];
+      case 'hubspot':    return [{key:'api_key',label:'Private App -token',required:true,secret:true,hint:'HubSpot → Settings → Integrations → Private Apps → luo sovellus ja kopioi token.'}];
+      case 'pipedrive':  return [{key:'domain',label:'Yritystunnus (domain)',required:true,hint:'esim. yritys (yritys.pipedrive.com).'},{key:'api_token',label:'API-token',required:true,secret:true,hint:'Pipedrive → Asetukset → Henkilökohtaiset → API.'}];
+      case 'salesforce': return [{key:'instance_url',label:'Instance-URL',required:true,hint:'esim. https://yritys.my.salesforce.com'},{key:'access_token',label:'Access token',required:true,secret:true,hint:'Connected App / OAuth-token.'}];
+      default: return [];
+    }
+  }
+  function renderPvCrmFields(){
+    const prov=document.getElementById('pvCrmProvider').value;
+    const fields=crmFieldDefs(prov);
+    document.getElementById('pvCrmFields').innerHTML = fields.map(f=>
+      '<div class="field"><label>'+esc(f.label)+(f.required?' *':'')+'</label>'+
+      '<input class="input" id="pvCrm_'+f.key+'"'+(f.secret?' type="password" autocomplete="new-password"':'')+'>'+
+      (f.hint?'<div class="hint">'+esc(f.hint)+'</div>':'')+'</div>'
+    ).join('');
+  }
+  document.getElementById('pvCrmProvider').addEventListener('change', renderPvCrmFields);
+  function collectCrm(){
+    const provider=document.getElementById('pvCrmProvider').value;
+    if(provider==='none') return { provider:'none', config:{} };
+    const config={};
+    crmFieldDefs(provider).forEach(f=>{ const el=document.getElementById('pvCrm_'+f.key); if(el&&el.value.trim()) config[f.key]=el.value.trim(); });
+    return { provider, config };
+  }
+
+  /* ---- Vaihe 8: yhteenveto ---- */
+  function renderPvSummary(){
+    const mode=currentNumberMode();
+    const crm=document.getElementById('pvCrmProvider');
+    const crmLbl=crm.options[crm.selectedIndex].text;
+    const services=Array.from(document.querySelectorAll('[data-pvsrv]')).map(r=>r.querySelector('.s-name').value.trim()).filter(Boolean);
+    const products=Array.from(document.querySelectorAll('[data-pvprd]')).map(r=>r.querySelector('.p-name').value.trim()).filter(Boolean);
+    const urgent=document.getElementById('pvUrgent').value.trim();
+    const rows=[
+      ['Yritys', document.getElementById('pvName').value.trim()||'—'],
+      ['Sähköposti', document.getElementById('pvEmail').value.trim()||'—'],
+      ['Toimiala', document.getElementById('pvIndustry').value.trim()||'—'],
+      ['Numero', mode==='attach' ? ('Liitetään: '+(document.getElementById('pvNumber').value.trim()||'—')) : 'Ostetaan uusi suomalainen numero'],
+      ['Ääni', document.getElementById('pvVoice').value==='mies'?'Miesääni':'Naisääni'],
+      ['Palvelut', services.length?services.join(', '):'—'],
+      ['Tuotteet', products.length?products.join(', '):'—'],
+      ['Kiireelliset', urgent||'Ei ohjausta'],
+      ['CRM', crmLbl],
+      ['Paketti', document.getElementById('pvPlan').value],
+      ['Kieli', document.getElementById('pvLang').options[document.getElementById('pvLang').selectedIndex].text]
+    ];
+    document.getElementById('pvSummary').innerHTML = rows.map(([k,v])=>
+      '<div class="kv"><span class="k">'+esc(k)+'</span><span class="vv">'+esc(v)+'</span></div>').join('');
+  }
+
   function pvRow(kind,obj,i){
     if(kind==='srv') return '<div class="field-row" data-pvsrv="'+i+'" style="grid-template-columns:2fr 1fr 1fr auto;align-items:end;gap:8px;margin-bottom:8px">'+
       '<div class="field" style="margin-bottom:0"><label>Palvelu</label><input class="input s-name" value="'+esc(obj.name||'')+'"></div>'+
@@ -401,6 +815,7 @@
 
   document.getElementById('provForm').addEventListener('submit', async function(e){
     e.preventDefault();
+    if(!validateStep(1)){ gotoStep(1); return; }
     document.getElementById('provErr').style.display='none';
     const btn=document.getElementById('provSubmit');
     btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Provisioidaan…';
@@ -410,6 +825,13 @@
     const products = Array.from(document.querySelectorAll('[data-pvprd]')).map(r=>({
       name:r.querySelector('.p-name').value.trim(), price_eur:numOrNull(r.querySelector('.p-price').value)
     })).filter(p=>p.name);
+    const hours={};
+    document.querySelectorAll('.pv-hour').forEach(i=>{ if(i.value.trim()) hours[i.dataset.day]=i.value.trim(); });
+    const faq=PV_FAQS.map(f=>({q:f.q&&f.q.trim?f.q.trim():'', a:f.a&&f.a.trim?f.a.trim():''}))
+      .filter(f=>f.q&&f.a);
+    const mode=currentNumberMode();
+    const crm=collectCrm();
+    const transp=document.getElementById('pvTransp').value.trim();
     const payload = {
       name: document.getElementById('pvName').value.trim(),
       contact_name: document.getElementById('pvContact').value.trim(),
@@ -418,11 +840,15 @@
       account: { email: document.getElementById('pvEmail').value.trim(), password: document.getElementById('pvPassword').value },
       plan: document.getElementById('pvPlan').value,
       language: document.getElementById('pvLang').value,
-      number_mode: document.getElementById('pvNumberMode').value,
-      provided_number: document.getElementById('pvNumber').value.trim() || null,
+      number: { mode: mode, value: mode==='attach' ? (document.getElementById('pvNumber').value.trim()||null) : undefined },
       voice_label: document.getElementById('pvVoice').value,
       greeting: document.getElementById('pvGreeting').value.trim(),
       system_prompt: document.getElementById('pvPrompt').value.trim(),
+      hours,
+      faq,
+      urgent_routing: document.getElementById('pvUrgent').value.trim() || null,
+      crm,
+      transparency_text: transp || null,
       services, products
     };
     try {
