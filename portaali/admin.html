@@ -318,6 +318,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="config.js"></script>
+<script src="integrations.js"></script>
 <script>
 (function(){
   'use strict';
@@ -426,10 +427,15 @@
       onboardingHtml(c)+
       numberSectionHtml(c)+
       calendarSectionHtml(c)+
-      crmSectionHtml(c);
+      crmSectionHtml(c)+
+      '<div class="divider"></div>'+
+      '<div class="card-h"><h2>Integraatiot</h2></div>'+
+      '<div class="sub" style="color:var(--muted);margin-bottom:12px">Kytke asiakkaan järjestelmät kategorioittain. Salaisuuksia ei näytetä takaisin — syötä uusi vain jos haluat vaihtaa.</div>'+
+      '<div id="cmIntgRoot"></div>';
     document.getElementById('ecStatus').value = c.status;
     document.getElementById('ecPlan').value = c.plan;
     bindCustomerCardActions(c);
+    renderCustomerIntegrations(c);
     openModal('custModal');
   }
 
@@ -447,8 +453,10 @@
     ];
     const rows = items.map(([key,label,val])=>{
       const ok = val===true;
+      const okLbl = key==='calendar' ? 'Yhdistetty' : 'Valmis';
+      const missLbl = key==='calendar' ? 'Ei yhdistetty' : 'Puuttuu';
       return '<div class="ob-item '+(ok?'ok':'miss')+'" data-ob="'+key+'"><span class="ob-ico">'+(ok?'✓':'–')+'</span>'+
-        '<span class="ob-label">'+esc(label)+'</span><span class="ob-state">'+(ok?'Valmis':'Puuttuu')+'</span></div>';
+        '<span class="ob-label">'+esc(label)+'</span><span class="ob-state">'+(ok?okLbl:missLbl)+'</span></div>';
     }).join('');
     return '<div class="card" style="margin:14px 0;background:var(--cream)"><div class="card-h"><h2>Käyttöönoton tila</h2></div><div class="ob-list">'+rows+'</div></div>';
   }
@@ -512,6 +520,26 @@
       '<button type="button" class="btn btn-deep btn-sm" id="cmCrmSave">Tallenna CRM-asetukset</button>'+
       '<div class="hint" style="margin-top:6px">Salaisuuksia ei näytetä takaisin. Jätä kenttä tyhjäksi säilyttääksesi nykyisen arvon — täytä vain jos haluat vaihtaa.</div>'+
       '<div class="banner err" id="cmCrmErr" style="display:none;margin-top:10px"></div></div>';
+  }
+
+  /* ---------- Asiakaskortti: Integraatiot (jaettu moduuli) ---------- */
+  function renderCustomerIntegrations(c){
+    const root = document.getElementById('cmIntgRoot');
+    if (!root || !window.HyrraIntegrations) return;
+    window.HyrraIntegrations.render(root, {
+      customerId: c.id,
+      onStatusChange: (idx)=>{
+        const s = window.HyrraIntegrations.summary(idx);
+        // Päivitä käyttöönoton tila -checklistin kalenteririvi
+        const calItem = document.querySelector('#cmBody .ob-item[data-ob="calendar"]');
+        if (calItem && s.calendarConnected){
+          calItem.classList.remove('miss'); calItem.classList.add('ok');
+          calItem.querySelector('.ob-ico').textContent='✓';
+          calItem.querySelector('.ob-state').textContent='Yhdistetty';
+          c.calendar_connected = true;
+        }
+      }
+    });
   }
 
   function bindCustomerCardActions(c){

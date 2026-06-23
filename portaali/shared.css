@@ -260,6 +260,29 @@ textarea.input{resize:vertical;min-height:80px;line-height:1.5}
 .secret-mask{display:flex;align-items:center;gap:10px;background:#f3f1ec;border:1px dashed var(--line-strong);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--muted)}
 .secret-mask code{font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;color:var(--ink)}
 
+/* ---------- Integraatiot ---------- */
+.intg-group{margin-bottom:20px}
+.intg-group:last-child{margin-bottom:0}
+.intg-group-h{display:flex;align-items:center;gap:10px;margin:0 2px 12px}
+.intg-group-h .ig-ico{width:30px;height:30px;border-radius:8px;background:var(--amber-soft);display:grid;place-items:center;flex-shrink:0;color:var(--deep)}
+.intg-group-h .ig-ico svg{width:17px;height:17px}
+.intg-group-h h3{font-size:14px;font-weight:800;color:var(--deep);letter-spacing:-0.01em}
+.intg-group-h .ig-sub{font-size:12px;color:var(--muted);font-weight:500}
+.intg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+@media (max-width:560px){.intg-grid{grid-template-columns:1fr}}
+.intg-card{border:1px solid var(--line);border-radius:var(--radius-sm);padding:15px 16px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.intg-card.req{background:#fdfcf9;border-style:dashed}
+.intg-card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.intg-card-h .ic-name{font-size:14px;font-weight:700;color:var(--ink)}
+.intg-card-h .ic-meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+.intg-card .ic-fields{display:flex;flex-direction:column;gap:10px}
+.intg-card .ic-fields .field{margin-bottom:0}
+.intg-card .ic-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.intg-card .ic-note{font-size:11.5px;color:var(--muted);line-height:1.45}
+.intg-card .banner{margin-bottom:0;margin-top:2px}
+.pill.pending{background:var(--amber-soft);color:var(--amber-2)}
+.pill.locked{background:#eef0f2;color:var(--muted)}
+
 /* ---------- Tulostus (päiväkooste-PDF) ---------- */
 @media print{
   .top-nav,.side-nav,.menu-toggle,.nav-scrim,.no-print{display:none !important}

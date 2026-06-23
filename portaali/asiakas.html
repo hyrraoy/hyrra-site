@@ -47,6 +47,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       Asetukset
     </button>
+    <button class="side-link" data-view="integraatiot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><path d="M13 17h9M17.5 13v9"/></svg>
+      Integraatiot
+    </button>
     <button class="side-link" data-view="laskutus">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
       Laskutus
@@ -213,6 +217,12 @@
       </form>
     </section>
 
+    <!-- ============== INTEGRAATIOT ============== -->
+    <section class="view" id="view-integraatiot">
+      <div class="page-head"><h1>Integraatiot</h1><div class="sub">Kytke kalenteri, varausjärjestelmä, viestintä ja muut järjestelmät Hyrrään. Salaisuuksia (avaimet, tokenit) ei näytetä takaisin — syötä uusi vain jos haluat vaihtaa.</div></div>
+      <div id="intgRoot"></div>
+    </section>
+
     <!-- ============== LASKUTUS ============== -->
     <section class="view" id="view-laskutus">
       <div class="page-head"><h1>Laskutus</h1><div class="sub">Tilauksesi, paketti ja laskuhistoria.</div></div>
@@ -267,6 +277,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="integrations.js"></script>
 <script>
 (function(){
   'use strict';
@@ -284,6 +295,35 @@
     document.querySelectorAll('.side-link[data-view]').forEach(l=>l.classList.toggle('active', l.dataset.view===name));
     closeMenu();
     window.scrollTo(0,0);
+    if (name==='integraatiot') renderIntegrationsView();
+  }
+
+  /* ---------- Integraatiot-näkymä (asiakas) ---------- */
+  let INTG_RENDERED = false;
+  function renderIntegrationsView(){
+    if (INTG_RENDERED || !CUSTOMER) return;
+    INTG_RENDERED = true;
+    window.HyrraIntegrations.render(document.getElementById('intgRoot'), {
+      customerId: CUSTOMER.id,
+      // CRM näytetään asiakkaalle vain lukutilassa (ylläpidon hallinnoima)
+      crmHtml: crmReadOnlyHtml(),
+      onStatusChange: (idx)=>{
+        const s = window.HyrraIntegrations.summary(idx);
+        if (s.calendarConnected) CUSTOMER.calendar_connected = true;
+      }
+    });
+  }
+  function crmReadOnlyHtml(){
+    const provider = CUSTOMER.crm_provider || 'none';
+    const connected = !!CUSTOMER.crm_connected;
+    const lbl = { none:'Ei käytössä', webhook:'Yleinen webhook', hubspot:'HubSpot', pipedrive:'Pipedrive', salesforce:'Salesforce' }[provider] || provider;
+    const pill = '<span class="pill '+(provider==='none'?'gray':(connected?'good':'amber'))+'">'+
+      esc(lbl)+(provider==='none'?'':(connected?' · Yhdistetty':' · Ei yhdistetty'))+'</span>';
+    const info = provider==='none'
+      ? 'CRM-integraatiota ei ole käytössä. Ota yhteyttä Hyrrän ylläpitoon ottaaksesi sen käyttöön.'
+      : 'CRM-integraatio ('+esc(lbl)+') on määritetty. Salaisia avaimia ei näytetä turvallisuussyistä. Muutostarpeet hoitaa Hyrrän ylläpito.';
+    return '<div class="intg-card"><div class="intg-card-h"><div class="ic-name">CRM-tila</div>'+pill+'</div>'+
+      '<div class="ic-note">'+info+'</div></div>';
   }
   document.querySelectorAll('.side-link[data-view]').forEach(l=>l.addEventListener('click',()=>showView(l.dataset.view)));
   document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.goto)));
