@@ -126,8 +126,12 @@ window.HyrraIntegrations = (function () {
   /* ---------- Tila per (customer): integraatiolista ---------- */
   // map "category|provider" → { status, account_label, config }
   function indexList(list) {
+    // Backend voi palauttaa joko taulukon tai { integrations:[...] } — normalisoi.
+    const arr = Array.isArray(list)
+      ? list
+      : (list && Array.isArray(list.integrations) ? list.integrations : []);
     const idx = {};
-    (list || []).forEach(it => { idx[it.category + '|' + it.provider] = it; });
+    arr.forEach(it => { idx[it.category + '|' + it.provider] = it; });
     return idx;
   }
 
