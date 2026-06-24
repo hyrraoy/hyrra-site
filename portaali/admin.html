@@ -70,6 +70,10 @@
     <section class="view active" id="view-asiakkaat">
       <div class="page-head"><h1>Asiakkaat</h1><div class="sub">Kaikki Hyrrää käyttävät yritykset. Klikkaa riviä avataksesi asiakkaan kortin.</div></div>
       <div class="kpi-grid" id="custKpis"></div>
+      <div class="card" id="billReqCard" style="display:none;margin-bottom:18px;border-color:rgba(255,182,39,0.35)">
+        <div class="card-h"><h2>Avoimet laskutuspyynnöt <span class="pill amber" id="billReqCount">0</span></h2></div>
+        <table class="tbl"><thead><tr><th>Yritys</th><th>Pyyntö</th><th>Nykyinen</th><th>Toivottu</th><th>Päivä</th><th></th></tr></thead><tbody id="billReqRows"></tbody></table>
+      </div>
       <div class="card">
         <div class="card-h">
           <h2>Kaikki asiakkaat</h2>
@@ -323,7 +327,7 @@
 (function(){
   'use strict';
   const H = window.Hyrra, SB = window.SB, esc = H.esc;
-  let PROFILE=null, CUSTOMERS=[], CALLS=[], BOOKINGS=[], SUBS=[], PROFILES=[], EMAILTMPL=[], TRANSP=[];
+  let PROFILE=null, CUSTOMERS=[], CALLS=[], BOOKINGS=[], SUBS=[], PROFILES=[], EMAILTMPL=[], TRANSP=[], BILLING_REQS=[];
   let PV_SERVICES=[], PV_PRODUCTS=[];
 
   /* ---------- Navigointi ---------- */
@@ -351,19 +355,21 @@
     if (PROFILE.role !== 'admin'){ location.href='asiakas.html'; return; }
     document.getElementById('userName').textContent = PROFILE.name || PROFILE.email;
 
-    const [c, calls, bookings, subs, profiles, emailtmpl, transp] = await Promise.all([
+    const [c, calls, bookings, subs, profiles, emailtmpl, transp, breqs] = await Promise.all([
       SB.from('customers').select('*').order('created_at',{ascending:false}),
       SB.from('calls').select('id,customer_id,started_at,duration_sec,outcome'),
       SB.from('bookings').select('id,customer_id,booking_date'),
       SB.from('subscriptions').select('*'),
       SB.from('profiles').select('id,email,name,role,customer_id'),
       SB.from('email_templates').select('*').order('created_at'),
-      SB.from('transparency_texts').select('*').order('updated_at',{ascending:false})
+      SB.from('transparency_texts').select('*').order('updated_at',{ascending:false}),
+      SB.from('billing_requests').select('*').order('created_at',{ascending:false})
     ]);
     CUSTOMERS=c.data||[]; CALLS=calls.data||[]; BOOKINGS=bookings.data||[]; SUBS=subs.data||[];
     PROFILES=profiles.data||[]; EMAILTMPL=emailtmpl.data||[]; TRANSP=transp.data||[];
+    BILLING_REQS=breqs.data||[];
 
-    renderCustomers(); renderUsers(); renderTemplates(); renderTranspAdmin();
+    renderCustomers(); renderUsers(); renderTemplates(); renderTranspAdmin(); renderBillingRequests();
     fillCustomerSelect(); renderPvServices(); renderPvProducts();
     renderPvHours(); renderPvFaqs(); renderPvCrmFields(); showWizStep(WIZ_CUR);
     document.getElementById('qcDate').value = new Date().toISOString().slice(0,10);
@@ -394,6 +400,53 @@
     }).join('') || '<tr class="norow"><td colspan="6"><div class="empty">Ei asiakkaita.</div></td></tr>';
     document.querySelectorAll('#custRows [data-cust]').forEach(r=>r.addEventListener('click',()=>openCustomer(r.dataset.cust)));
   }
+  /* ---------- LASKUTUSPYYNNÖT ---------- */
+  function renderBillingRequests(){
+    const pending = (BILLING_REQS||[]).filter(r=>r.status==='pending');
+    const card = document.getElementById('billReqCard');
+    document.getElementById('billReqCount').textContent = pending.length;
+    if (!pending.length){ card.style.display='none'; document.getElementById('billReqRows').innerHTML=''; return; }
+    card.style.display='';
+    document.getElementById('billReqRows').innerHTML = pending.map(r=>{
+      const c = CUSTOMERS.find(x=>x.id===r.customer_id);
+      const nimi = c ? c.name : r.customer_id;
+      const nyk = c ? c.plan : '—';
+      const tyyppi = r.type==='cancel' ? '<span class="pill warn">Irtisanonta</span>' : '<span class="pill info">Paketinvaihto</span>';
+      const toiv = r.type==='cancel' ? '—' : esc(r.requested_plan||'—');
+      return '<tr data-req="'+esc(r.id)+'"><td><b>'+esc(nimi)+'</b></td><td>'+tyyppi+'</td><td>'+esc(nyk)+'</td><td>'+toiv+'</td><td>'+H.fmtDate(r.created_at)+'</td>'+
+        '<td style="text-align:right;white-space:nowrap"><button class="btn btn-primary btn-sm" data-do="'+esc(r.id)+'">Toteuta</button> '+
+        '<button class="btn btn-ghost btn-sm" data-rej="'+esc(r.id)+'">Hylkää</button></td></tr>';
+    }).join('');
+    document.querySelectorAll('#billReqRows [data-do]').forEach(b=>b.addEventListener('click',()=>handleBillingRequest(b.dataset.do,'done')));
+    document.querySelectorAll('#billReqRows [data-rej]').forEach(b=>b.addEventListener('click',()=>handleBillingRequest(b.dataset.rej,'rejected')));
+  }
+
+  async function handleBillingRequest(reqId, action){
+    const r = BILLING_REQS.find(x=>x.id===reqId); if(!r) return;
+    const c = CUSTOMERS.find(x=>x.id===r.customer_id);
+    const nimi = c ? c.name : r.customer_id;
+    const verb = action==='done' ? 'TOTEUTA' : 'hylkää';
+    let msg = '';
+    if (action==='done' && r.type==='plan_change') msg = nimi+': vaihda paketiksi '+r.requested_plan+'?';
+    else if (action==='done' && r.type==='cancel') msg = nimi+': irtisano tilaus (tila → paussi)?';
+    else msg = nimi+': '+verb+' pyyntö?';
+    if (!confirm(msg)) return;
+    try {
+      const res = await H.callFn('billing-request-handle', { request_id: reqId, action });
+      // Päivitä paikallinen data
+      const { data:breqs } = await SB.from('billing_requests').select('*').order('created_at',{ascending:false});
+      BILLING_REQS = breqs||[];
+      if (res && res.customer){
+        const idx = CUSTOMERS.findIndex(x=>x.id===res.customer.id);
+        if (idx>=0) CUSTOMERS[idx] = { ...CUSTOMERS[idx], ...res.customer };
+      }
+      renderCustomers(); renderBillingRequests();
+      alert('Valmis.');
+    } catch(e){
+      alert('Toiminto epäonnistui: ' + (e && e.message ? e.message : e));
+    }
+  }
+
   document.getElementById('custSearch').addEventListener('input',e=>{
     const q=e.target.value.toLowerCase().trim();
     drawCustRows(CUSTOMERS.filter(c=>c.name.toLowerCase().includes(q)||(c.industry||'').toLowerCase().includes(q)));

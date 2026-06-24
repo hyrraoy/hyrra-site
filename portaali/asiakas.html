@@ -89,6 +89,7 @@
         <div class="kpi amber"><div class="lbl">Varaukset tällä viikolla</div><div class="v tnum" id="kpiBookings">0</div><div class="sub">Hyrrän tekemät ajat</div></div>
         <div class="kpi"><div class="lbl">Vastausaste</div><div class="v tnum" id="kpiAnswer">0<span class="unit">%</span></div><div class="sub">Vastatut / kaikki</div></div>
         <div class="kpi"><div class="lbl">Keskim. kesto</div><div class="v tnum" id="kpiDur">0<span class="unit">s</span></div><div class="sub">Tällä viikolla</div></div>
+        <div class="kpi"><div class="lbl">Puhelut tässä kuussa</div><div class="v tnum" id="kpiMonth">0</div><div class="sub" id="kpiMonthSub">Pakettiraja</div></div>
       </div>
 
       <div class="card">
@@ -226,6 +227,7 @@
     <!-- ============== LASKUTUS ============== -->
     <section class="view" id="view-laskutus">
       <div class="page-head"><h1>Laskutus</h1><div class="sub">Tilauksesi, paketti ja laskuhistoria.</div></div>
+      <div id="billReqBanner"></div>
       <div class="grid g-2-1" style="margin-bottom:18px">
         <div class="card">
           <div class="card-h"><h2>Tilaus</h2><span id="subStatusPill"></span></div>
@@ -234,11 +236,24 @@
           <div class="kv"><span class="k">Kuukausimaksu</span><span class="vv" id="billAmount">—</span></div>
           <div class="kv"><span class="k">Seuraava laskutus</span><span class="vv" id="billNext">—</span></div>
           <div class="kv"><span class="k">Laskutusjakso päättyy</span><span class="vv" id="billPeriodEnd">—</span></div>
+          <div class="kv"><span class="k">Laskutettava</span><span class="vv" id="billCompany">—</span></div>
+          <div class="kv"><span class="k">Yhteyshenkilö</span><span class="vv" id="billContact">—</span></div>
+          <div class="kv"><span class="k">Laskutussähköposti</span><span class="vv" id="billEmail">—</span></div>
         </div>
         <div class="card accent">
-          <div class="card-eyebrow">Tarvitsetko muutoksen?</div>
-          <p style="font-size:13.5px;color:var(--ink);line-height:1.6">Haluatko vaihtaa pakettia, päivittää maksutiedot tai keskeyttää tilauksen? Ole yhteydessä, niin hoidamme sen puolestasi.</p>
-          <a class="btn btn-deep btn-sm" href="mailto:laskutus@hyrra.fi" style="margin-top:14px">Ota yhteyttä laskutukseen</a>
+          <div class="card-eyebrow">Hallitse tilausta</div>
+          <div class="field" style="margin-top:10px;margin-bottom:8px">
+            <label for="billPlanSelect">Vaihda paketti</label>
+            <select class="input" id="billPlanSelect">
+              <option value="Kevyt">Kevyt — 149 €/kk</option>
+              <option value="Plus">Plus — 299 €/kk</option>
+              <option value="Pro">Pro — 749 €/kk</option>
+            </select>
+          </div>
+          <button class="btn btn-deep btn-sm" id="btnPlanChange" style="width:100%">Pyydä paketinvaihtoa</button>
+          <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+          <button class="btn btn-ghost btn-sm" id="btnCancelSub" style="width:100%">Irtisano tilaus</button>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5">Pyyntö lähetetään Hyrrän tiimille, joka vahvistaa muutoksen. Saat vahvistuksen sähköpostiisi.</p>
         </div>
       </div>
       <div class="card">
@@ -285,7 +300,7 @@
   const esc = H.esc;
   let CUSTOMER = null, PROFILE = null;
   let CALLS = [], BOOKINGS = [], SERVICES = [], PRODUCTS = [], TEMPLATES = [];
-  let INVOICES = [], SUBSCRIPTION = null, TRANSP = [];
+  let INVOICES = [], SUBSCRIPTION = null, TRANSP = [], BILLING_REQS = [];
   const DAYS = [['mon','Maanantai'],['tue','Tiistai'],['wed','Keskiviikko'],['thu','Torstai'],['fri','Perjantai'],['sat','Lauantai'],['sun','Sunnuntai']];
 
   /* ---------- Navigointi ---------- */
@@ -351,7 +366,7 @@
 
     // Lataa data rinnakkain (RLS rajaa automaattisesti omaan asiakkaaseen)
     const cid = PROFILE.customer_id;
-    const [cust, calls, bookings, services, products, templates, invoices, subs, transp] = await Promise.all([
+    const [cust, calls, bookings, services, products, templates, invoices, subs, transp, breqs] = await Promise.all([
       SB.from('customers').select('*').eq('id', cid).single(),
       SB.from('calls').select('*').eq('customer_id', cid).order('started_at',{ascending:false}),
       SB.from('bookings').select('*').eq('customer_id', cid),
@@ -360,11 +375,13 @@
       SB.from('message_templates').select('*').eq('customer_id', cid).order('created_at'),
       SB.from('invoices').select('*').eq('customer_id', cid).order('issued_date',{ascending:false}),
       SB.from('subscriptions').select('*').eq('customer_id', cid).order('created_at',{ascending:false}).limit(1).maybeSingle(),
-      SB.from('transparency_texts').select('*')
+      SB.from('transparency_texts').select('*'),
+      SB.from('billing_requests').select('*').eq('customer_id', cid).order('created_at',{ascending:false})
     ]);
     CUSTOMER = cust.data; CALLS = calls.data || []; BOOKINGS = bookings.data || [];
     SERVICES = services.data || []; PRODUCTS = products.data || []; TEMPLATES = templates.data || [];
     INVOICES = invoices.data || []; SUBSCRIPTION = subs.data || null; TRANSP = transp.data || [];
+    BILLING_REQS = breqs.data || [];
 
     renderAll();
     subscribeNewCalls(cid);
@@ -415,6 +432,16 @@
     const durs = wc.filter(c=>c.duration_sec!=null).map(c=>c.duration_sec);
     const avg = durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : 0;
     document.getElementById('kpiDur').innerHTML = avg + '<span class="unit">s</span>';
+    // Kuukauden puhelumäärä vs. pakettiraja (laskettu puheluista, robusti)
+    const _now=new Date(), _mStart=new Date(_now.getFullYear(),_now.getMonth(),1);
+    const monthCount = CALLS.filter(c=>c.started_at && new Date(c.started_at)>=_mStart).length;
+    const lim = CUSTOMER.call_limit;
+    const mEl=document.getElementById('kpiMonth'), mSub=document.getElementById('kpiMonthSub');
+    mEl.textContent = monthCount + (lim ? (' / '+lim) : '');
+    if(lim){ const pct=Math.round(monthCount/lim*100);
+      mSub.textContent = pct>=100 ? 'Raja täynnä ('+CUSTOMER.plan+')' : (pct+' % '+CUSTOMER.plan+'-rajasta');
+      if(mEl.parentElement) mEl.parentElement.classList.toggle('amber', pct>=80);
+    } else { mSub.textContent='Rajaton'; }
     document.getElementById('recentCalls').innerHTML = CALLS.slice(0,5).map(callRowHtml).join('') ||
       '<div class="empty">Ei vielä puheluita.</div>';
     bindCallRows('recentCalls');
@@ -571,6 +598,16 @@
   document.querySelectorAll('[data-calconn]').forEach(b=>b.addEventListener('click',()=>connectCalendar(b.dataset.calconn, b)));
   document.getElementById('calCheckBtn').addEventListener('click', checkCalendar);
 
+  // Laskutus: paketinvaihto + irtisanonta (pyyntö Hyrrän tiimille)
+  document.getElementById('btnPlanChange').addEventListener('click', function(){
+    const plan = document.getElementById('billPlanSelect').value;
+    if (plan === CUSTOMER.plan){ alert('Tämä on jo nykyinen pakettisi.'); return; }
+    submitBillingRequest('plan_change', plan);
+  });
+  document.getElementById('btnCancelSub').addEventListener('click', function(){
+    submitBillingRequest('cancel', null);
+  });
+
   function renderServices(){
     const el = document.getElementById('servicesList');
     if (!SERVICES.length){ el.innerHTML = '<div class="sub" style="color:var(--muted)">Ei palveluita. Lisää ensimmäinen.</div>'; return; }
@@ -690,6 +727,14 @@
     document.getElementById('billPlan').textContent = CUSTOMER.plan || '—';
     document.getElementById('billAmount').textContent = CUSTOMER.billing_amount_eur!=null ? H.fmtEur(CUSTOMER.billing_amount_eur)+' / kk' : '—';
     document.getElementById('billNext').textContent = H.fmtDate(CUSTOMER.billing_next);
+    // Laskutustiedot
+    document.getElementById('billCompany').textContent = CUSTOMER.name || '—';
+    document.getElementById('billContact').textContent = CUSTOMER.contact_name || '—';
+    document.getElementById('billEmail').textContent = CUSTOMER.contact_email || '—';
+    // Aseta pakettivalitsin nykyiseen pakettiin
+    const sel = document.getElementById('billPlanSelect');
+    if (sel && CUSTOMER.plan) sel.value = CUSTOMER.plan;
+    renderBillingRequests();
     if (SUBSCRIPTION){
       document.getElementById('billStatus').textContent = H.subStatusFi(SUBSCRIPTION.status);
       document.getElementById('billPeriodEnd').textContent = H.fmtDate(SUBSCRIPTION.current_period_end);
@@ -706,6 +751,34 @@
       return '<tr class="norow"><td><b>'+esc(inv.id)+'</b></td><td>'+H.fmtDate(inv.issued_date)+'</td><td>'+esc(inv.plan||'—')+'</td><td>'+H.fmtEur(inv.amount_eur)+'</td><td><span class="pill '+cls+'">'+H.invStatusFi(inv.status)+'</span></td><td style="text-align:right">'+pdf+'</td></tr>';
     }).join('');
     document.getElementById('invoiceRows').innerHTML = rows || '<tr class="norow"><td colspan="6"><div class="empty">Ei laskuja vielä.</div></td></tr>';
+  }
+
+  function renderBillingRequests(){
+    const banner = document.getElementById('billReqBanner');
+    if (!banner) return;
+    const pending = (BILLING_REQS||[]).filter(r=>r.status==='pending');
+    if (!pending.length){ banner.innerHTML=''; return; }
+    banner.innerHTML = pending.map(r=>{
+      const txt = r.type==='cancel'
+        ? 'Irtisanontapyyntö vastaanotettu — Hyrrän tiimi käsittelee sen.'
+        : 'Paketinvaihtopyyntö ('+esc(r.requested_plan||'')+') vastaanotettu — Hyrrän tiimi vahvistaa muutoksen.';
+      return '<div class="banner info" style="margin-bottom:14px"><span class="ico">⏳</span> '+txt+'</div>';
+    }).join('');
+  }
+
+  async function submitBillingRequest(type, requested_plan){
+    const label = type==='cancel' ? 'irtisanoa tilauksen' : ('vaihtaa paketiksi '+requested_plan);
+    if (!confirm('Haluatko varmasti pyytää '+label+'? Pyyntö lähetetään Hyrrän tiimille vahvistettavaksi.')) return;
+    try {
+      await H.callFn('billing-request', { customer_id: CUSTOMER.id, type, requested_plan: requested_plan||null });
+      // Päivitä lista ja banneri
+      const { data } = await SB.from('billing_requests').select('*').eq('customer_id', CUSTOMER.id).order('created_at',{ascending:false});
+      BILLING_REQS = data || [];
+      renderBillingRequests();
+      alert('Pyyntö lähetetty. Saat vahvistuksen sähköpostiisi.');
+    } catch(e){
+      alert('Pyynnön lähetys epäonnistui: ' + (e && e.message ? e.message : e));
+    }
   }
 
   /* ---------- Läpinäkyvyys ---------- */
