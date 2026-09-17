@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kirjaudu portaaliin — Hyrrä</title>
+<meta name="description" content="Hyrrän asiakasportaali. Kirjaudu sisään hallitaksesi Hyrrää, lukeaksesi puheluitasi ja säätääksesi asetuksia.">
+<meta name="theme-color" content="#0A1628">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --white:#FFFFFF; --gray:#9FAFC4; --gray-2:#6B7E92;
+    --red:#E25C5C; --green:#5BD178;
+    --line:rgba(255,255,255,0.08); --line-strong:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--white);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);background-size:120px 120px, 200px 200px;background-position:0 0, 60px 80px;opacity:0.10;mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%);-webkit-mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%)}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,182,39,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,182,39,0.025) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;opacity:0.6}
+  .bg-aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bg-aurora::before,.bg-aurora::after{content:"";position:absolute;border-radius:50%;filter:blur(140px)}
+  .bg-aurora::before{width:720px;height:720px;background:radial-gradient(circle, rgba(27,58,92,0.75) 0%, transparent 70%);top:-200px;left:-150px;animation:drift1 30s ease-in-out infinite}
+  .bg-aurora::after{width:600px;height:600px;background:radial-gradient(circle, rgba(255,182,39,0.22) 0%, transparent 70%);top:20%;right:-150px;animation:drift2 36s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,60px)}}
+  @keyframes spinMark{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  .shell{min-height:100vh;display:grid;place-items:center;padding:40px 20px;position:relative;z-index:2}
+  .login-card{max-width:440px;width:100%;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid var(--line);border-radius:24px;padding:40px 36px;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);box-shadow:0 30px 80px -20px rgba(0,0,0,0.5)}
+  .brand{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--white);justify-content:center;margin-bottom:6px}
+  .brand .spin-mark{width:28px;height:28px;animation:spinMark 1.8s linear infinite}
+  .login-card h1{font-size:24px;font-weight:800;letter-spacing:-0.02em;color:var(--white);text-align:center;margin-bottom:6px}
+  .login-card .sub{text-align:center;color:var(--gray);font-size:14px;margin-bottom:28px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:6px}
+  .field input{width:100%;background:rgba(255,255,255,0.025);border:1px solid var(--line);border-radius:12px;padding:13px 16px;color:var(--white);font-family:inherit;font-size:15px;transition:border-color .15s, background .15s}
+  .field input:focus{outline:none;border-color:var(--amber);background:#FFFFFF}
+  .field input::placeholder{color:var(--gray-2)}
+  .err{background:rgba(226,92,92,0.10);border:1px solid rgba(226,92,92,0.3);color:#FFB3B3;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px;display:none}
+  .err.show{display:block}
+  .btn-login{width:100%;background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);padding:14px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;border:none;transition:transform .15s, box-shadow .15s;box-shadow:0 8px 22px -6px rgba(255,182,39,0.4);font-family:inherit;letter-spacing:-0.005em}
+  .btn-login:hover{transform:translateY(-1px);box-shadow:0 12px 28px -6px rgba(255,182,39,0.55)}
+  .btn-login:active{transform:translateY(0)}
+  .links{margin-top:18px;text-align:center;font-size:13px;color:var(--gray-2);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace}
+  .links a:hover{color:var(--amber)}
+
+  .demo-creds{margin-top:32px;background:rgba(255,182,39,0.06);border:1px solid rgba(255,182,39,0.25);border-radius:14px;padding:18px 20px}
+  .demo-creds .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .demo-creds .lbl::before{content:"//"}
+  .demo-creds .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+  .demo-creds .row:last-child{border-bottom:none}
+  .demo-creds .role{color:var(--gray-2);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+  .demo-creds .cred{color:var(--white);font-family:'JetBrains Mono',monospace;font-size:12.5px}
+  .demo-creds .fillbtn{background:transparent;border:1px solid var(--line);color:var(--gray);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;transition:border-color .15s, color .15s}
+  .demo-creds .fillbtn:hover{border-color:var(--amber);color:var(--amber)}
+  .demo-note{font-size:12px;color:var(--gray-2);text-align:center;margin-top:14px;font-family:'JetBrains Mono',monospace}
+  .back-link{position:fixed;top:24px;left:24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;z-index:5;display:inline-flex;align-items:center;gap:4px;transition:color .15s}
+  .back-link:hover{color:var(--amber)}
+
+</style>
+</head>
+<body>
+<div class="bg-stars"></div>
+<div class="bg-grid"></div>
+<div class="bg-aurora"></div>
+
+<a href="/" class="back-link">← Etusivulle</a>
+
+<div class="shell">
+  <div class="login-card">
+    <div class="brand">
+      <svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg>
+      <span>hyrrä</span>
+    </div>
+    <h1>Kirjaudu portaaliin</h1>
+    <p class="sub">Hallitse Hyrrää, lue puheluita ja säädä asetuksia.</p>
+
+    <div class="err" id="err"></div>
+
+    <form id="loginForm" autocomplete="on">
+      <div class="field">
+        <label for="email">Sähköposti</label>
+        <input id="email" type="text" required autocomplete="email" placeholder="info@yritys.fi" autocapitalize="none" autocorrect="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="password">Salasana</label>
+        <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn-login">Kirjaudu sisään →</button>
+    </form>
+
+    <div class="links">
+      <a href="mailto:tuki@hyrrä.fi">Unohditko salasanan?</a>
+      <a href="mailto:info@hyrrä.fi">Tarvitsetko tunnukset?</a>
+    </div>
+
+    <div class="demo-creds">
+      <div class="lbl">DEMO-TUNNUKSET (prototyyppi)</div>
+      <div class="row">
+        <div>
+          <div class="role">Admin</div>
+          <div class="cred">admin@hyrrä.fi / admin123</div>
+        </div>
+        <button class="fillbtn" data-fill="admin">Täytä</button>
+      </div>
+      <div class="row">
+        <div>
+          <div class="role">Asiakas — autokorjaamo</div>
+          <div class="cred">info@asentamohelsinki.fi / asentamo24</div>
+        </div>
+        <button class="fillbtn" data-fill="autokorjaamo">Täytä</button>
+      </div>
+      <div class="row">
+        <div>
+          <div class="role">Asiakas — parturi</div>
+          <div class="cred">varaus@salonkisata.fi / salonki24</div>
+        </div>
+        <button class="fillbtn" data-fill="parturi">Täytä</button>
+      </div>
+      <div class="row">
+        <div>
+          <div class="role">Asiakas — putkiasentaja</div>
+          <div class="cred">paivystys@putkikallio.fi / putki24</div>
+        </div>
+        <button class="fillbtn" data-fill="putki">Täytä</button>
+      </div>
+    </div>
+    <div class="demo-note">// Tämä on prototyyppi. Data tallentuu selaimeen (localStorage).</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ====== Seed users + customers + demo data into localStorage ======
+  // Bump SEED_KEY suffix when seed data changes — forces re-seed on next page load
+  var SEED_KEY = 'hyrra-portal-seeded-v4';
+  if (!localStorage.getItem(SEED_KEY)) {
+    if (localStorage.getItem('hyrra-portal-seeded-v1') || localStorage.getItem('hyrra-portal-seeded-v2') || localStorage.getItem('hyrra-portal-seeded-v3')) {
+      // Käyttäjä oli jo aikaisemmalla versiolla — älä pyyhi koko dataa
+      // 1) Päivitä admin-tunnukset (jos ne puuttuvat)
+      var existing = JSON.parse(localStorage.getItem('hyrra-portal-users') || '{}');
+      var adminProfile = { password: 'admin123', role: 'admin', name: 'Hyrrä Admin' };
+      existing['admin@hyrrä.fi'] = adminProfile;
+      existing['admin@hyrrä.fi'] = adminProfile;
+      localStorage.setItem('hyrra-portal-users', JSON.stringify(existing));
+      // 2) Merkitse olemassa olevat demo-asiakkaat setupComplete:ksi (jotta wizard ei hyppää eteen)
+      // 3) Migratoi vanhat hinnat ja paketti-nimet uusiin
+      var existingCusts = JSON.parse(localStorage.getItem('hyrra-portal-customers') || '{}');
+      var newPrices = { 'Kevyt': 149, 'Mini': 149, 'Plus': 299, 'Pro': 749 };
+      Object.values(existingCusts).forEach(function(c){
+        if (c.setupComplete === undefined) c.setupComplete = true;
+        if (c.plan === 'Mini') c.plan = 'Kevyt';  // Mini → Kevyt rename
+        if (c.billingAmount && newPrices[c.plan]) c.billingAmount = newPrices[c.plan];
+      });
+      localStorage.setItem('hyrra-portal-customers', JSON.stringify(existingCusts));
+      localStorage.removeItem('hyrra-portal-seeded-v1');
+      localStorage.removeItem('hyrra-portal-seeded-v2');
+      localStorage.removeItem('hyrra-portal-seeded-v3');
+    } else {
+      // Tyhjä → kylvä koko demo-data
+      seedDemoData();
+    }
+    localStorage.setItem(SEED_KEY, '1');
+  }
+
+  function seedDemoData(){
+    // Admin has both ASCII (admin@hyrrä.fi) and Unicode (admin@hyrrä.fi) aliases —
+    // both work for login. ASCII is shown in the demo creds for simplicity.
+    var adminProfile = { password: 'admin123', role: 'admin', name: 'Hyrrä Admin' };
+    var users = {
+      'admin@hyrrä.fi': adminProfile,
+      'admin@hyrrä.fi': adminProfile,
+      'info@asentamohelsinki.fi': { password: 'asentamo24', role: 'customer', customerId: 'cust-001', name: 'Mika Niemi' },
+      'varaus@salonkisata.fi': { password: 'salonki24', role: 'customer', customerId: 'cust-002', name: 'Sini Lehto' },
+      'paivystys@putkikallio.fi': { password: 'putki24', role: 'customer', customerId: 'cust-003', name: 'Ari Kallio' }
+    };
+
+    var customers = {
+      'cust-001': {
+        id: 'cust-001',
+        name: 'Asentamo Helsinki Oy',
+        contactName: 'Mika Niemi',
+        contactEmail: 'info@asentamohelsinki.fi',
+        industry: 'Autokorjaamo',
+        phone: '+358 9 4567 8901',
+        plan: 'Plus',
+        status: 'aktiivinen',
+        pilotEndsAt: null,
+        setupComplete: true, setupMethod: 'new',
+        billingNext: '2026-07-15',
+        billingAmount: 299,
+        greeting: 'Asentamo Helsinki, Hyrrä vastaa. Miten voin auttaa?',
+        voice: 'nainen',
+        hours: { mon: '8:00-17:00', tue: '8:00-17:00', wed: '8:00-17:00', thu: '8:00-17:00', fri: '8:00-17:00', sat: 'suljettu', sun: 'suljettu' },
+        services: [
+          { name: 'Rengasvaihto (kausivaihto)', priceMin: 60, priceMax: 80, durationMin: 30 },
+          { name: 'Öljynvaihto', priceMin: 89, priceMax: 89, durationMin: 30 },
+          { name: 'Huolto (suuri)', priceMin: 250, priceMax: 450, durationMin: 90 },
+          { name: 'Jarrupalat (etu)', priceMin: 180, priceMax: 260, durationMin: 60 }
+        ],
+        smsConfirm: true,
+        calendar: { provider: 'Google Calendar', connected: true, calendarName: 'Asentamo Helsinki — Työt' },
+        faq: {
+          'Voiko maksaa kortilla?': 'Kyllä, vastaanotamme kaikki yleiset korttimaksut sekä laskutuksen yrityksille.',
+          'Onko sijaisautoa saatavilla?': 'Kyllä, sijaisautot on varattava etukäteen — kerro varauksen yhteydessä.',
+          'Teettekö katsastusta?': 'Emme tee itse katsastusta, mutta hoidamme katsastushuollot ennen katsastusta.'
+        }
+      },
+      'cust-002': {
+        id: 'cust-002',
+        name: 'Salonki Sata',
+        contactName: 'Sini Lehto',
+        contactEmail: 'varaus@salonkisata.fi',
+        industry: 'Parturi-kampaamo',
+        phone: '+358 9 1234 5678',
+        plan: 'Kevyt',
+        status: 'pilotti',
+        pilotEndsAt: '2026-06-12',
+        setupComplete: true, setupMethod: 'forward',
+        billingNext: null,
+        billingAmount: 0,
+        greeting: 'Salonki Sata, Hyrrä vastaa. Kuinka voin palvella?',
+        voice: 'nainen',
+        hours: { mon: '10:00-19:00', tue: '10:00-19:00', wed: '10:00-19:00', thu: '10:00-20:00', fri: '10:00-20:00', sat: '9:00-15:00', sun: 'suljettu' },
+        services: [
+          { name: 'Naisten leikkaus', priceMin: 55, priceMax: 75, durationMin: 45 },
+          { name: 'Värjäys (täysväri)', priceMin: 110, priceMax: 160, durationMin: 120 },
+          { name: 'Raidoitus', priceMin: 130, priceMax: 180, durationMin: 150 },
+          { name: 'Miesten leikkaus', priceMin: 35, priceMax: 45, durationMin: 30 }
+        ],
+        smsConfirm: true,
+        calendar: { provider: 'Timma', connected: true, calendarName: 'Salonki Sata' },
+        faq: {
+          'Voiko peruuttaa varauksen?': 'Kyllä, varauksen voi perua ilmaiseksi viimeistään 24 h ennen aikaa.',
+          'Onko meillä lahjakortteja?': 'Kyllä, lahjakortteja saa salongista paikan päältä — pyydä lisätietoja seuraavalla käynnillä.'
+        }
+      },
+      'cust-003': {
+        id: 'cust-003',
+        name: 'Putki Kallio Oy',
+        contactName: 'Ari Kallio',
+        contactEmail: 'paivystys@putkikallio.fi',
+        industry: 'Putki- ja sähköasennus',
+        phone: '+358 40 555 1234',
+        plan: 'Pro',
+        status: 'aktiivinen',
+        pilotEndsAt: null,
+        setupComplete: true, setupMethod: 'port',
+        billingNext: '2026-07-22',
+        billingAmount: 749,
+        greeting: 'Putki Kallio päivystää, Hyrrä vastaa. Mikä on tilanne?',
+        voice: 'mies',
+        hours: { mon: '24h', tue: '24h', wed: '24h', thu: '24h', fri: '24h', sat: '24h', sun: '24h' },
+        services: [
+          { name: 'Päivystyskäynti', priceMin: 280, priceMax: 380, durationMin: 60 },
+          { name: 'Vesivuodon paikallistus', priceMin: 150, priceMax: 220, durationMin: 60 },
+          { name: 'Wc-pöntön asennus', priceMin: 220, priceMax: 320, durationMin: 90 },
+          { name: 'Lämmityskattilan huolto', priceMin: 180, priceMax: 280, durationMin: 90 }
+        ],
+        smsConfirm: true,
+        calendar: { provider: 'Google Calendar', connected: true, calendarName: 'Putki Kallio — Keikat' },
+        faq: {
+          'Tuletteko viikonloppuna?': 'Kyllä, päivystämme 24/7 — viikonloppuna laskutuksessa on lisämaksu.',
+          'Onko hätäpuhelu?': 'Hyrrä erottaa hätätapaukset ja yhdistää suoraan päivystäjälle.'
+        }
+      }
+    };
+
+    // Demo call logs
+    var now = new Date();
+    function isoDaysAgo(d, h){ var x = new Date(now); x.setDate(x.getDate() - d); if(h !== undefined) x.setHours(h, Math.floor(Math.random()*60), 0, 0); return x.toISOString(); }
+
+    var calls = {
+      'cust-001': [
+        { id:'call-1001', date: isoDaysAgo(0, 9), callerNumber:'+358 50 123 4567', durationSec: 94, type:'varaus', outcome:'Varaus tehty', service:'Öljynvaihto', vehicle:'ABC-123', summary:'Asiakas varasi öljynvaihdon torstaille klo 14:00. Volvo V60, vm. 2019.', transcript:[ {who:'hyrrä', text:'Asentamo Helsinki, Hyrrä vastaa. Miten voin auttaa?'}, {who:'soittaja', text:'Tarvitsisin öljynvaihdon.'}, {who:'hyrrä', text:'Mielelläni autan. Mikä on auton merkki ja rekisteritunnus?'}, {who:'soittaja', text:'Volvo V60, rekkari ABC-123.'}, {who:'hyrrä', text:'Hyvä. Sopisiko torstai klo 14? Öljynvaihto kestää noin 30 min, hinta 89 euroa.'}, {who:'soittaja', text:'Sopii.'}, {who:'hyrrä', text:'Kiitos. Varaus tehty — saat vahvistuksen tekstiviestillä.'} ] },
+        { id:'call-1002', date: isoDaysAgo(0, 11), callerNumber:'+358 44 987 6543', durationSec: 71, type:'kysely', outcome:'Hinta annettu', service:'Rengasvaihto', summary:'Asiakas kysyi rengasvaihdon hintaa, ohjattu varauskalenteriin verkossa.', transcript:[ {who:'hyrrä', text:'Asentamo Helsinki, Hyrrä vastaa.'}, {who:'soittaja', text:'Paljonko maksaa renkaanvaihto?'}, {who:'hyrrä', text:'Kausivaihto 60–80 € riippuen autosta. Haluatko varata ajan?'}, {who:'soittaja', text:'Mietin vielä, kiitos.'}, {who:'hyrrä', text:'Selvä. Voit varata myös verkossa milloin tahansa. Hyvää päivänjatkoa.'} ] },
+        { id:'call-1003', date: isoDaysAgo(1, 8), callerNumber:'+358 40 333 1212', durationSec: 128, type:'varaus', outcome:'Varaus tehty', service:'Huolto', vehicle:'XYZ-789', summary:'Iso huolto BMW X3, varattu perjantaille klo 9:00.', transcript:[ {who:'hyrrä', text:'Asentamo Helsinki, Hyrrä vastaa.'}, {who:'soittaja', text:'BMW:lle iso huolto.'}, {who:'hyrrä', text:'Rekisteritunnus?'}, {who:'soittaja', text:'XYZ-789'}, {who:'hyrrä', text:'Sopisiko perjantai klo 9? Huolto kestää noin 1,5 h, alkuarvio 350 €.'}, {who:'soittaja', text:'Sopii hyvin.'}, {who:'hyrrä', text:'Varaus tehty.'} ] },
+        { id:'call-1004', date: isoDaysAgo(2, 14), callerNumber:'+358 50 777 8888', durationSec: 56, type:'varaus', outcome:'Varaus tehty', service:'Jarrupalat', vehicle:'DEF-456', summary:'Etujarrupalojen vaihto, keskiviikolle klo 10:30.', transcript:[] },
+        { id:'call-1005', date: isoDaysAgo(3, 9), callerNumber:'+358 44 111 2222', durationSec: 39, type:'kysely', outcome:'Yhteystiedot annettu', summary:'Soittaja kysyi sijaisautoa.', transcript:[] },
+        { id:'call-1006', date: isoDaysAgo(4, 15), callerNumber:'+358 40 555 6666', durationSec: 87, type:'varaus', outcome:'Varaus tehty', service:'Öljynvaihto', vehicle:'GHI-321', summary:'Skoda Octavia, öljynvaihto + tarkistus.', transcript:[] },
+        { id:'call-1007', date: isoDaysAgo(5, 11), callerNumber:'+358 50 444 5555', durationSec: 23, type:'ei-vastattu', outcome:'Soittaja katkaisi', summary:'Soittaja katkaisi heti tervehdyksen jälkeen.', transcript:[] }
+      ],
+      'cust-002': [
+        { id:'call-2001', date: isoDaysAgo(0, 10), callerNumber:'+358 40 999 8888', durationSec: 82, type:'varaus', outcome:'Varaus tehty', service:'Värjäys (täysväri)', summary:'Asiakas Tiina varasi värjäyksen perjantaille klo 15:00.', transcript:[ {who:'hyrrä', text:'Salonki Sata, Hyrrä vastaa.'}, {who:'soittaja', text:'Haluaisin värjäyksen.'}, {who:'hyrrä', text:'Mielelläni. Onko kyseessä täysväri vai raidoitus?'}, {who:'soittaja', text:'Täysväri.'}, {who:'hyrrä', text:'Sopisiko perjantai klo 15? Kestää noin 2 h, hinta 110–160 €.'}, {who:'soittaja', text:'Sopii.'}, {who:'hyrrä', text:'Saanko nimesi?'}, {who:'soittaja', text:'Tiina Virtanen.'}, {who:'hyrrä', text:'Kiitos Tiina. Varaus on tehty.'} ] },
+        { id:'call-2002', date: isoDaysAgo(0, 14), callerNumber:'+358 44 222 3333', durationSec: 47, type:'kysely', outcome:'Lahjakortti', summary:'Soittaja kysyi lahjakortin saatavuutta.', transcript:[] },
+        { id:'call-2003', date: isoDaysAgo(1, 11), callerNumber:'+358 50 666 7777', durationSec: 65, type:'varaus', outcome:'Varaus tehty', service:'Naisten leikkaus', summary:'Naisten leikkaus tiistaille klo 13.', transcript:[] },
+        { id:'call-2004', date: isoDaysAgo(2, 17), callerNumber:'+358 40 444 1111', durationSec: 102, type:'varaus', outcome:'Varaus tehty', service:'Raidoitus', summary:'Raidoitus + leikkaus.', transcript:[] },
+        { id:'call-2005', date: isoDaysAgo(3, 9), callerNumber:'+358 50 888 9999', durationSec: 31, type:'peruutus', outcome:'Peruttu', summary:'Asiakas perui huomenisen aikansa.', transcript:[] }
+      ],
+      'cust-003': [
+        { id:'call-3001', date: isoDaysAgo(0, 2), callerNumber:'+358 50 700 8001', durationSec: 156, type:'paivystys', outcome:'Yhdistetty Arille', service:'Vesivuoto', summary:'YÖPÄIVYSTYS — vesivuoto kerrostalon kellarissa. Hyrrä yhdisti suoraan Arille.', transcript:[ {who:'hyrrä', text:'Putki Kallio päivystää, Hyrrä vastaa.'}, {who:'soittaja', text:'Kerrostalossa vesivuoto kellarissa, tarvitsemme heti apua!'}, {who:'hyrrä', text:'Selvä, tämä on päivystystapaus. Yhdistän heti.'} ] },
+        { id:'call-3002', date: isoDaysAgo(0, 9), callerNumber:'+358 44 666 1234', durationSec: 78, type:'varaus', outcome:'Varaus tehty', service:'Wc-pöntön asennus', summary:'Pöntön asennus seuraavalle viikolle.', transcript:[] },
+        { id:'call-3003', date: isoDaysAgo(0, 14), callerNumber:'+358 40 222 9999', durationSec: 44, type:'kysely', outcome:'Hinta annettu', service:'Lämmityskattila', summary:'Asiakas kysyi kattilahuollon hintaa.', transcript:[] },
+        { id:'call-3004', date: isoDaysAgo(1, 23), callerNumber:'+358 50 111 7777', durationSec: 92, type:'paivystys', outcome:'Yhdistetty Arille', summary:'YÖPÄIVYSTYS — viemäritukkos.', transcript:[] },
+        { id:'call-3005', date: isoDaysAgo(2, 11), callerNumber:'+358 44 333 2222', durationSec: 67, type:'varaus', outcome:'Varaus tehty', service:'Vesivuodon paikallistus', summary:'Paikallistus omakotitalossa.', transcript:[] }
+      ]
+    };
+
+    var bookings = {
+      'cust-001': [
+        { id:'book-1001', date:'2026-06-04', time:'14:00', service:'Öljynvaihto', customerName:'Volvo V60', vehicle:'ABC-123', source:'Hyrrä', syncedTo:'Google Calendar', synced:true },
+        { id:'book-1002', date:'2026-06-05', time:'09:00', service:'Huolto (iso)', customerName:'BMW X3', vehicle:'XYZ-789', source:'Hyrrä', syncedTo:'Google Calendar', synced:true },
+        { id:'book-1003', date:'2026-06-05', time:'10:30', service:'Jarrupalat', customerName:'Auto', vehicle:'DEF-456', source:'Hyrrä', syncedTo:'Google Calendar', synced:true },
+        { id:'book-1004', date:'2026-06-08', time:'13:00', service:'Öljynvaihto', customerName:'Skoda', vehicle:'GHI-321', source:'Hyrrä', syncedTo:'Google Calendar', synced:true }
+      ],
+      'cust-002': [
+        { id:'book-2001', date:'2026-06-06', time:'15:00', service:'Värjäys (täysväri)', customerName:'Tiina Virtanen', source:'Hyrrä', syncedTo:'Timma', synced:true },
+        { id:'book-2002', date:'2026-06-07', time:'13:00', service:'Naisten leikkaus', customerName:'Asiakas', source:'Hyrrä', syncedTo:'Timma', synced:true },
+        { id:'book-2003', date:'2026-06-09', time:'17:00', service:'Raidoitus + leikkaus', customerName:'Asiakas', source:'Hyrrä', syncedTo:'Timma', synced:true }
+      ],
+      'cust-003': [
+        { id:'book-3001', date:'2026-06-09', time:'10:00', service:'Wc-pöntön asennus', customerName:'Omakotitalo', source:'Hyrrä', syncedTo:'Google Calendar', synced:true },
+        { id:'book-3002', date:'2026-06-04', time:'11:00', service:'Vesivuodon paikallistus', customerName:'Omakotitalo', source:'Hyrrä', syncedTo:'Google Calendar', synced:true }
+      ]
+    };
+
+    var invoices = {
+      'cust-001': [
+        { id:'INV-2026-05-001', date:'2026-05-15', amount:149, status:'maksettu', plan:'Plus' },
+        { id:'INV-2026-04-001', date:'2026-04-15', amount:149, status:'maksettu', plan:'Plus' },
+        { id:'INV-2026-03-001', date:'2026-03-15', amount:149, status:'maksettu', plan:'Plus' }
+      ],
+      'cust-002': [],
+      'cust-003': [
+        { id:'INV-2026-05-002', date:'2026-05-22', amount:249, status:'maksettu', plan:'Pro' },
+        { id:'INV-2026-04-002', date:'2026-04-22', amount:249, status:'maksettu', plan:'Pro' }
+      ]
+    };
+
+    // Meta-Hyrrä (Hyrrän oma Hyrrä)
+    var metaHyrra = {
+      phoneNumber: null, // Twilio pending
+      phonePending: true,
+      voice: 'nainen',
+      greeting: 'Hyrrä vastaa. Kerro mistä haluat tietää lisää, niin autan.',
+      systemPrompt: 'Olet Hyrrän oma AI-vastaanottaja. Hyrrä on suomalainen AI-puhelinvastaanottaja pk-yrityksille. Vastaat selkeästi ja ystävällisesti suomeksi. Voit kertoa hinnoittelusta (Kevyt 149 €/kk, Plus 299 €/kk, Pro 749 €/kk), integraatioista (Google Calendar, Timma, Vello, jne.), pilottijaksosta (14 päivää ilmaiseksi), ja varata kalenteriin 30 min pilottipalaverin tiimin kanssa. Et puhu kolmansien osapuolten teknologioista. Jos joku haluaa kuulla teknisiä yksityiskohtia, voit kertoa että nämä käydään läpi pilottipalaverissa.',
+      faq: {
+        'Mitä Hyrrä maksaa?': 'Hyrrässä on kolme tasoa: Kevyt 149 €/kk (60 puhelua), Plus 299 €/kk (250 puhelua, suosituin) ja Pro 749 €/kk (800 puhelua). Kaikkiin sisältyy 14 päivän ilmainen pilotti. Avausmaksu 199 € vapautuu 12 kk sitoumuksella.',
+        'Mihin kalenteriin Hyrrä kytkeytyy?': 'Hyrrä yhdistyy Google Calendariin, Microsoft 365 -kalenteriin, Timmaan, Velloon, Diariumiin, Slottiin ja moneen muuhun. Voimme tehdä myös erityisintegraatioita.',
+        'Kuinka nopea käyttöönotto on?': 'Tyypillisesti 30 minuuttia ensimmäisestä keskustelusta siihen, että Hyrrä vastaa puheluitasi. Pilottijakso on 14 päivää ilmaiseksi, ei sitoumusta.',
+        'Voiko Hyrrää testata?': 'Kyllä, voit soittaa demo-numeroon ja kuulla itse miltä Hyrrä kuulostaa. Demo on osoitteessa hyrrä.fi/demo, ja kun haluat oman pilotin, autan varaamaan ajan tiimin kanssa.'
+      },
+      bookedPilots: [
+        { id:'pilot-001', name:'Maria Heikkinen', business:'Kauneushoitola Maria', industry:'Kauneudenhoito', phone:'+358 50 234 5678', email:'maria@kauneusmaria.fi', meetingDate:'2026-06-09', meetingTime:'10:00', status:'vahvistettu', notes:'Etsii kalenterivuotoa, käyttää nyt Vellon ajanvarausta.' },
+        { id:'pilot-002', name:'Jukka Karhu', business:'Karhun Autohuolto', industry:'Autokorjaamo', phone:'+358 40 111 9999', email:'jukka@karhunauto.fi', meetingDate:'2026-06-10', meetingTime:'13:30', status:'vahvistettu', notes:'Pieni autokorjaamo Espoossa, 3 asentajaa. Kausivaihtokiire.' },
+        { id:'pilot-003', name:'Anna Mäkinen', business:'Parturi-Kampaamo Mäkinen', industry:'Parturi-kampaamo', phone:'+358 44 555 0001', email:'anna@kampaamomakinen.fi', meetingDate:'2026-06-11', meetingTime:'15:00', status:'odottaa', notes:'Kampaamoyrittäjä Tampereelta. Kiinnostunut ajanvarausautomaatiosta.' }
+      ],
+      callLog: [
+        { id:'mcall-001', date: isoDaysAgo(0, 11), callerNumber:'+358 50 234 5678', durationSec: 142, type:'pilotti-varaus', outcome:'Pilotti varattu', summary:'Maria Heikkinen, Kauneushoitola Maria. Varaus 9.6. klo 10:00.' },
+        { id:'mcall-002', date: isoDaysAgo(0, 14), callerNumber:'+358 40 111 9999', durationSec: 178, type:'pilotti-varaus', outcome:'Pilotti varattu', summary:'Jukka Karhu, Karhun Autohuolto. Varaus 10.6. klo 13:30.' },
+        { id:'mcall-003', date: isoDaysAgo(1, 9), callerNumber:'+358 44 555 0001', durationSec: 215, type:'pilotti-varaus', outcome:'Pilotti varattu — odottaa vahvistusta', summary:'Anna Mäkinen, kampaamo.' },
+        { id:'mcall-004', date: isoDaysAgo(1, 13), callerNumber:'+358 50 999 1111', durationSec: 88, type:'kysely', outcome:'Hintatieto', summary:'Hinnoittelua kysynyt kahvilan omistaja.' },
+        { id:'mcall-005', date: isoDaysAgo(2, 16), callerNumber:'+358 40 333 2222', durationSec: 67, type:'kysely', outcome:'Tieto annettu', summary:'Kysymys integraatioista — Timma erityisesti.' },
+        { id:'mcall-006', date: isoDaysAgo(3, 10), callerNumber:'+358 44 888 7777', durationSec: 54, type:'kysely', outcome:'Lähetetty linkki demoon', summary:'Halusi vain kuulla esimerkin.' }
+      ]
+    };
+
+    localStorage.setItem('hyrra-portal-users', JSON.stringify(users));
+    localStorage.setItem('hyrra-portal-customers', JSON.stringify(customers));
+    localStorage.setItem('hyrra-portal-calls', JSON.stringify(calls));
+    localStorage.setItem('hyrra-portal-bookings', JSON.stringify(bookings));
+    localStorage.setItem('hyrra-portal-invoices', JSON.stringify(invoices));
+    localStorage.setItem('hyrra-portal-meta-hyrra', JSON.stringify(metaHyrra));
+  }
+
+  // ====== Login form ======
+  var form = document.getElementById('loginForm');
+  var emailInput = document.getElementById('email');
+  var passInput = document.getElementById('password');
+  var errBox = document.getElementById('err');
+
+  function showErr(msg){
+    errBox.textContent = msg;
+    errBox.classList.add('show');
+  }
+  function clearErr(){ errBox.classList.remove('show'); }
+
+  // Normalize email so ä-merkki ja eri Unicode-muodot toimivat luotettavasti
+  function normalizeEmail(s){
+    var x = String(s || '').trim().toLowerCase();
+    // NFC-normalisointi varmistaa että "ä" tallennetaan samana koodipisteenä
+    // (joillain syöttötavoilla se tulee "a + yhdistettävänä tarkkeena")
+    try { x = x.normalize('NFC'); } catch (e) {}
+    return x;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErr();
+    var email = normalizeEmail(emailInput.value);
+    var password = passInput.value;
+    if (!email || !password) { showErr('Sähköposti ja salasana vaaditaan.'); return; }
+
+    var users = JSON.parse(localStorage.getItem('hyrra-portal-users') || '{}');
+    var user = users[email];
+    // Etsi myös normalisoidulla vertailulla (jos taulukon avain on eri muodossa)
+    if (!user) {
+      var key = Object.keys(users).find(function(k){ return normalizeEmail(k) === email; });
+      if (key) user = users[key];
+    }
+    if (!user || user.password !== password) {
+      showErr('Virheellinen sähköposti tai salasana.');
+      return;
+    }
+
+    // Save session
+    var session = {
+      email: email,
+      role: user.role,
+      name: user.name,
+      customerId: user.customerId || null,
+      loginAt: new Date().toISOString()
+    };
+    localStorage.setItem('hyrra-portal-session', JSON.stringify(session));
+
+    // Redirect
+    if (user.role === 'admin') {
+      window.location.href = 'portaali-admin.html';
+    } else {
+      window.location.href = 'portaali-asiakas.html';
+    }
+  });
+
+  // ====== Demo cred fill ======
+  var presets = {
+    admin: { email: 'admin@hyrrä.fi', password: 'admin123' },
+    autokorjaamo: { email: 'info@asentamohelsinki.fi', password: 'asentamo24' },
+    parturi: { email: 'varaus@salonkisata.fi', password: 'salonki24' },
+    putki: { email: 'paivystys@putkikallio.fi', password: 'putki24' }
+  };
+  document.querySelectorAll('[data-fill]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var p = presets[btn.getAttribute('data-fill')];
+      if (!p) return;
+      emailInput.value = p.email;
+      passInput.value = p.password;
+      clearErr();
+      emailInput.focus();
+    });
+  });
+
+  // If already logged in, redirect
+  var existing = JSON.parse(localStorage.getItem('hyrra-portal-session') || 'null');
+  if (existing && existing.email) {
+    // optional auto-redirect; keep visible so user can switch accounts
+  }
+})();
+</script>
+</body>
+</html>

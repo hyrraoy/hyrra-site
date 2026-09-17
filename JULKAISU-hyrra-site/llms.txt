@@ -1,0 +1,41 @@
+# Hyrrä
+
+> Hyrrä on suomalainen AI-puhelinvastaanottaja pk-yrityksille. Se vastaa puheluihin 24/7 luonnollisella suomella, varaa ajat kalenteriin ja lähettää SMS-vahvistuksen — myös silloin kun yrittäjä on kiireinen, lounaalla tai illalla.
+
+Hyrrä on rakennettu erityisesti pienyrityksille: parturit ja kampaamot, autokorjaamot, putki- ja sähköasentajat, eläinlääkärit, fysioterapeutit ja muut palvelualan yritykset, joille vastaamaton puhelu tarkoittaa menetettyä kauppaa.
+
+## Mikä erottaa Hyrrän
+
+- **Hinta näkyvissä, ei pakollista myyntipalaveria.** Hyrrä on Suomen läpinäkyvin AI-puhelinvastaaja: paketit ja hinnat ovat sivulla, ja kokeilun voi aloittaa itse.
+- **14 päivän ilmainen pilotti**, ei sitoumusta.
+- **Rakennettu juuri sinun alallesi** — oma laskeutumissivu ja esimerkit toimialoittain.
+- **Suomalainen, data EU-alueella, GDPR-yhteensopiva.** Natiivi suomi, ei käännöksiä.
+- Käyttöönotto tyypillisesti saman päivän aikana, ei koodausta.
+
+## Hinnoittelu
+
+- Kevyt — 149 €/kk, 60 puhelua/kk. Sooloyrittäjälle.
+- Plus — 299 €/kk, 250 puhelua/kk (suosituin). 1–8 hengen tiimille.
+- Pro — 749 €/kk, 800 puhelua/kk. Useammalle toimipisteelle.
+- Avausmaksu 199 € (vapautuu 12 kk sitoumuksella). Vuositilauksella yksi kuukausi ilmaiseksi.
+- Pakettirajan ylittävät puhelut: Kevyt 0,79 €, Plus 0,59 €, Pro 0,49 € / puhelu.
+
+## Toiminnot
+
+- Vastaa saapuviin puheluihin 24/7 yrityksen nimellä.
+- Varaa ajan kalenteriin reaaliajassa (Google Calendar, Timma, Vello ym.).
+- Lähettää asiakkaalle SMS-vahvistuksen.
+- Kerää tarvittavat tiedot ja ohjaa kiireelliset puhelut sääntöjen mukaan.
+
+## Yhteys
+
+- Verkkosivu: https://hyrrä.fi
+- Sähköposti: info@hyrrä.fi
+- Demo: soita +358 45 490 4229 ja kuule Hyrrä itse.
+
+## Toimialat
+
+- Parturit ja kampaamot: https://hyrrä.fi/parturit-ja-kampaamot
+- Autokorjaamot: https://hyrrä.fi/autokorjaamoille
+- Putki- ja sähköasentajat: https://hyrrä.fi/putki-ja-sahkoasentajille
+- Integraatiot: https://hyrrä.fi/integraatiot

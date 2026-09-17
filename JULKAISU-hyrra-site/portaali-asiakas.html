@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Asiakasportaali — Hyrrä</title>
+<meta name="theme-color" content="#0A1628">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --white:#FFFFFF; --gray:#9FAFC4; --gray-2:#6B7E92;
+    --red:#E25C5C; --green:#5BD178; --cyan:#6EB9E8;
+    --line:rgba(255,255,255,0.08); --line-strong:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bg);color:var(--white);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  button,input,select,textarea{font-family:inherit}
+  button{cursor:pointer;border:none;background:none;color:inherit}
+
+  /* Background layers */
+  .bg-aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bg-aurora::before,.bg-aurora::after{content:"";position:absolute;border-radius:50%;filter:blur(140px)}
+  .bg-aurora::before{width:720px;height:720px;background:radial-gradient(circle, rgba(27,58,92,0.75) 0%, transparent 70%);top:-200px;left:-150px;animation:drift1 30s ease-in-out infinite}
+  .bg-aurora::after{width:600px;height:600px;background:radial-gradient(circle, rgba(255,182,39,0.15) 0%, transparent 70%);top:20%;right:-150px;animation:drift2 36s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,60px)}}
+  @keyframes spinMark{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  /* Top nav */
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(10,22,40,0.88);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--line);padding:14px 24px}
+  .top-nav-inner{max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .brand{display:inline-flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--white)}
+  .brand .spin-mark{width:24px;height:24px;animation:spinMark 1.8s linear infinite}
+  .portal-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--amber);background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.25);padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-left:6px}
+  .nav-user{display:flex;align-items:center;gap:14px}
+  .user-name{color:var(--gray);font-size:13px;font-family:'JetBrains Mono',monospace}
+  .user-name b{color:var(--white);font-weight:600}
+  .logout-btn{padding:7px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--line);color:var(--white);border-radius:99px;font-size:12.5px;font-weight:600;transition:background .15s, border-color .15s;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.04em}
+  .logout-btn:hover{background:rgba(226,92,92,0.10);border-color:rgba(226,92,92,0.30);color:#FFB3B3}
+
+  /* Customer header */
+  .cust-header{padding:30px 24px 0;position:relative;z-index:2}
+  .cust-header-inner{max-width:1320px;margin:0 auto}
+  .cust-meta{display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .cust-meta .dot{width:3px;height:3px;background:var(--gray-2);border-radius:50%}
+  .cust-meta .status{color:var(--green)}
+  .cust-meta .status.pilotti{color:var(--cyan)}
+  .cust-meta .status.paussi{color:var(--red)}
+  .cust-meta .status::before{content:"●";margin-right:4px}
+  h1.cust-name{font-size:clamp(28px, 4vw, 38px);font-weight:800;letter-spacing:-0.025em;color:var(--white);line-height:1.1}
+  .cust-phone{font-family:'JetBrains Mono',monospace;color:var(--amber);font-size:15px;margin-top:6px;font-weight:500}
+
+  /* Tabs */
+  .tabs-wrap{padding:24px 24px 0;position:relative;z-index:2;position:sticky;top:64px;background:linear-gradient(180deg, var(--bg) 60%, transparent);z-index:40}
+  .tabs{max-width:1320px;margin:0 auto;display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:13px 18px;font-size:13.5px;font-weight:600;color:var(--gray);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s, border-color .15s;white-space:nowrap;letter-spacing:-0.005em;font-family:inherit}
+  .tab:hover{color:var(--white)}
+  .tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+  .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,182,39,0.18);color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 6px;border-radius:6px;margin-left:6px;font-weight:700;min-width:20px}
+
+  /* Main */
+  main{padding:32px 24px 80px;position:relative;z-index:2;max-width:1320px;margin:0 auto}
+  .section{display:none}
+  .section.active{display:block;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* Card primitives */
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid var(--line);border-radius:18px;padding:22px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .card.amber{background:linear-gradient(180deg, rgba(255,182,39,0.10), rgba(255,182,39,0.02));border-color:rgba(255,182,39,0.25)}
+  .card-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:14px}
+  .card-h h2{font-size:16px;font-weight:700;color:var(--white);letter-spacing:-0.01em}
+  .card-h .meta-line{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
+  .card-eyebrow{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .card-eyebrow::before{content:"//"}
+
+  /* KPI grid */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:14px;margin-bottom:24px}
+  .kpi{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid var(--line);border-radius:16px;padding:18px 20px;backdrop-filter:blur(10px)}
+  .kpi .lbl{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .kpi .v{font-size:32px;font-weight:800;color:var(--white);letter-spacing:-0.025em;line-height:1;font-variant-numeric:tabular-nums}
+  .kpi .v .unit{font-size:14px;color:var(--gray);font-weight:600;margin-left:3px;letter-spacing:0}
+  .kpi .delta{font-size:11.5px;font-family:'JetBrains Mono',monospace;margin-top:6px;color:var(--green)}
+  .kpi .delta.down{color:var(--red)}
+  .kpi.amber .v{color:var(--amber)}
+
+  /* Grid layouts */
+  .row{display:grid;gap:20px}
+  .row-2{grid-template-columns:1fr 1fr}
+  .row-3{grid-template-columns:repeat(3, 1fr)}
+  .row-2-3{grid-template-columns:2fr 1fr}
+  @media (max-width:880px){.row-2,.row-3,.row-2-3{grid-template-columns:1fr}}
+
+  /* Status panel */
+  .status-panel{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(91,209,120,0.10);border:1px solid rgba(91,209,120,0.30);border-radius:14px}
+  .status-panel.warn{background:rgba(255,182,39,0.10);border-color:rgba(255,182,39,0.30)}
+  .status-panel.warn .ico{background:var(--amber);color:var(--bg)}
+  .status-panel .ico{width:36px;height:36px;border-radius:50%;background:var(--green);color:var(--bg);display:grid;place-items:center;font-size:16px;flex-shrink:0}
+  .status-panel .ico svg{width:18px;height:18px}
+  .status-panel .txt b{display:block;color:var(--white);font-size:14px;font-weight:700;margin-bottom:2px}
+  .status-panel .txt span{color:var(--gray);font-size:13px}
+
+  /* Lists / tables */
+  .calls-list, .booking-list, .invoice-list{display:flex;flex-direction:column;gap:8px}
+  .call-row, .booking-row, .invoice-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:14px 16px;background:rgba(255,255,255,0.025);border:1px solid var(--line);border-radius:12px;transition:background .15s, border-color .15s;cursor:pointer}
+  .call-row:hover, .booking-row:hover{background:#FFFFFF;border-color:var(--line-strong)}
+  .call-row .when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);min-width:90px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+  .call-row .who{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .call-row .who b{font-size:14px;color:var(--white);font-weight:600;letter-spacing:-0.005em}
+  .call-row .who span{font-size:12.5px;color:var(--gray);font-family:'JetBrains Mono',monospace}
+  .call-row .pill{padding:4px 10px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;white-space:nowrap}
+  .pill.varaus{background:rgba(91,209,120,0.15);color:var(--green)}
+  .pill.kysely{background:rgba(110,185,232,0.15);color:var(--cyan)}
+  .pill.peruutus{background:rgba(255,182,39,0.15);color:var(--amber)}
+  .pill.paivystys{background:rgba(226,92,92,0.15);color:#FFB3B3}
+  .pill.ei-vastattu{background:rgba(159,175,196,0.15);color:var(--gray)}
+  .pill.pilotti-varaus{background:rgba(91,209,120,0.15);color:var(--green)}
+  .call-row .dur{font-family:'JetBrains Mono',monospace;color:var(--gray);font-size:12px;min-width:50px;text-align:right}
+  .call-row .expand-ico{color:var(--gray-2);transition:transform .2s, color .15s}
+  .call-row.open .expand-ico{transform:rotate(90deg);color:var(--amber)}
+
+  /* Expanded call panel */
+  .call-detail{display:none;padding:20px;background:rgba(27,58,92,0.06);border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;margin-top:-12px;margin-bottom:8px}
+  .call-detail.open{display:block;animation:fadeIn .2s ease}
+  .call-detail .meta-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:14px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .call-detail .meta-grid > div{font-family:'JetBrains Mono',monospace;font-size:11.5px}
+  .call-detail .meta-grid .l{color:var(--gray-2);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;font-size:10.5px;margin-bottom:3px}
+  .call-detail .meta-grid .v{color:var(--white);font-size:13px}
+  .call-detail .summary-box{background:rgba(255,182,39,0.05);border:1px solid rgba(255,182,39,0.20);border-radius:10px;padding:12px 14px;margin-bottom:18px}
+  .call-detail .summary-box .l{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+  .call-detail .summary-box p{font-size:14px;color:var(--white);line-height:1.5}
+  .transcript{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .t-row{display:flex;gap:10px;align-items:flex-start}
+  .t-row .av{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace}
+  .t-row.hyrra .av{background:var(--amber);color:var(--bg)}
+  .t-row.soittaja .av{background:rgba(27,58,92,0.10);color:var(--white);border:1px solid var(--line)}
+  .t-row .bubble{flex:1;padding:9px 13px;border-radius:10px;font-size:13.5px;line-height:1.5}
+  .t-row.hyrra .bubble{background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.18);color:var(--white)}
+  .t-row.soittaja .bubble{background:#FFFFFF;border:1px solid var(--line);color:#1A1A1A}
+  .t-row .who-name{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gray-2);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+  .call-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .ca-btn{padding:8px 14px;background:#FFFFFF;border:1px solid var(--line);color:var(--white);border-radius:99px;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:background .15s, border-color .15s}
+  .ca-btn:hover{background:rgba(27,58,92,0.10);border-color:rgba(255,182,39,0.30)}
+  .ca-btn.amber{background:var(--amber);color:var(--bg);border-color:transparent}
+  .ca-btn.amber:hover{background:var(--amber-2);transform:translateY(-1px)}
+  .ca-btn svg{width:13px;height:13px}
+
+  /* Filter strip */
+  .filter-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .filter-strip button{padding:7px 13px;background:#FFFFFF;border:1px solid var(--line);color:var(--gray);border-radius:99px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.04em;transition:color .15s, border-color .15s, background .15s}
+  .filter-strip button:hover{color:var(--white)}
+  .filter-strip button.active{color:var(--amber);border-color:rgba(255,182,39,0.40);background:rgba(255,182,39,0.06)}
+
+  /* Booking */
+  .booking-row{cursor:default;grid-template-columns:auto 1fr auto auto}
+  .booking-row .when b{color:var(--white);font-size:13.5px}
+  .booking-row .when .day{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+  .booking-row .what{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .booking-row .what b{font-size:14px;font-weight:600;color:var(--white)}
+  .booking-row .what span{font-size:12.5px;color:var(--gray)}
+  .booking-row .sync{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--green);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+  .booking-row .sync::before{content:"●";font-size:13px}
+
+  /* Settings */
+  .form-grid{display:grid;gap:16px}
+  .form-grid label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:8px}
+  .form-grid input[type="text"], .form-grid input[type="email"], .form-grid textarea, .form-grid select{width:100%;background:#FFFFFF;border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:14px;transition:border-color .15s, background .15s;line-height:1.4}
+  .form-grid input:focus, .form-grid textarea:focus, .form-grid select:focus{outline:none;border-color:var(--amber);background:#FFFFFF}
+  .form-grid textarea{resize:vertical;min-height:80px;font-family:inherit}
+  .toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer}
+  .toggle input{display:none}
+  .toggle .track{width:44px;height:24px;background:rgba(27,58,92,0.10);border-radius:99px;position:relative;transition:background .15s}
+  .toggle .track::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;background:var(--white);border-radius:50%;transition:transform .2s, background .15s}
+  .toggle input:checked + .track{background:var(--amber)}
+  .toggle input:checked + .track::after{transform:translateX(20px);background:var(--bg)}
+  .toggle .lbl{font-size:13.5px;color:var(--white);font-weight:500}
+  .voice-toggle{display:inline-flex;background:#FFFFFF;border:1px solid var(--line);border-radius:99px;padding:4px}
+  .voice-toggle button{padding:7px 16px;border-radius:99px;font-size:12.5px;font-weight:600;color:var(--gray);transition:color .15s, background .15s}
+  .voice-toggle button.active{background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--bg)}
+
+  .svc-table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:13.5px}
+  .svc-table th{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;text-align:left;padding:4px 12px}
+  .svc-table td{background:#FFFFFF;padding:9px 12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .svc-table td:first-child{border-left:1px solid var(--line);border-radius:9px 0 0 9px}
+  .svc-table td:last-child{border-right:1px solid var(--line);border-radius:0 9px 9px 0;text-align:right}
+  .svc-table input{background:transparent;border:none;color:var(--white);font-family:inherit;font-size:13.5px;width:100%;padding:2px 4px}
+  .svc-table input:focus{outline:none;background:rgba(255,182,39,0.10);border-radius:4px}
+  .del-btn{color:var(--red);background:none;border:none;cursor:pointer;font-size:14px;padding:2px 6px;border-radius:6px;opacity:0.5;transition:opacity .15s}
+  .del-btn:hover{opacity:1;background:rgba(226,92,92,0.10)}
+  .add-row-btn{margin-top:4px;padding:8px 14px;background:rgba(255,182,39,0.10);border:1px dashed rgba(255,182,39,0.30);color:var(--amber);border-radius:10px;font-size:12.5px;font-weight:600;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.05em}
+  .add-row-btn:hover{background:rgba(255,182,39,0.12)}
+
+  .hours-grid{display:grid;grid-template-columns:120px 1fr;gap:10px 16px;align-items:center}
+  .hours-grid label{margin-bottom:0;color:var(--white);text-transform:capitalize;letter-spacing:0;font-size:13.5px;font-weight:500;font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif}
+  .hours-grid input{padding:8px 12px;font-size:13px}
+
+  .faq-list{display:flex;flex-direction:column;gap:10px}
+  .faq-row{background:rgba(255,255,255,0.025);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .faq-row textarea{width:100%;background:transparent;border:none;color:var(--white);font-family:inherit;font-size:13.5px;resize:vertical;min-height:40px;line-height:1.5;padding:4px 0}
+  .faq-row textarea:focus{outline:none}
+  .faq-row .q{font-weight:700;font-size:13.5px;color:var(--amber);margin-bottom:6px;font-family:inherit;letter-spacing:-0.005em}
+  .faq-row .q input{width:100%;background:transparent;border:none;color:var(--amber);font-family:inherit;font-size:13.5px;font-weight:700}
+  .faq-row .q input:focus{outline:none}
+
+  .save-bar{position:sticky;bottom:14px;display:flex;justify-content:flex-end;gap:10px;background:rgba(10,22,40,0.85);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;margin-top:24px;align-items:center;box-shadow:0 12px 32px -8px rgba(27,58,92,0.12)}
+  .save-bar .status-txt{flex:1;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+  .save-bar .status-txt.saved{color:var(--green)}
+  .btn-save{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);padding:11px 22px;border-radius:99px;font-weight:700;font-size:13.5px;transition:transform .15s, box-shadow .15s;box-shadow:0 6px 18px -4px rgba(255,182,39,0.4)}
+  .btn-save:hover{transform:translateY(-1px)}
+
+  /* Billing */
+  .billing-hero{background:linear-gradient(135deg, rgba(255,182,39,0.10), rgba(27,58,92,0.30));border:1px solid rgba(255,182,39,0.30);border-radius:18px;padding:28px;margin-bottom:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;align-items:flex-end}
+  .billing-hero .plan-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:6px}
+  .billing-hero h2{font-size:36px;font-weight:800;color:var(--white);letter-spacing:-0.025em}
+  .billing-hero .price{color:var(--gray);font-size:14px;margin-top:4px;font-family:'JetBrains Mono',monospace}
+  .billing-hero .price b{color:var(--amber);font-size:18px}
+  .billing-hero .next{text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--gray)}
+  .billing-hero .next b{display:block;color:var(--white);font-size:18px;margin-top:4px}
+  .invoice-row{cursor:default;grid-template-columns:auto 1fr auto auto auto;gap:14px}
+  .invoice-row .inv-id{font-family:'JetBrains Mono',monospace;color:var(--gray);font-size:12px;font-weight:600}
+  .invoice-row .inv-date{font-family:'JetBrains Mono',monospace;color:var(--gray-2);font-size:11.5px}
+  .invoice-row .inv-amount{font-family:'JetBrains Mono',monospace;color:var(--white);font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums}
+  .pill.maksettu{background:rgba(91,209,120,0.15);color:var(--green)}
+  .pill.avoinna{background:rgba(255,182,39,0.15);color:var(--amber)}
+
+  /* Empty state */
+  .empty{padding:40px 20px;text-align:center;color:var(--gray-2);font-size:13.5px;font-family:'JetBrains Mono',monospace}
+  .empty::before{content:"//";display:block;font-size:18px;color:var(--amber);margin-bottom:6px}
+
+  /* Mobile */
+  @media (max-width:680px){
+    .top-nav{padding:12px 16px}
+    .cust-header,.tabs-wrap,main{padding-left:16px;padding-right:16px}
+    .billing-hero{padding:20px}
+    .billing-hero .next{text-align:left}
+    .call-row{grid-template-columns:1fr auto;gap:8px}
+    .call-row .when{grid-column:1/-1;margin-bottom:2px}
+    .call-row .dur, .call-row .expand-ico{display:none}
+    .booking-row{grid-template-columns:1fr auto;gap:10px}
+    .booking-row .sync{grid-column:1/-1}
+    .invoice-row{grid-template-columns:1fr auto;gap:6px}
+    .invoice-row .inv-date{display:none}
+    .nav-user .user-name{display:none}
+  }
+
+</style>
+</head>
+<body>
+<div class="bg-aurora"></div>
+
+<header class="top-nav">
+  <div class="top-nav-inner">
+    <a href="/" class="brand">
+      <svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg>
+      <span>hyrrä</span><span class="portal-tag">portaali</span>
+    </a>
+    <div class="nav-user">
+      <div class="user-name">Kirjautunut: <b id="navUserName">—</b></div>
+      <button class="logout-btn" id="logoutBtn">Kirjaudu ulos</button>
+    </div>
+  </div>
+</header>
+
+<section class="cust-header">
+  <div class="cust-header-inner">
+    <div class="cust-meta">
+      <span id="custIndustry">—</span>
+      <span class="dot"></span>
+      <span class="status" id="custStatus">—</span>
+      <span class="dot"></span>
+      <span id="custPlan">—</span>
+    </div>
+    <h1 class="cust-name" id="custName">—</h1>
+    <div class="cust-phone" id="custPhone">—</div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap" id="quickActions">
+      <a href="portaali-yhdista.html" class="logout-btn" style="text-transform:uppercase;letter-spacing:0.04em;border-color:rgba(255,182,39,0.25);color:var(--amber);background:rgba(255,182,39,0.06)">Yhdistä uudelleen</a>
+    </div>
+  </div>
+</section>
+
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="yleisnakyma">Yleisnäkymä</button>
+    <button class="tab" data-tab="puhelut">Puhelut <span class="tab-badge" id="callsBadge">0</span></button>
+    <button class="tab" data-tab="varaukset">Varaukset <span class="tab-badge" id="bookingsBadge">0</span></button>
+    <button class="tab" data-tab="asetukset">Asetukset</button>
+    <button class="tab" data-tab="laskutus">Laskutus</button>
+  </div>
+</div>
+
+<main>
+  <!-- YLEISNÄKYMÄ -->
+  <section class="section active" id="sec-yleisnakyma">
+    <div class="kpi-grid" id="kpiRow"></div>
+
+    <div class="row row-2-3" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-eyebrow">VIIMEISET PUHELUT</div>
+        <div class="calls-list" id="recentCalls"></div>
+      </div>
+      <div class="card amber">
+        <div class="card-eyebrow">HYRRÄN TILA</div>
+        <div class="status-panel" id="statusPanel">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="txt"><b>Aktiivinen 24/7</b><span id="statusSub">Hyrrä vastaa puheluihin</span></div>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray)">
+            <span>Numero</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--white)" id="quickPhone">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray)">
+            <span>Ääni</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--white)" id="quickVoice">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray)">
+            <span>Kalenteri</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--green)" id="quickCalendar">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUHELUT -->
+  <section class="section" id="sec-puhelut">
+    <div class="filter-strip" id="callFilter">
+      <button class="active" data-filter="kaikki">Kaikki</button>
+      <button data-filter="varaus">Varaukset</button>
+      <button data-filter="kysely">Kyselyt</button>
+      <button data-filter="paivystys">Päivystys</button>
+      <button data-filter="peruutus">Peruutukset</button>
+      <button data-filter="ei-vastattu">Ei vastattu</button>
+    </div>
+    <div class="calls-list" id="callsList"></div>
+  </section>
+
+  <!-- VARAUKSET -->
+  <section class="section" id="sec-varaukset">
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-h">
+        <div>
+          <div class="card-eyebrow">KALENTERI-INTEGRAATIO</div>
+          <h2 id="calIntName">—</h2>
+        </div>
+        <span class="sync" id="calSyncStatus" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--green);text-transform:uppercase;letter-spacing:0.05em;font-weight:600">● YHDISTETTY</span>
+      </div>
+      <p style="color:var(--gray);font-size:14px" id="calIntDesc">Varaukset synkronoituvat automaattisesti.</p>
+    </div>
+
+    <div class="card-eyebrow">TULEVAT VARAUKSET</div>
+    <div class="booking-list" id="bookingsList"></div>
+  </section>
+
+  <!-- ASETUKSET -->
+  <section class="section" id="sec-asetukset">
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-eyebrow">TERVEHDYS & ÄÄNI</div>
+      <div class="form-grid">
+        <div>
+          <label for="setGreeting">Tervehdys (asiakas kuulee tämän ensin)</label>
+          <textarea id="setGreeting" rows="2"></textarea>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+          <div>
+            <label>Hyrrän ääni</label>
+            <div class="voice-toggle">
+              <button type="button" data-voice="nainen" id="voiceNainen">Nainen</button>
+              <button type="button" data-voice="mies" id="voiceMies">Mies</button>
+            </div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="setSmsConfirm">
+            <span class="track"></span>
+            <span class="lbl">Lähetä SMS-vahvistus varauksen jälkeen</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-eyebrow">AUKIOLOAJAT</div>
+      <div class="hours-grid" id="hoursGrid"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-h">
+        <div class="card-eyebrow" style="margin:0">PALVELUKATALOGI</div>
+      </div>
+      <table class="svc-table">
+        <thead>
+          <tr><th>Palvelu</th><th>Hinta (€)</th><th>Kesto (min)</th><th></th></tr>
+        </thead>
+        <tbody id="svcBody"></tbody>
+      </table>
+      <button class="add-row-btn" id="addSvcBtn">+ Lisää palvelu</button>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-eyebrow">FAQ — USEIN KYSYTYT KYSYMYKSET</div>
+      <p style="color:var(--gray);font-size:13.5px;margin-bottom:14px">Hyrrä vastaa näihin kysymyksiin automaattisesti, kun asiakkaat soittavat.</p>
+      <div class="faq-list" id="faqList"></div>
+      <button class="add-row-btn" id="addFaqBtn">+ Lisää kysymys</button>
+    </div>
+
+    <div class="save-bar">
+      <span class="status-txt" id="saveStatus">// muutoksia ei tallennettu</span>
+      <button class="btn-save" id="saveBtn">Tallenna asetukset</button>
+    </div>
+  </section>
+
+  <!-- LASKUTUS -->
+  <section class="section" id="sec-laskutus">
+    <div class="billing-hero">
+      <div>
+        <div class="plan-lbl">NYKYINEN TILAUS</div>
+        <h2 id="billPlan">—</h2>
+        <div class="price"><b id="billPrice">—</b> / kk</div>
+      </div>
+      <div class="next">
+        <span id="nextLbl">SEURAAVA LASKUTUS</span>
+        <b id="nextDate">—</b>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-eyebrow">SISÄLTYY TILAUKSEEN</div>
+      <ul style="list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:13.5px;color:#1A1A1A" id="planFeatures"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-eyebrow">LASKUHISTORIA</div>
+      <div class="invoice-list" id="invoiceList"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  // ===== Session check =====
+  var session = JSON.parse(localStorage.getItem('hyrra-portal-session') || 'null');
+  if (!session || session.role !== 'customer') {
+    window.location.href = 'portaali-kirjautuminen.html';
+    return;
+  }
+
+  // ===== Onboarding check — jos asiakkaan numeroa ei ole vielä liitetty, ohjataan wizardiin =====
+  var customersCheck = JSON.parse(localStorage.getItem('hyrra-portal-customers') || '{}');
+  var custCheck = customersCheck[session.customerId];
+  // setupComplete oletetaan trueksi olemassa oleville asiakkaille jos kenttää ei ole määritelty
+  // (taaksepäin yhteensopivuus). Uudet asiakkaat saavat setupComplete: false.
+  if (custCheck && custCheck.setupComplete === false) {
+    window.location.href = 'portaali-yhdista.html';
+    return;
+  }
+
+  // ===== Data load =====
+  var customers = JSON.parse(localStorage.getItem('hyrra-portal-customers') || '{}');
+  var allCalls = JSON.parse(localStorage.getItem('hyrra-portal-calls') || '{}');
+  var allBookings = JSON.parse(localStorage.getItem('hyrra-portal-bookings') || '{}');
+  var allInvoices = JSON.parse(localStorage.getItem('hyrra-portal-invoices') || '{}');
+
+  var customer = customers[session.customerId];
+  if (!customer) { alert('Asiakasdataa ei löytynyt. Kirjaudutaan ulos.'); doLogout(); return; }
+  var calls = (allCalls[customer.id] || []).slice().sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+  var bookings = (allBookings[customer.id] || []).slice().sort(function(a,b){return new Date(a.date+'T'+a.time) - new Date(b.date+'T'+b.time);});
+  var invoices = allInvoices[customer.id] || [];
+
+  // ===== Initialize header =====
+  document.getElementById('navUserName').textContent = session.name;
+  document.getElementById('custName').textContent = customer.name;
+  document.getElementById('custIndustry').textContent = customer.industry;
+  document.getElementById('custStatus').textContent = customer.status.charAt(0).toUpperCase() + customer.status.slice(1);
+  document.getElementById('custStatus').className = 'status ' + customer.status;
+  document.getElementById('custPlan').textContent = customer.plan + ' -tilaus';
+  document.getElementById('custPhone').textContent = customer.phone;
+  document.title = customer.name + ' — Hyrrä-portaali';
+
+  // ===== Logout =====
+  function doLogout(){
+    localStorage.removeItem('hyrra-portal-session');
+    window.location.href = 'portaali-kirjautuminen.html';
+  }
+  document.getElementById('logoutBtn').addEventListener('click', doLogout);
+
+  // ===== Tabs =====
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      var name = t.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+      document.getElementById('sec-'+name).classList.add('active');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  });
+
+  // ===== Helpers =====
+  function fmtDuration(s){ var m = Math.floor(s/60); var r = s%60; return (m>0 ? m+' min ' : '') + r + ' s'; }
+  function fmtDate(iso){
+    var d = new Date(iso);
+    var now = new Date();
+    var sameDay = d.toDateString() === now.toDateString();
+    var yest = new Date(now); yest.setDate(yest.getDate()-1);
+    var sameYest = d.toDateString() === yest.toDateString();
+    var hh = String(d.getHours()).padStart(2,'0'); var mm = String(d.getMinutes()).padStart(2,'0');
+    if (sameDay) return 'Tänään ' + hh+':'+mm;
+    if (sameYest) return 'Eilen ' + hh+':'+mm;
+    var months = ['tam','hel','maa','huh','tou','kes','hei','elo','syy','lok','mar','jou'];
+    return d.getDate() + '. ' + months[d.getMonth()] + ' ' + hh+':'+mm;
+  }
+  function fmtBookingDate(d){
+    var date = new Date(d+'T00:00:00');
+    var days = ['Su','Ma','Ti','Ke','To','Pe','La'];
+    return { day: days[date.getDay()], date: date.getDate() + '.' + (date.getMonth()+1) + '.' };
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
+
+  // ===== KPI =====
+  function renderKpis(){
+    var thisMonth = new Date(); thisMonth.setDate(1); thisMonth.setHours(0,0,0,0);
+    var monthCalls = calls.filter(function(c){return new Date(c.date) >= thisMonth;});
+    var monthVarauksia = monthCalls.filter(function(c){return c.type === 'varaus' || c.type === 'pilotti-varaus';}).length;
+    var totalCalls = monthCalls.length;
+    var convRate = totalCalls > 0 ? Math.round((monthVarauksia / totalCalls) * 100) : 0;
+    var totalSec = monthCalls.reduce(function(s,c){return s + (c.durationSec || 0);}, 0);
+    var savedHours = Math.round(totalSec / 3600 * 10) / 10;
+
+    var kpis = [
+      {lbl:'PUHELUJA / KK', v: totalCalls, delta:'+18 % vs. edellinen'},
+      {lbl:'VARAUKSIA / KK', v: monthVarauksia, delta:'+22 % vs. edellinen', amber: true},
+      {lbl:'KONVERSIO', v: convRate, unit:'%', delta:'+4 pp vs. edellinen'},
+      {lbl:'AIKAA SÄÄSTÖÖN', v: savedHours, unit:'h', delta:'≈ ' + Math.round(savedHours*45) + ' € palkkaa'}
+    ];
+    document.getElementById('kpiRow').innerHTML = kpis.map(function(k){
+      return '<div class="kpi'+(k.amber?' amber':'')+'"><div class="lbl">'+k.lbl+'</div><div class="v">'+k.v+(k.unit?'<span class="unit">'+k.unit+'</span>':'')+'</div><div class="delta">'+k.delta+'</div></div>';
+    }).join('');
+  }
+
+  // ===== Calls list =====
+  function renderCallRow(c){
+    var pillClass = c.type;
+    return '<div class="call-row" data-call="'+c.id+'">'+
+      '<div class="when">'+fmtDate(c.date)+'</div>'+
+      '<div class="who"><b>'+esc(c.callerNumber)+'</b><span>'+esc(c.outcome || '—')+'</span></div>'+
+      '<span class="pill '+pillClass+'">'+pillClass.replace('-',' ')+'</span>'+
+      '<div class="dur">'+fmtDuration(c.durationSec || 0)+'</div>'+
+      '</div>';
+  }
+  function renderCallDetail(c){
+    var transcript = (c.transcript || []).map(function(t){
+      var who = t.who === 'hyrrä' ? 'Hyrrä' : 'Soittaja';
+      var ico = t.who === 'hyrrä' ? 'H' : 'S';
+      return '<div class="t-row '+t.who+'"><div class="av">'+ico+'</div><div class="bubble"><span class="who-name">'+who+'</span>'+esc(t.text)+'</div></div>';
+    }).join('');
+    var summary = c.summary ? '<div class="summary-box"><div class="l">// HYRRÄN YHTEENVETO</div><p>'+esc(c.summary)+'</p></div>' : '';
+    var metaRows = [];
+    if (c.service) metaRows.push({l:'Palvelu', v:c.service});
+    if (c.vehicle) metaRows.push({l:'Ajoneuvo', v:c.vehicle});
+    metaRows.push({l:'Soittaja', v:c.callerNumber});
+    metaRows.push({l:'Kesto', v:fmtDuration(c.durationSec || 0)});
+    var meta = '<div class="meta-grid">' + metaRows.map(function(r){return '<div><div class="l">'+r.l+'</div><div class="v">'+esc(r.v)+'</div></div>';}).join('') + '</div>';
+    var transcriptHtml = transcript ? ('<div class="transcript">'+transcript+'</div>') : '<div class="empty">Transkriptia ei ole saatavilla tälle puhelulle.</div>';
+    var actions = '<div class="call-actions">'+
+      '<button class="ca-btn amber" data-play="'+c.id+'"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Toista äänitallenne</button>'+
+      '<button class="ca-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Lataa transkripti</button>'+
+      '</div>';
+    return '<div class="call-detail" id="detail-'+c.id+'">'+meta+summary+transcriptHtml+actions+'</div>';
+  }
+  function renderCallsList(filter){
+    var filtered = filter && filter !== 'kaikki' ? calls.filter(function(c){return c.type === filter;}) : calls;
+    if (!filtered.length) { document.getElementById('callsList').innerHTML = '<div class="empty">Ei puheluita valitulla suodattimella.</div>'; return; }
+    var html = filtered.map(function(c){ return renderCallRow(c) + renderCallDetail(c); }).join('');
+    document.getElementById('callsList').innerHTML = html;
+    wireCallRows();
+  }
+  function renderRecentCalls(){
+    var recent = calls.slice(0, 5);
+    document.getElementById('recentCalls').innerHTML = recent.map(renderCallRow).join('') || '<div class="empty">Ei vielä puheluita.</div>';
+    document.getElementById('callsBadge').textContent = calls.length;
+  }
+  function wireCallRows(){
+    document.querySelectorAll('.call-row').forEach(function(r){
+      r.onclick = function(){
+        var id = r.getAttribute('data-call');
+        var detail = document.getElementById('detail-'+id);
+        if (!detail) return;
+        var isOpen = detail.classList.contains('open');
+        document.querySelectorAll('.call-detail.open').forEach(function(d){d.classList.remove('open');});
+        document.querySelectorAll('.call-row.open').forEach(function(x){x.classList.remove('open');});
+        if (!isOpen) { detail.classList.add('open'); r.classList.add('open'); }
+      };
+    });
+    document.querySelectorAll('[data-play]').forEach(function(b){
+      b.onclick = function(ev){
+        ev.stopPropagation();
+        var id = b.getAttribute('data-play');
+        var call = calls.find(function(c){return c.id === id;});
+        if (!call || !call.transcript || !call.transcript.length) { alert('Tälle puhelulle ei ole tallennetta.'); return; }
+        playTranscript(call.transcript);
+      };
+    });
+  }
+
+  // Demo audio playback using SpeechSynthesis
+  var currentSpeech = null;
+  function playTranscript(transcript){
+    if (!('speechSynthesis' in window)) { alert('Selaimesi ei tue äänitallenteen toistoa.'); return; }
+    if (currentSpeech) { window.speechSynthesis.cancel(); currentSpeech = null; }
+    var i = 0;
+    function next(){
+      if (i >= transcript.length) return;
+      var t = transcript[i++];
+      var u = new SpeechSynthesisUtterance(t.text);
+      u.lang = 'fi-FI';
+      u.rate = 1.0;
+      u.pitch = t.who === 'hyrrä' ? (customer.voice === 'mies' ? 0.85 : 1.05) : (Math.random() > 0.5 ? 0.9 : 1.1);
+      u.onend = next;
+      window.speechSynthesis.speak(u);
+      currentSpeech = u;
+    }
+    next();
+  }
+
+  // ===== Bookings =====
+  function renderBookings(){
+    if (!bookings.length) { document.getElementById('bookingsList').innerHTML = '<div class="empty">Ei tulevia varauksia.</div>'; return; }
+    document.getElementById('bookingsList').innerHTML = bookings.map(function(b){
+      var d = fmtBookingDate(b.date);
+      return '<div class="booking-row">'+
+        '<div class="when"><div class="day">'+d.day+'</div><b>'+d.date+' '+b.time+'</b></div>'+
+        '<div class="what"><b>'+esc(b.service)+'</b><span>'+esc(b.customerName)+(b.vehicle?' · '+esc(b.vehicle):'')+'</span></div>'+
+        '<span class="sync">'+esc(b.syncedTo)+'</span>'+
+        '</div>';
+    }).join('');
+    document.getElementById('bookingsBadge').textContent = bookings.length;
+    document.getElementById('calIntName').textContent = customer.calendar.calendarName + ' (' + customer.calendar.provider + ')';
+    document.getElementById('calIntDesc').textContent = 'Hyrrän tekemät varaukset synkronoituvat tähän kalenteriin reaaliajassa. Voit muokata aikoja kalenterissa, muutokset näkyvät myös Hyrrällä.';
+  }
+
+  // ===== Status panel =====
+  function renderStatusBits(){
+    document.getElementById('quickPhone').textContent = customer.phone;
+    document.getElementById('quickVoice').textContent = customer.voice.charAt(0).toUpperCase() + customer.voice.slice(1);
+    document.getElementById('quickCalendar').textContent = '● ' + customer.calendar.provider;
+    if (customer.status === 'pilotti' && customer.pilotEndsAt) {
+      var sub = document.getElementById('statusSub');
+      var pp = document.getElementById('statusPanel');
+      pp.classList.add('warn');
+      sub.textContent = 'Pilotti päättyy ' + customer.pilotEndsAt;
+      var top = pp.querySelector('.txt b');
+      top.textContent = 'Pilottijakso käynnissä';
+    }
+  }
+
+  // ===== Settings =====
+  function renderSettings(){
+    document.getElementById('setGreeting').value = customer.greeting;
+    document.getElementById('setSmsConfirm').checked = !!customer.smsConfirm;
+    document.querySelectorAll('.voice-toggle button').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-voice') === customer.voice);
+    });
+    // Hours
+    var dayLabels = {mon:'Maanantai', tue:'Tiistai', wed:'Keskiviikko', thu:'Torstai', fri:'Perjantai', sat:'Lauantai', sun:'Sunnuntai'};
+    document.getElementById('hoursGrid').innerHTML = Object.keys(dayLabels).map(function(d){
+      return '<label>'+dayLabels[d]+'</label><input type="text" data-day="'+d+'" value="'+esc(customer.hours[d]||'')+'" placeholder="esim. 8:00-17:00 tai suljettu">';
+    }).join('');
+    // Services
+    renderServices();
+    // FAQ
+    renderFaqs();
+  }
+  function renderServices(){
+    document.getElementById('svcBody').innerHTML = customer.services.map(function(s, i){
+      return '<tr data-svc="'+i+'">'+
+        '<td><input data-field="name" value="'+esc(s.name)+'"></td>'+
+        '<td><input data-field="priceMin" value="'+s.priceMin+'" style="width:48%"> – <input data-field="priceMax" value="'+s.priceMax+'" style="width:48%"></td>'+
+        '<td><input data-field="durationMin" value="'+s.durationMin+'"></td>'+
+        '<td><button class="del-btn" data-del-svc="'+i+'" type="button">✕</button></td>'+
+        '</tr>';
+    }).join('');
+    document.querySelectorAll('[data-del-svc]').forEach(function(b){
+      b.onclick = function(){
+        if(!confirm('Poista palvelu?')) return;
+        customer.services.splice(parseInt(b.getAttribute('data-del-svc'),10), 1);
+        renderServices(); markUnsaved();
+      };
+    });
+  }
+  function renderFaqs(){
+    var entries = Object.entries(customer.faq || {});
+    document.getElementById('faqList').innerHTML = entries.map(function(e, i){
+      return '<div class="faq-row" data-faq="'+i+'">'+
+        '<div class="q"><input data-field="q" value="'+esc(e[0])+'"></div>'+
+        '<textarea data-field="a" rows="2">'+esc(e[1])+'</textarea>'+
+        '<div style="display:flex;justify-content:flex-end;margin-top:4px"><button class="del-btn" data-del-faq="'+i+'" type="button">Poista ✕</button></div>'+
+        '</div>';
+    }).join('');
+    document.querySelectorAll('[data-del-faq]').forEach(function(b){
+      b.onclick = function(){
+        if(!confirm('Poista kysymys?')) return;
+        var idx = parseInt(b.getAttribute('data-del-faq'),10);
+        var keys = Object.keys(customer.faq); customer.faq[keys[idx]] !== undefined && delete customer.faq[keys[idx]];
+        renderFaqs(); markUnsaved();
+      };
+    });
+  }
+  document.getElementById('addSvcBtn').onclick = function(){
+    customer.services.push({ name:'Uusi palvelu', priceMin:0, priceMax:0, durationMin:30 });
+    renderServices(); markUnsaved();
+  };
+  document.getElementById('addFaqBtn').onclick = function(){
+    customer.faq['Uusi kysymys?'] = 'Vastaus tähän...';
+    renderFaqs(); markUnsaved();
+  };
+  document.querySelectorAll('.voice-toggle button').forEach(function(b){
+    b.onclick = function(){
+      customer.voice = b.getAttribute('data-voice');
+      document.querySelectorAll('.voice-toggle button').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      markUnsaved();
+    };
+  });
+  document.getElementById('setGreeting').oninput = function(){ customer.greeting = this.value; markUnsaved(); };
+  document.getElementById('setSmsConfirm').onchange = function(){ customer.smsConfirm = this.checked; markUnsaved(); };
+  // Hours, svc, faq inputs delegated
+  document.getElementById('sec-asetukset').addEventListener('input', function(e){
+    var t = e.target;
+    if (t.matches('[data-day]')) { customer.hours[t.getAttribute('data-day')] = t.value; markUnsaved(); }
+    if (t.matches('.svc-table input[data-field]')) {
+      var row = t.closest('[data-svc]'); var i = parseInt(row.getAttribute('data-svc'),10);
+      var field = t.getAttribute('data-field');
+      if (field === 'name') customer.services[i].name = t.value;
+      else customer.services[i][field] = parseInt(t.value,10) || 0;
+      markUnsaved();
+    }
+    if (t.matches('.faq-row input[data-field], .faq-row textarea[data-field]')) {
+      var faqRows = Array.from(document.querySelectorAll('.faq-row'));
+      var newFaq = {};
+      faqRows.forEach(function(row){
+        var qi = row.querySelector('input[data-field="q"]');
+        var ai = row.querySelector('textarea[data-field="a"]');
+        if (qi && ai) newFaq[qi.value || 'Uusi kysymys?'] = ai.value;
+      });
+      customer.faq = newFaq;
+      markUnsaved();
+    }
+  });
+  function markUnsaved(){
+    var s = document.getElementById('saveStatus');
+    s.textContent = '// muutoksia ei tallennettu';
+    s.classList.remove('saved');
+  }
+  document.getElementById('saveBtn').onclick = function(){
+    customers[customer.id] = customer;
+    localStorage.setItem('hyrra-portal-customers', JSON.stringify(customers));
+    var s = document.getElementById('saveStatus');
+    s.textContent = '✓ TALLENNETTU';
+    s.classList.add('saved');
+    // Re-render dependent UI
+    document.getElementById('custPhone').textContent = customer.phone;
+    document.getElementById('quickPhone').textContent = customer.phone;
+    document.getElementById('quickVoice').textContent = customer.voice.charAt(0).toUpperCase() + customer.voice.slice(1);
+  };
+
+  // ===== Billing =====
+  function renderBilling(){
+    var planFeatures = {
+      'Mini':  ['60 puhelua / kk', 'Yksi puhelinnumero', 'Yksi kalenteri', 'SMS-vahvistukset', 'Sähköpostituki (48 h)', 'Overage 0,79 €/puhelu'],
+      'Kevyt': ['60 puhelua / kk', 'Yksi puhelinnumero', 'Yksi kalenteri', 'SMS-vahvistukset', 'Sähköpostituki (48 h)', 'Overage 0,79 €/puhelu'],
+      'Plus':  ['250 puhelua / kk', 'Yksi puhelinnumero', 'Useita kalentereita', 'SMS-vahvistukset', 'Puhelintuki (24 h)', 'Puhelinrekisterin haku', 'Overage 0,59 €/puhelu'],
+      'Pro':   ['800 puhelua / kk', '3 puhelinnumeroa', 'Useita kalentereita', 'SMS + sähköposti -vahvistukset', 'Päivystysoperaattori', 'Premium-ääni (ElevenLabs)', 'Mukautetut integraatiot', 'Overage 0,49 €/puhelu']
+    };
+    document.getElementById('billPlan').textContent = customer.plan;
+    document.getElementById('billPrice').textContent = (customer.plan === 'Pro' ? '749' : customer.plan === 'Plus' ? '299' : '149') + ' €';
+    if (customer.status === 'pilotti') {
+      document.getElementById('nextLbl').textContent = 'PILOTTI PÄÄTTYY';
+      document.getElementById('nextDate').textContent = customer.pilotEndsAt;
+    } else {
+      document.getElementById('nextLbl').textContent = 'SEURAAVA LASKUTUS';
+      document.getElementById('nextDate').textContent = customer.billingNext + ' · ' + customer.billingAmount + ' €';
+    }
+    document.getElementById('planFeatures').innerHTML = (planFeatures[customer.plan]||[]).map(function(f){
+      return '<li style="display:flex;gap:10px;align-items:flex-start"><span style="color:var(--amber);font-weight:800">✓</span> '+esc(f)+'</li>';
+    }).join('');
+    if (!invoices.length) { document.getElementById('invoiceList').innerHTML = '<div class="empty">Ei vielä laskuja — pilotti on ilmainen.</div>'; return; }
+    document.getElementById('invoiceList').innerHTML = invoices.map(function(inv){
+      return '<div class="invoice-row">'+
+        '<span class="inv-id">'+esc(inv.id)+'</span>'+
+        '<span class="inv-date">'+esc(inv.date)+'</span>'+
+        '<span class="pill maksettu">'+esc(inv.status)+'</span>'+
+        '<span class="inv-amount">'+inv.amount+' €</span>'+
+        '<button class="ca-btn" style="padding:5px 12px;font-size:11.5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> PDF</button>'+
+        '</div>';
+    }).join('');
+  }
+
+  // ===== Call filters =====
+  document.querySelectorAll('#callFilter button').forEach(function(b){
+    b.onclick = function(){
+      document.querySelectorAll('#callFilter button').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      renderCallsList(b.getAttribute('data-filter'));
+    };
+  });
+
+  // ===== Initial render =====
+  renderKpis();
+  renderRecentCalls();
+  renderStatusBits();
+  renderCallsList('kaikki');
+  renderBookings();
+  renderSettings();
+  renderBilling();
+
+})();
+</script>
+</body>
+</html>

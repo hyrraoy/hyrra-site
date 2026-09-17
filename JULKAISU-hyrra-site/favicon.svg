@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hyrrä">
+  <title>Hyrrä</title>
+  <!-- Pyöristetty taustaneliö Hyrrä Deep -värissä -->
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#0F3D3E"/>
+  <!-- Logon vinot ä-pisteet, suurennettu ja keskitetty -->
+  <g transform="translate(32 33) rotate(-12)" fill="#FFB627">
+    <circle cx="-11" cy="-2" r="9"/>
+    <circle cx="11" cy="2" r="9"/>
+  </g>
+</svg>

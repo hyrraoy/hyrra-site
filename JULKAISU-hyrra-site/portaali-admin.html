@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Hyrrä</title>
+<meta name="theme-color" content="#0A1628">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --white:#FFFFFF; --gray:#9FAFC4; --gray-2:#6B7E92;
+    --red:#E25C5C; --green:#5BD178; --cyan:#6EB9E8;
+    --line:rgba(255,255,255,0.08); --line-strong:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bg);color:var(--white);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  button,input,select,textarea{font-family:inherit}
+  button{cursor:pointer;border:none;background:none;color:inherit}
+
+  .bg-aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bg-aurora::before,.bg-aurora::after{content:"";position:absolute;border-radius:50%;filter:blur(140px)}
+  .bg-aurora::before{width:720px;height:720px;background:radial-gradient(circle, rgba(27,58,92,0.75) 0%, transparent 70%);top:-200px;left:-150px;animation:drift1 30s ease-in-out infinite}
+  .bg-aurora::after{width:600px;height:600px;background:radial-gradient(circle, rgba(255,182,39,0.15) 0%, transparent 70%);top:20%;right:-150px;animation:drift2 36s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,60px)}}
+  @keyframes spinMark{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(10,22,40,0.88);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--line);padding:14px 24px}
+  .top-nav-inner{max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .brand{display:inline-flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--white)}
+  .brand .spin-mark{width:24px;height:24px;animation:spinMark 1.8s linear infinite}
+  .portal-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--red);background:rgba(226,92,92,0.10);border:1px solid rgba(226,92,92,0.30);padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-left:6px}
+  .nav-user{display:flex;align-items:center;gap:14px}
+  .user-name{color:var(--gray);font-size:13px;font-family:'JetBrains Mono',monospace}
+  .user-name b{color:var(--white);font-weight:600}
+  .logout-btn{padding:7px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--line);color:var(--white);border-radius:99px;font-size:12.5px;font-weight:600;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.04em;transition:background .15s, border-color .15s}
+  .logout-btn:hover{background:rgba(226,92,92,0.10);border-color:rgba(226,92,92,0.30);color:#FFB3B3}
+
+  .page-hero{padding:30px 24px 0;position:relative;z-index:2}
+  .page-hero-inner{max-width:1320px;margin:0 auto}
+  .page-hero .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;font-weight:600;letter-spacing:0.02em;text-transform:uppercase;margin-bottom:12px}
+  .page-hero .eyebrow::before{content:"//";color:var(--amber);opacity:0.6}
+  .page-hero h1{font-size:clamp(28px, 4vw, 38px);font-weight:800;letter-spacing:-0.025em;color:var(--white);line-height:1.1}
+  .page-hero p{color:var(--gray);margin-top:8px;font-size:15px;max-width:680px}
+
+  .tabs-wrap{padding:24px 24px 0;position:sticky;top:64px;background:linear-gradient(180deg, var(--bg) 60%, transparent);z-index:40}
+  .tabs{max-width:1320px;margin:0 auto;display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:13px 18px;font-size:13.5px;font-weight:600;color:var(--gray);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s, border-color .15s;white-space:nowrap;letter-spacing:-0.005em;font-family:inherit}
+  .tab:hover{color:var(--white)}
+  .tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+  .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,182,39,0.18);color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 6px;border-radius:6px;margin-left:6px;font-weight:700;min-width:20px}
+
+  main{padding:32px 24px 80px;position:relative;z-index:2;max-width:1320px;margin:0 auto}
+  .section{display:none}
+  .section.active{display:block;animation:fadeIn .25s ease}
+
+  /* Cards / KPIs */
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid var(--line);border-radius:18px;padding:22px;backdrop-filter:blur(10px)}
+  .card.amber{background:linear-gradient(180deg, rgba(255,182,39,0.10), rgba(255,182,39,0.02));border-color:rgba(255,182,39,0.25)}
+  .card.warn{background:linear-gradient(180deg, rgba(226,92,92,0.08), rgba(226,92,92,0.02));border-color:rgba(226,92,92,0.25)}
+  .card-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:14px;flex-wrap:wrap}
+  .card-h h2{font-size:16px;font-weight:700;color:var(--white);letter-spacing:-0.01em}
+  .card-eyebrow{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .card-eyebrow::before{content:"//"}
+  .card-eyebrow.warn{color:var(--red)}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:14px;margin-bottom:24px}
+  .kpi{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+  .kpi.amber{background:linear-gradient(180deg, rgba(255,182,39,0.10), rgba(255,182,39,0.02));border-color:rgba(255,182,39,0.25)}
+  .kpi .lbl{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .kpi .v{font-size:32px;font-weight:800;color:var(--white);letter-spacing:-0.025em;line-height:1;font-variant-numeric:tabular-nums}
+  .kpi .v .unit{font-size:14px;color:var(--gray);font-weight:600;margin-left:3px}
+  .kpi .delta{font-size:11.5px;font-family:'JetBrains Mono',monospace;margin-top:6px;color:var(--green)}
+  .kpi.amber .v{color:var(--amber)}
+
+  .row{display:grid;gap:20px}
+  .row-2{grid-template-columns:1fr 1fr}
+  .row-2-3{grid-template-columns:2fr 1fr}
+  @media (max-width:980px){.row-2,.row-2-3{grid-template-columns:1fr}}
+
+  /* Customer list */
+  .cust-list{display:flex;flex-direction:column;gap:8px}
+  .cust-row{display:grid;grid-template-columns:48px 1fr auto auto auto;gap:14px;align-items:center;padding:14px 18px;background:rgba(255,255,255,0.025);border:1px solid var(--line);border-radius:14px;cursor:pointer;transition:background .15s, border-color .15s}
+  .cust-row:hover{background:#FFFFFF;border-color:var(--line-strong)}
+  .cust-row .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg, var(--amber), var(--amber-2));color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:15px;font-family:'JetBrains Mono',monospace}
+  .cust-row .info{min-width:0}
+  .cust-row .info b{display:block;color:var(--white);font-size:14.5px;font-weight:700;letter-spacing:-0.005em}
+  .cust-row .info span{display:block;color:var(--gray);font-size:12.5px;font-family:'JetBrains Mono',monospace;margin-top:2px}
+  .cust-row .ph{font-family:'JetBrains Mono',monospace;color:var(--amber);font-size:12.5px;font-weight:600}
+  .pill{padding:4px 10px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;white-space:nowrap}
+  .pill.aktiivinen{background:rgba(91,209,120,0.15);color:var(--green)}
+  .pill.pilotti{background:rgba(110,185,232,0.15);color:var(--cyan)}
+  .pill.paussi{background:rgba(226,92,92,0.15);color:#FFB3B3}
+  .pill.maksettu{background:rgba(91,209,120,0.15);color:var(--green)}
+  .pill.odottaa{background:rgba(255,182,39,0.15);color:var(--amber)}
+  .pill.vahvistettu{background:rgba(91,209,120,0.15);color:var(--green)}
+  .pill.pilotti-varaus{background:rgba(91,209,120,0.15);color:var(--green)}
+  .pill.kysely{background:rgba(110,185,232,0.15);color:var(--cyan)}
+  .cust-row .chev{color:var(--gray-2);font-size:18px}
+
+  /* Form / inputs */
+  label.fld-lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:8px}
+  input.txt, textarea.txt, select.txt{width:100%;background:#FFFFFF;border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--white);font-family:inherit;font-size:14px;transition:border-color .15s, background .15s;line-height:1.4}
+  input.txt:focus, textarea.txt:focus, select.txt:focus{outline:none;border-color:var(--amber);background:#FFFFFF}
+  textarea.txt{resize:vertical;min-height:120px;font-family:inherit}
+  textarea.txt.mono{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6}
+
+  .btn{padding:11px 22px;border-radius:99px;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:transform .15s, background .15s, box-shadow .15s;font-family:inherit;border:none;letter-spacing:-0.005em}
+  .btn-amber{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);box-shadow:0 6px 18px -4px rgba(255,182,39,0.4)}
+  .btn-amber:hover{transform:translateY(-1px)}
+  .btn-ghost{background:#FFFFFF;color:var(--white);border:1px solid var(--line)}
+  .btn-ghost:hover{background:rgba(27,58,92,0.10)}
+  .btn-danger{background:rgba(226,92,92,0.10);color:#FFB3B3;border:1px solid rgba(226,92,92,0.30)}
+  .btn-danger:hover{background:rgba(226,92,92,0.18)}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(10,22,40,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal.open{display:flex}
+  .modal-card{background:linear-gradient(180deg, var(--bg-2), var(--bg));border:1px solid var(--line);border-radius:20px;padding:32px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeIn .2s ease;box-shadow:0 30px 80px -20px rgba(27,58,92,0.15)}
+  .modal-card h2{font-size:22px;font-weight:800;color:var(--white);letter-spacing:-0.02em;margin-bottom:6px}
+  .modal-card .sub{color:var(--gray);font-size:13.5px;margin-bottom:20px}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+  .form-grid{display:grid;gap:14px}
+  .form-grid.cols-2{grid-template-columns:1fr 1fr}
+  @media (max-width:520px){.form-grid.cols-2{grid-template-columns:1fr}}
+
+  /* Drawer (customer detail) */
+  .drawer{position:fixed;inset:0;background:rgba(10,22,40,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:150;display:none}
+  .drawer.open{display:block}
+  .drawer-card{position:fixed;right:0;top:0;height:100vh;width:min(540px, 100%);background:linear-gradient(180deg, var(--bg-2), var(--bg));border-left:1px solid var(--line);overflow-y:auto;animation:slideIn .3s ease;box-shadow:-20px 0 60px -20px rgba(27,58,92,0.15)}
+  @keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
+  .drawer-card h2{font-size:22px;font-weight:800;color:var(--white);letter-spacing:-0.02em}
+  .drawer-card .meta{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:12px}
+  .drawer-card section{padding:24px;border-bottom:1px solid var(--line)}
+  .drawer-card section:last-child{border-bottom:none}
+  .drawer-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:#F4F1EB;border:1px solid var(--line);display:grid;place-items:center;color:var(--white);font-size:16px;cursor:pointer;z-index:5}
+  .drawer-close:hover{background:rgba(27,58,92,0.18)}
+
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-family:'JetBrains Mono',monospace}
+  .info-grid .l{color:var(--gray-2);font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:3px}
+  .info-grid .v{color:var(--white);font-size:13px;margin-bottom:6px}
+
+  .creds-box{background:rgba(255,182,39,0.06);border:1px solid rgba(255,182,39,0.25);border-radius:12px;padding:16px;margin-top:12px}
+  .creds-box .l{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:10px}
+  .creds-box .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--white);border-bottom:1px dashed #F4F1EB}
+  .creds-box .row:last-child{border-bottom:none}
+  .creds-box .copy{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:transparent;border:1px solid var(--line);color:var(--gray);padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;cursor:pointer;transition:color .15s, border-color .15s}
+  .creds-box .copy:hover{color:var(--amber);border-color:var(--amber)}
+
+  /* Meta-Hyrrä specifics */
+  .phone-status-box{display:flex;gap:14px;align-items:center;padding:18px 20px;background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.30);border-radius:14px;margin-bottom:18px}
+  .phone-status-box .ico{width:44px;height:44px;border-radius:50%;background:var(--amber);color:var(--bg);display:grid;place-items:center;flex-shrink:0}
+  .phone-status-box .ico svg{width:22px;height:22px}
+  .phone-status-box .txt b{display:block;font-weight:700;color:var(--white);font-size:14.5px;margin-bottom:2px}
+  .phone-status-box .txt span{color:var(--gray);font-size:13px}
+  .phone-status-box.connected{background:rgba(91,209,120,0.08);border-color:rgba(91,209,120,0.30)}
+  .phone-status-box.connected .ico{background:var(--green)}
+
+  .pilot-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:14px 18px;background:rgba(255,255,255,0.025);border:1px solid var(--line);border-radius:14px;margin-bottom:8px}
+  .pilot-row .when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);min-width:90px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+  .pilot-row .who b{display:block;color:var(--white);font-size:14px;font-weight:600;letter-spacing:-0.005em}
+  .pilot-row .who span{display:block;color:var(--gray);font-size:12.5px;font-family:'JetBrains Mono',monospace;margin-top:2px}
+
+  .call-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:13px 18px;background:rgba(255,255,255,0.025);border:1px solid var(--line);border-radius:12px;margin-bottom:6px}
+  .call-row .when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);min-width:90px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+  .call-row .who b{display:block;color:var(--white);font-size:13.5px;font-weight:600}
+  .call-row .who span{display:block;color:var(--gray);font-size:12px;margin-top:2px}
+  .call-row .dur{font-family:'JetBrains Mono',monospace;color:var(--gray);font-size:11.5px}
+
+  .save-bar{position:sticky;bottom:14px;display:flex;justify-content:flex-end;gap:10px;background:rgba(10,22,40,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;margin-top:24px;align-items:center;box-shadow:0 12px 32px -8px rgba(27,58,92,0.12)}
+  .save-bar .status-txt{flex:1;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+  .save-bar .status-txt.saved{color:var(--green)}
+
+  .empty{padding:40px 20px;text-align:center;color:var(--gray-2);font-size:13.5px;font-family:'JetBrains Mono',monospace}
+  .empty::before{content:"//";display:block;font-size:18px;color:var(--amber);margin-bottom:6px}
+
+  @media (max-width:680px){
+    .top-nav{padding:12px 16px}
+    .page-hero, .tabs-wrap, main{padding-left:16px;padding-right:16px}
+    .cust-row{grid-template-columns:40px 1fr auto;gap:12px}
+    .cust-row .ph, .cust-row .chev{grid-column:1/-1;justify-self:start}
+    .nav-user .user-name{display:none}
+  }
+
+</style>
+</head>
+<body>
+<div class="bg-aurora"></div>
+
+<header class="top-nav">
+  <div class="top-nav-inner">
+    <a href="/" class="brand">
+      <svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg>
+      <span>hyrrä</span><span class="portal-tag">admin</span>
+    </a>
+    <div class="nav-user">
+      <div class="user-name">Kirjautunut: <b id="navUserName">—</b></div>
+      <button class="logout-btn" id="logoutBtn">Kirjaudu ulos</button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow">ADMIN-NÄKYMÄ</div>
+    <h1>Hyrrän hallintapaneeli</h1>
+    <p>Hallitse asiakkaita, generoi tunnuksia, määritä puhelinnumeroita ja muokkaa oman Hyrrän asetuksia.</p>
+  </div>
+</section>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="yleisnakyma">Yleisnäkymä</button>
+    <button class="tab" data-tab="asiakkaat">Asiakkaat <span class="tab-badge" id="custBadge">0</span></button>
+    <button class="tab" data-tab="oma-hyrra">Oma Hyrrä <span class="tab-badge" id="metaBadge">0</span></button>
+  </div>
+</div>
+
+<main>
+  <!-- YLEISNÄKYMÄ -->
+  <section class="section active" id="sec-yleisnakyma">
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="row row-2-3" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-eyebrow">VIIMEISIMMÄT ASIAKKAAT</div>
+        <div class="cust-list" id="recentCusts"></div>
+      </div>
+      <div class="card amber">
+        <div class="card-eyebrow">TWILIO-STATUS</div>
+        <div class="phone-status-box" id="twilioStatus" style="margin-bottom:0">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="txt"><b>Odottaa vahvistusta</b><span>Twilion käyttöoikeudet myönnetty, A2P 10DLC -prosessi käynnissä</span></div>
+        </div>
+        <div style="margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.05em;font-weight:600">// SEURAAVAT VAIHEET</div>
+        <ul style="list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px;color:var(--gray);font-size:13px">
+          <li style="display:flex;gap:10px"><span style="color:var(--green)">✓</span> Twilio-tili luotu</li>
+          <li style="display:flex;gap:10px"><span style="color:var(--green)">✓</span> A2P 10DLC rekisteröity</li>
+          <li style="display:flex;gap:10px"><span style="color:var(--amber)">⏳</span> Brand verification käynnissä</li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gray-2)">○</span> Numero hankittu</li>
+          <li style="display:flex;gap:10px"><span style="color:var(--gray-2)">○</span> Numero liitetty oma-Hyrrään</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASIAKKAAT -->
+  <section class="section" id="sec-asiakkaat">
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-h">
+        <div>
+          <div class="card-eyebrow">KAIKKI ASIAKKAAT</div>
+          <h2 id="custCountLine">—</h2>
+        </div>
+        <button class="btn btn-amber" id="addCustBtn">+ Lisää asiakas</button>
+      </div>
+      <div class="cust-list" id="custList"></div>
+    </div>
+  </section>
+
+  <!-- OMA HYRRÄ -->
+  <section class="section" id="sec-oma-hyrra">
+    <div class="card warn" id="twilioWarnCard" style="margin-bottom:20px;display:none">
+      <div class="card-eyebrow warn">PUHELINNUMERO ODOTTAA TWILIOA</div>
+      <div class="phone-status-box" style="margin-bottom:0;background:rgba(226,92,92,0.08);border-color:rgba(226,92,92,0.30)">
+        <div class="ico" style="background:var(--red)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></div>
+        <div class="txt"><b>Numeroa ei ole vielä liitetty</b><span>Oma Hyrrä on rakennettu ja valmis — liität puhelinnumeron kun Twilio on hyväksynyt brändi-vahvistuksen.</span></div>
+      </div>
+    </div>
+    <div class="card" id="twilioConnectedCard" style="margin-bottom:20px;display:none">
+      <div class="card-eyebrow">PUHELINNUMERO</div>
+      <div class="phone-status-box connected" style="margin-bottom:0">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="txt"><b id="metaPhoneTxt">—</b><span>Oma Hyrrä vastaa tähän numeroon. Linkki demoon sivuston etusivulla.</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-eyebrow">NUMERON LIITTÄMINEN</div>
+      <p style="color:var(--gray);font-size:14px;margin-bottom:14px">Kun Twilion brändi-vahvistus on valmis, syötä numero tähän ja Oma Hyrrä alkaa vastata siihen automaattisesti.</p>
+      <div class="form-grid cols-2">
+        <div>
+          <label class="fld-lbl">Twilion puhelinnumero</label>
+          <input type="text" class="txt" id="metaPhoneInput" placeholder="+358 9 1234 5678">
+        </div>
+        <div>
+          <label class="fld-lbl">Tila</label>
+          <select class="txt" id="metaPhoneStatus">
+            <option value="pending">Odottaa Twilioa</option>
+            <option value="connected">Yhdistetty (testissä)</option>
+            <option value="live">Live — vastaa puheluihin</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-eyebrow">TERVEHDYS & ÄÄNI</div>
+        <div class="form-grid">
+          <div>
+            <label class="fld-lbl">Tervehdys</label>
+            <textarea class="txt" id="metaGreeting" rows="2"></textarea>
+          </div>
+          <div>
+            <label class="fld-lbl">Ääni</label>
+            <select class="txt" id="metaVoice">
+              <option value="nainen">Nainen</option>
+              <option value="mies">Mies</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-eyebrow">JÄRJESTELMÄKEHOTE</div>
+        <p style="color:var(--gray);font-size:13px;margin-bottom:10px">Tämä on Hyrrän AI-mallille annettu ohjeistus.</p>
+        <textarea class="txt mono" id="metaSysprompt" rows="8" placeholder="System prompt..."></textarea>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-h">
+        <div>
+          <div class="card-eyebrow" style="margin:0">VARATUT PILOTTIPALAVERIT</div>
+          <h2 style="margin-top:4px" id="pilotCountLine">—</h2>
+        </div>
+      </div>
+      <div id="pilotList"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-h">
+        <div>
+          <div class="card-eyebrow" style="margin:0">PUHELULOKI — OMA HYRRÄ</div>
+          <h2 style="margin-top:4px" id="metaCallCountLine">—</h2>
+        </div>
+      </div>
+      <div id="metaCallList"></div>
+    </div>
+
+    <div class="save-bar">
+      <span class="status-txt" id="metaSaveStatus">// muutoksia ei tallennettu</span>
+      <button class="btn btn-amber" id="metaSaveBtn">Tallenna asetukset</button>
+    </div>
+  </section>
+</main>
+
+<!-- Modal: add customer -->
+<div class="modal" id="addModal">
+  <div class="modal-card">
+    <h2>Lisää uusi asiakas</h2>
+    <p class="sub">Luo tunnukset asiakkaalle. Asiakas voi kirjautua portaaliin heti niiden avulla.</p>
+    <div class="form-grid">
+      <div class="form-grid cols-2">
+        <div><label class="fld-lbl">Yrityksen nimi</label><input type="text" class="txt" id="addName" placeholder="esim. Asentamo Helsinki Oy"></div>
+        <div><label class="fld-lbl">Toimiala</label>
+          <select class="txt" id="addIndustry">
+            <option>Autokorjaamo</option>
+            <option>Parturi-kampaamo</option>
+            <option>Putki- ja sähköasennus</option>
+            <option>Eläinlääkäri</option>
+            <option>Kauneudenhoito</option>
+            <option>Muu</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid cols-2">
+        <div><label class="fld-lbl">Yhteyshenkilön nimi</label><input type="text" class="txt" id="addContact" placeholder="esim. Mika Niemi"></div>
+        <div><label class="fld-lbl">Sähköposti (kirjautumistunnus)</label><input type="email" class="txt" id="addEmail" placeholder="info@yritys.fi"></div>
+      </div>
+      <div class="form-grid cols-2">
+        <div><label class="fld-lbl">Puhelinnumero (Hyrrään liitettävä)</label><input type="text" class="txt" id="addPhone" placeholder="+358 9 1234 5678"></div>
+        <div><label class="fld-lbl">Tilauspaketti</label>
+          <select class="txt" id="addPlan">
+            <option value="pilotti">Pilotti (14 päivää, 30 puhelua, 0 €)</option>
+            <option value="Kevyt">Kevyt — 149 €/kk (60 puhelua)</option>
+            <option value="Plus" selected>Plus — 299 €/kk (250 puhelua)</option>
+            <option value="Pro">Pro — 749 €/kk (800 puhelua)</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="fld-lbl">Salasana (luodaan automaattisesti)</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" class="txt" id="addPassword" readonly>
+          <button class="btn btn-ghost" type="button" id="regenPassBtn">Generoi uudelleen</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancelAddBtn">Peruuta</button>
+      <button class="btn btn-amber" id="confirmAddBtn">Luo asiakas →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Drawer: customer detail -->
+<div class="drawer" id="custDrawer">
+  <div class="drawer-card">
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <section>
+      <div class="meta" id="drawerIndustry">—</div>
+      <h2 id="drawerName">—</h2>
+      <div style="font-family:'JetBrains Mono',monospace;color:var(--amber);font-size:14px;margin-top:6px" id="drawerPhone">—</div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <span class="pill" id="drawerStatus">—</span>
+        <span class="pill amber" id="drawerPlan" style="background:rgba(255,182,39,0.15);color:var(--amber)">—</span>
+      </div>
+    </section>
+    <section>
+      <div class="card-eyebrow">YHTEYSTIEDOT & TILA</div>
+      <div class="info-grid">
+        <div><div class="l">Yhteyshenkilö</div><div class="v" id="drawerContact">—</div></div>
+        <div><div class="l">Sähköposti</div><div class="v" id="drawerEmail">—</div></div>
+        <div><div class="l">Tila</div><div class="v" id="drawerStatusV">—</div></div>
+        <div><div class="l">Paketti</div><div class="v" id="drawerPlanV">—</div></div>
+        <div><div class="l">Seur. laskutus</div><div class="v" id="drawerBilling">—</div></div>
+        <div><div class="l">Kalenteri</div><div class="v" id="drawerCalendar">—</div></div>
+        <div><div class="l">Liittäminen</div><div class="v" id="drawerSetup">—</div></div>
+        <div><div class="l">Liitäntätapa</div><div class="v" id="drawerSetupMethod">—</div></div>
+      </div>
+    </section>
+    <section>
+      <div class="card-eyebrow">KIRJAUTUMISTUNNUKSET</div>
+      <p style="color:var(--gray);font-size:13px;margin-bottom:8px">Lähetä nämä asiakkaalle. He pääsevät portaaliin osoitteessa <b style="color:var(--white);font-family:'JetBrains Mono',monospace;font-size:12px">hyrrä.fi/portaali</b></p>
+      <div class="creds-box">
+        <div class="l">TUNNUKSET</div>
+        <div class="row">Sähköposti <span id="drawerCredEmail">—</span> <button class="copy" data-copy-target="drawerCredEmail">Kopioi</button></div>
+        <div class="row">Salasana <span id="drawerCredPass">—</span> <button class="copy" data-copy-target="drawerCredPass">Kopioi</button></div>
+      </div>
+      <button class="btn btn-ghost" id="resetPassBtn" style="margin-top:14px">Resetoi salasana</button>
+    </section>
+    <section>
+      <div class="card-eyebrow">HALLINTATOIMINNOT</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label class="fld-lbl">Vaihda tila</label>
+          <select class="txt" id="drawerStatusSel">
+            <option value="aktiivinen">Aktiivinen</option>
+            <option value="pilotti">Pilotti</option>
+            <option value="paussi">Paussi</option>
+          </select>
+        </div>
+        <div>
+          <label class="fld-lbl">Päivitä puhelinnumero</label>
+          <input type="text" class="txt" id="drawerPhoneInput">
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn btn-amber" id="drawerSaveBtn">Tallenna muutokset</button>
+          <button class="btn btn-danger" id="drawerDelBtn">Poista asiakas</button>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="card-eyebrow">TILASTOJA</div>
+      <div class="info-grid">
+        <div><div class="l">Puheluja yht.</div><div class="v" id="drawerCalls">—</div></div>
+        <div><div class="l">Varauksia yht.</div><div class="v" id="drawerBookings">—</div></div>
+        <div><div class="l">Laskuja maksettu</div><div class="v" id="drawerInvoices">—</div></div>
+        <div><div class="l">Asiakas-ID</div><div class="v" id="drawerCustId">—</div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ===== Session =====
+  var session = JSON.parse(localStorage.getItem('hyrra-portal-session') || 'null');
+  if (!session || session.role !== 'admin') {
+    window.location.href = 'portaali-kirjautuminen.html';
+    return;
+  }
+  document.getElementById('navUserName').textContent = session.name;
+  document.getElementById('logoutBtn').onclick = function(){ localStorage.removeItem('hyrra-portal-session'); window.location.href = 'portaali-kirjautuminen.html'; };
+
+  // ===== Data =====
+  var users = JSON.parse(localStorage.getItem('hyrra-portal-users') || '{}');
+  var customers = JSON.parse(localStorage.getItem('hyrra-portal-customers') || '{}');
+  var allCalls = JSON.parse(localStorage.getItem('hyrra-portal-calls') || '{}');
+  var allBookings = JSON.parse(localStorage.getItem('hyrra-portal-bookings') || '{}');
+  var allInvoices = JSON.parse(localStorage.getItem('hyrra-portal-invoices') || '{}');
+  var meta = JSON.parse(localStorage.getItem('hyrra-portal-meta-hyrra') || '{}');
+
+  function saveAll(){
+    localStorage.setItem('hyrra-portal-users', JSON.stringify(users));
+    localStorage.setItem('hyrra-portal-customers', JSON.stringify(customers));
+    localStorage.setItem('hyrra-portal-meta-hyrra', JSON.stringify(meta));
+  }
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
+  function fmtDate(iso){
+    var d = new Date(iso); var now = new Date();
+    var sameDay = d.toDateString() === now.toDateString();
+    var yest = new Date(now); yest.setDate(yest.getDate()-1);
+    var sameYest = d.toDateString() === yest.toDateString();
+    var hh = String(d.getHours()).padStart(2,'0'); var mm = String(d.getMinutes()).padStart(2,'0');
+    if (sameDay) return 'Tänään ' + hh+':'+mm;
+    if (sameYest) return 'Eilen ' + hh+':'+mm;
+    var months = ['tam','hel','maa','huh','tou','kes','hei','elo','syy','lok','mar','jou'];
+    return d.getDate()+'. '+months[d.getMonth()]+' '+hh+':'+mm;
+  }
+  function fmtDuration(s){ var m = Math.floor(s/60); return m+'m '+ (s%60) + 's'; }
+
+  // ===== Tabs =====
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.onclick = function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+      document.getElementById('sec-'+t.getAttribute('data-tab')).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    };
+  });
+
+  // ===== KPI overview =====
+  function totalCalls(){
+    var n = 0; Object.values(allCalls).forEach(function(arr){ n += arr.length; }); return n;
+  }
+  function totalBookings(){ var n = 0; Object.values(allBookings).forEach(function(arr){ n += arr.length; }); return n; }
+  function totalMRR(){
+    var prices = { 'Kevyt':149, 'Mini':149, 'Plus':299, 'Pro':749 };
+    var sum = 0;
+    Object.values(customers).forEach(function(c){
+      if (c.status === 'aktiivinen' && prices[c.plan]) sum += prices[c.plan];
+    });
+    return sum;
+  }
+  function renderKpis(){
+    var custCount = Object.keys(customers).length;
+    var pilotCount = Object.values(customers).filter(function(c){return c.status === 'pilotti';}).length;
+    var kpis = [
+      { lbl:'ASIAKKAITA YHT.', v: custCount, delta:'+'+pilotCount+' pilottia' },
+      { lbl:'MRR (€/KK)', v: totalMRR(), unit:'€', delta:'aktiivisilta', amber: true },
+      { lbl:'PUHELUJA YHT.', v: totalCalls(), delta:'kaikki asiakkaat' },
+      { lbl:'VARAUKSIA YHT.', v: totalBookings(), delta:'tulevat ajat' },
+      { lbl:'OMAN HYRRÄN VARAUKSIA', v: (meta.bookedPilots||[]).length, delta:'pilottipalaverit' }
+    ];
+    document.getElementById('kpiGrid').innerHTML = kpis.map(function(k){
+      return '<div class="kpi'+(k.amber?' amber':'')+'"><div class="lbl">'+k.lbl+'</div><div class="v">'+k.v+(k.unit?'<span class="unit">'+k.unit+'</span>':'')+'</div><div class="delta">'+k.delta+'</div></div>';
+    }).join('');
+  }
+
+  // ===== Customer list =====
+  function initials(name){
+    return name.split(' ').slice(0,2).map(function(p){return p[0]||'';}).join('').toUpperCase();
+  }
+  function renderCusts(){
+    var arr = Object.values(customers);
+    document.getElementById('custBadge').textContent = arr.length;
+    document.getElementById('custCountLine').textContent = arr.length + ' asiakasta järjestelmässä';
+    document.getElementById('custList').innerHTML = arr.length ? arr.map(function(c){
+      return '<div class="cust-row" data-cust="'+c.id+'">'+
+        '<div class="av">'+initials(c.name)+'</div>'+
+        '<div class="info"><b>'+esc(c.name)+'</b><span>'+esc(c.contactName)+' · '+esc(c.industry)+'</span></div>'+
+        '<span class="ph">'+esc(c.phone)+'</span>'+
+        '<span class="pill '+c.status+'">'+c.status+' · '+esc(c.plan)+'</span>'+
+        '<span class="chev">›</span>'+
+        '</div>';
+    }).join('') : '<div class="empty">Ei vielä asiakkaita.</div>';
+    document.querySelectorAll('#custList .cust-row, #recentCusts .cust-row').forEach(function(r){
+      r.onclick = function(){ openDrawer(r.getAttribute('data-cust')); };
+    });
+    // Recent
+    document.getElementById('recentCusts').innerHTML = arr.slice(0,4).map(function(c){
+      return '<div class="cust-row" data-cust="'+c.id+'">'+
+        '<div class="av">'+initials(c.name)+'</div>'+
+        '<div class="info"><b>'+esc(c.name)+'</b><span>'+esc(c.industry)+'</span></div>'+
+        '<span class="ph">'+esc(c.phone)+'</span>'+
+        '<span class="pill '+c.status+'">'+c.status+'</span>'+
+        '<span class="chev">›</span>'+
+        '</div>';
+    }).join('') || '<div class="empty">Ei vielä asiakkaita.</div>';
+    document.querySelectorAll('#recentCusts .cust-row').forEach(function(r){
+      r.onclick = function(){ openDrawer(r.getAttribute('data-cust')); };
+    });
+  }
+
+  // ===== Add customer modal =====
+  function genPassword(){
+    var words = ['hyrra','soita','vastaa','varaa','huolto','kalenteri','asiakas','salonki','putki','auto','demo'];
+    return words[Math.floor(Math.random()*words.length)] + Math.floor(Math.random()*900 + 100);
+  }
+  document.getElementById('addCustBtn').onclick = function(){
+    document.getElementById('addName').value = '';
+    document.getElementById('addContact').value = '';
+    document.getElementById('addEmail').value = '';
+    document.getElementById('addPhone').value = '';
+    document.getElementById('addPassword').value = genPassword();
+    document.getElementById('addModal').classList.add('open');
+  };
+  document.getElementById('regenPassBtn').onclick = function(){
+    document.getElementById('addPassword').value = genPassword();
+  };
+  document.getElementById('cancelAddBtn').onclick = function(){ document.getElementById('addModal').classList.remove('open'); };
+  document.getElementById('confirmAddBtn').onclick = function(){
+    var name = document.getElementById('addName').value.trim();
+    var contact = document.getElementById('addContact').value.trim();
+    var email = document.getElementById('addEmail').value.trim().toLowerCase();
+    var phone = document.getElementById('addPhone').value.trim();
+    var industry = document.getElementById('addIndustry').value;
+    var plan = document.getElementById('addPlan').value;
+    var password = document.getElementById('addPassword').value;
+    if (!name || !contact || !email || !phone) { alert('Täytä kaikki kentät.'); return; }
+    if (users[email]) { alert('Sähköposti on jo käytössä.'); return; }
+    var newId = 'cust-' + String(Date.now()).slice(-6);
+    customers[newId] = {
+      id: newId, name: name, contactName: contact, contactEmail: email,
+      industry: industry, phone: phone, plan: plan === 'pilotti' ? 'Kevyt' : plan, status: plan === 'pilotti' ? 'pilotti' : 'aktiivinen',
+      pilotEndsAt: plan === 'pilotti' ? new Date(Date.now() + 14*864e5).toISOString().slice(0,10) : null,
+      billingNext: plan === 'pilotti' ? null : new Date(Date.now() + 30*864e5).toISOString().slice(0,10),
+      billingAmount: plan === 'Kevyt' ? 149 : plan === 'Pro' ? 749 : 299,
+      greeting: name + ', Hyrrä vastaa. Miten voin auttaa?',
+      voice: 'nainen',
+      hours: { mon:'9:00-17:00', tue:'9:00-17:00', wed:'9:00-17:00', thu:'9:00-17:00', fri:'9:00-17:00', sat:'suljettu', sun:'suljettu' },
+      services: [],
+      smsConfirm: true,
+      calendar: { provider: 'Google Calendar', connected: false, calendarName: name + ' — Työt' },
+      faq: {},
+      // Onboarding-tila: uusi asiakas joutuu wizardiin kun ensi kerran kirjautuu
+      setupComplete: false,
+      setupMethod: null
+    };
+    users[email] = { password: password, role: 'customer', customerId: newId, name: contact };
+    allCalls[newId] = []; allBookings[newId] = []; allInvoices[newId] = [];
+    localStorage.setItem('hyrra-portal-users', JSON.stringify(users));
+    localStorage.setItem('hyrra-portal-customers', JSON.stringify(customers));
+    localStorage.setItem('hyrra-portal-calls', JSON.stringify(allCalls));
+    localStorage.setItem('hyrra-portal-bookings', JSON.stringify(allBookings));
+    localStorage.setItem('hyrra-portal-invoices', JSON.stringify(allInvoices));
+    document.getElementById('addModal').classList.remove('open');
+    renderCusts(); renderKpis();
+    setTimeout(function(){ openDrawer(newId); }, 200);
+  };
+
+  // ===== Drawer =====
+  var currentDrawerCust = null;
+  function openDrawer(custId){
+    var c = customers[custId];
+    if (!c) return;
+    currentDrawerCust = custId;
+    document.getElementById('drawerIndustry').textContent = c.industry;
+    document.getElementById('drawerName').textContent = c.name;
+    document.getElementById('drawerPhone').textContent = c.phone;
+    document.getElementById('drawerStatus').textContent = c.status;
+    document.getElementById('drawerStatus').className = 'pill ' + c.status;
+    document.getElementById('drawerPlan').textContent = c.plan;
+    document.getElementById('drawerContact').textContent = c.contactName;
+    document.getElementById('drawerEmail').textContent = c.contactEmail;
+    document.getElementById('drawerStatusV').textContent = c.status;
+    document.getElementById('drawerPlanV').textContent = c.plan;
+    document.getElementById('drawerBilling').textContent = c.status === 'pilotti' ? ('Pilotti päättyy ' + (c.pilotEndsAt||'—')) : ((c.billingNext||'—') + ' · ' + (c.billingAmount||0) + ' €');
+    document.getElementById('drawerCalendar').textContent = c.calendar ? c.calendar.provider : '—';
+    var setupOk = c.setupComplete !== false;
+    var setupEl = document.getElementById('drawerSetup');
+    setupEl.textContent = setupOk ? '✓ Valmis' : '⏳ Odottaa wizardia';
+    setupEl.style.color = setupOk ? 'var(--green)' : 'var(--amber)';
+    var methodLabels = { new:'Uusi Hyrrä-numero', forward:'Soitonohjaus', port:'Numeron siirto' };
+    document.getElementById('drawerSetupMethod').textContent = c.setupMethod ? (methodLabels[c.setupMethod] || c.setupMethod) : '—';
+    // Creds: find user
+    var userEmail = Object.keys(users).find(function(e){return users[e].customerId === custId;}) || c.contactEmail;
+    var u = users[userEmail] || {};
+    document.getElementById('drawerCredEmail').textContent = userEmail;
+    document.getElementById('drawerCredPass').textContent = u.password || '—';
+    // Sel + input
+    document.getElementById('drawerStatusSel').value = c.status;
+    document.getElementById('drawerPhoneInput').value = c.phone;
+    // Stats
+    document.getElementById('drawerCalls').textContent = (allCalls[custId]||[]).length;
+    document.getElementById('drawerBookings').textContent = (allBookings[custId]||[]).length;
+    document.getElementById('drawerInvoices').textContent = (allInvoices[custId]||[]).length;
+    document.getElementById('drawerCustId').textContent = custId;
+    document.getElementById('custDrawer').classList.add('open');
+  }
+  document.getElementById('drawerClose').onclick = function(){ document.getElementById('custDrawer').classList.remove('open'); };
+  document.getElementById('custDrawer').onclick = function(e){ if (e.target === this) this.classList.remove('open'); };
+  document.getElementById('drawerSaveBtn').onclick = function(){
+    if (!currentDrawerCust) return;
+    var c = customers[currentDrawerCust];
+    var newStatus = document.getElementById('drawerStatusSel').value;
+    var newPhone = document.getElementById('drawerPhoneInput').value.trim();
+    c.status = newStatus;
+    c.phone = newPhone;
+    saveAll();
+    renderCusts(); renderKpis();
+    openDrawer(currentDrawerCust);
+    alert('Muutokset tallennettu.');
+  };
+  document.getElementById('drawerDelBtn').onclick = function(){
+    if (!currentDrawerCust) return;
+    if (!confirm('Poistetaanko asiakas pysyvästi? Tämä toiminto on lopullinen.')) return;
+    var userEmail = Object.keys(users).find(function(e){return users[e].customerId === currentDrawerCust;});
+    if (userEmail) delete users[userEmail];
+    delete customers[currentDrawerCust];
+    delete allCalls[currentDrawerCust];
+    delete allBookings[currentDrawerCust];
+    delete allInvoices[currentDrawerCust];
+    localStorage.setItem('hyrra-portal-users', JSON.stringify(users));
+    localStorage.setItem('hyrra-portal-customers', JSON.stringify(customers));
+    localStorage.setItem('hyrra-portal-calls', JSON.stringify(allCalls));
+    localStorage.setItem('hyrra-portal-bookings', JSON.stringify(allBookings));
+    localStorage.setItem('hyrra-portal-invoices', JSON.stringify(allInvoices));
+    document.getElementById('custDrawer').classList.remove('open');
+    currentDrawerCust = null;
+    renderCusts(); renderKpis();
+  };
+  document.getElementById('resetPassBtn').onclick = function(){
+    if (!currentDrawerCust) return;
+    var userEmail = Object.keys(users).find(function(e){return users[e].customerId === currentDrawerCust;});
+    if (!userEmail) return;
+    var newPass = genPassword();
+    users[userEmail].password = newPass;
+    saveAll();
+    document.getElementById('drawerCredPass').textContent = newPass;
+    alert('Uusi salasana: ' + newPass);
+  };
+  document.querySelectorAll('[data-copy-target]').forEach(function(b){
+    b.onclick = function(){
+      var t = document.getElementById(b.getAttribute('data-copy-target'));
+      if (!t) return;
+      var text = t.textContent;
+      navigator.clipboard.writeText(text).then(function(){
+        var orig = b.textContent; b.textContent = '✓ Kopioitu'; setTimeout(function(){b.textContent = orig;}, 1200);
+      }).catch(function(){ alert(text); });
+    };
+  });
+
+  // ===== Meta-Hyrrä =====
+  function renderMeta(){
+    var phoneSet = meta.phoneNumber && !meta.phonePending;
+    document.getElementById('twilioWarnCard').style.display = phoneSet ? 'none' : 'block';
+    document.getElementById('twilioConnectedCard').style.display = phoneSet ? 'block' : 'none';
+    if (phoneSet) document.getElementById('metaPhoneTxt').textContent = meta.phoneNumber;
+    document.getElementById('metaPhoneInput').value = meta.phoneNumber || '';
+    document.getElementById('metaPhoneStatus').value = meta.phonePending ? 'pending' : (meta.phoneNumber ? 'live' : 'pending');
+    document.getElementById('metaGreeting').value = meta.greeting || '';
+    document.getElementById('metaVoice').value = meta.voice || 'nainen';
+    document.getElementById('metaSysprompt').value = meta.systemPrompt || '';
+    // Pilots
+    var pilots = meta.bookedPilots || [];
+    document.getElementById('metaBadge').textContent = pilots.length;
+    document.getElementById('pilotCountLine').textContent = pilots.length + ' palaveria varattu';
+    document.getElementById('pilotList').innerHTML = pilots.length ? pilots.map(function(p){
+      return '<div class="pilot-row">'+
+        '<div class="when">'+esc(p.meetingDate)+'<br><span style="color:var(--white)">'+esc(p.meetingTime)+'</span></div>'+
+        '<div class="who"><b>'+esc(p.name)+'</b><span>'+esc(p.business)+' · '+esc(p.industry)+' · '+esc(p.phone)+'</span></div>'+
+        '<span class="pill '+p.status+'">'+p.status+'</span>'+
+        '<button class="btn btn-ghost" style="padding:6px 12px;font-size:11.5px" title="'+esc(p.notes)+'">Avaa</button>'+
+        '</div>';
+    }).join('') : '<div class="empty">Ei vielä varattuja palavereita.</div>';
+    // Calls
+    var mcalls = meta.callLog || [];
+    document.getElementById('metaCallCountLine').textContent = mcalls.length + ' puhelua vastattu';
+    document.getElementById('metaCallList').innerHTML = mcalls.length ? mcalls.map(function(c){
+      return '<div class="call-row">'+
+        '<div class="when">'+fmtDate(c.date)+'</div>'+
+        '<div class="who"><b>'+esc(c.callerNumber)+'</b><span>'+esc(c.summary || c.outcome)+'</span></div>'+
+        '<span class="pill '+c.type+'">'+c.type.replace('-',' ')+'</span>'+
+        '<span class="dur">'+fmtDuration(c.durationSec||0)+'</span>'+
+        '</div>';
+    }).join('') : '<div class="empty">Ei vielä puheluita Omalle Hyrrälle.</div>';
+  }
+  function markMetaUnsaved(){
+    var s = document.getElementById('metaSaveStatus');
+    s.textContent = '// muutoksia ei tallennettu';
+    s.classList.remove('saved');
+  }
+  ['metaPhoneInput','metaPhoneStatus','metaGreeting','metaVoice','metaSysprompt'].forEach(function(id){
+    document.getElementById(id).oninput = markMetaUnsaved;
+    document.getElementById(id).onchange = markMetaUnsaved;
+  });
+  document.getElementById('metaSaveBtn').onclick = function(){
+    meta.phoneNumber = document.getElementById('metaPhoneInput').value.trim() || null;
+    var st = document.getElementById('metaPhoneStatus').value;
+    meta.phonePending = (st === 'pending');
+    meta.greeting = document.getElementById('metaGreeting').value;
+    meta.voice = document.getElementById('metaVoice').value;
+    meta.systemPrompt = document.getElementById('metaSysprompt').value;
+    saveAll();
+    var s = document.getElementById('metaSaveStatus');
+    s.textContent = '✓ TALLENNETTU';
+    s.classList.add('saved');
+    renderMeta();
+  };
+
+  // ===== Initial render =====
+  renderKpis();
+  renderCusts();
+  renderMeta();
+
+})();
+</script>
+</body>
+</html>

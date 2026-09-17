@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hyrrä — Käyttöehdot</title>
+<meta name="description" content="Hyrrän käyttöehdot.">
+<meta name="theme-color" content="#0A1628">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hyrrä — Käyttöehdot">
+<meta property="og:description" content="Käyttöehdot.">
+<meta property="og:url" content="https://hyrrä.fi/kayttoehdot">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:site_name" content="Hyrrä">
+<link rel="canonical" href="https://hyrrä.fi/kayttoehdot">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<style>
+  :root{
+    --bg:#0A1628; --bg-2:#10243A; --bg-3:#06101A;
+    --deep:#1B3A5C; --deep-2:#2C4E73; --deep-3:#0F2538;
+    --amber:#FFB627; --amber-2:#F4A700;
+    --white:#FFFFFF; --gray:#9FAFC4; --gray-2:#6B7E92;
+    --cyan:#6EB9E8; --green:#5BD178;
+    --line:rgba(255,255,255,0.08); --line-strong:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bg);color:var(--white);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{min-height:100vh;line-height:1.55}
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+  .container-narrow{max-width:760px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);background-size:120px 120px, 200px 200px;background-position:0 0, 60px 80px;opacity:0.10;mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%);-webkit-mask-image:radial-gradient(ellipse at top, black 0%, transparent 60%)}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,182,39,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,182,39,0.025) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;opacity:0.6}
+  .bg-aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bg-aurora::before,.bg-aurora::after{content:"";position:absolute;border-radius:50%;filter:blur(140px)}
+  .bg-aurora::before{width:720px;height:720px;background:radial-gradient(circle, rgba(27,58,92,0.75) 0%, transparent 70%);top:-200px;left:-150px;animation:drift1 30s ease-in-out infinite}
+  .bg-aurora::after{width:600px;height:600px;background:radial-gradient(circle, rgba(255,182,39,0.22) 0%, transparent 70%);top:20%;right:-150px;animation:drift2 36s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,60px)}}
+  .cursor-glow{position:fixed;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle, rgba(255,182,39,0.08) 0%, transparent 60%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);will-change:transform;mix-blend-mode:screen}
+  nav.top{position:sticky;top:14px;z-index:50;padding:0 14px}
+  .nav-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;background:rgba(10,22,40,0.65);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;box-shadow:0 8px 32px -8px rgba(0,0,0,0.4)}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--white)}
+  .logo .spin-mark{width:24px;height:24px;display:inline-block;animation:spinMark 1.8s linear infinite}
+  @keyframes spinMark{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .nav-links{display:flex;gap:24px;align-items:center;font-size:13.5px;color:var(--gray)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg) !important;padding:10px 18px;border-radius:99px;font-weight:700;font-size:13px;transition:transform .15s, box-shadow .15s;box-shadow:0 4px 14px -2px rgba(255,182,39,0.4)}
+  .nav-cta:hover{transform:scale(1.04);box-shadow:0 8px 20px -4px rgba(255,182,39,0.6)}
+  .nav-burger{display:none;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,0.04);cursor:pointer;padding:0;align-items:center;justify-content:center;flex-direction:column;gap:5px;transition:background .15s}
+  .nav-burger:hover{background:rgba(255,255,255,0.08)}
+  .nav-burger span{width:18px;height:2px;background:var(--white);border-radius:2px}
+  @media (max-width:780px){.nav-links a:not(.nav-cta){display:none} .nav-burger{display:flex}}
+  @media (max-width:480px){.nav-cta{display:none}}
+  .menu-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.96);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s ease;overflow-y:auto;padding:24px 24px 60px}
+  .menu-overlay.open{opacity:1;pointer-events:auto}
+  .menu-overlay .menu-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
+  .menu-overlay .menu-logo{font-size:20px;font-weight:800;letter-spacing:-0.02em;display:inline-flex;align-items:center;gap:10px;color:var(--white)}
+  .menu-overlay .menu-logo .spin-mark{width:24px;height:24px}
+  .menu-overlay .menu-close{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;color:var(--white);font-size:18px}
+  .menu-overlay .menu-section{margin-bottom:32px}
+  .menu-overlay .menu-label{font-family:'JetBrains Mono', monospace;font-size:11px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;font-weight:600}
+  .menu-overlay .menu-links{display:flex;flex-direction:column;gap:0;list-style:none;padding:0;margin:0}
+  .menu-overlay .menu-links li{border-bottom:1px solid var(--line)}
+  .menu-overlay .menu-links a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;color:var(--white);font-size:18px;font-weight:600;letter-spacing:-0.01em;transition:color .15s}
+  .menu-overlay .menu-links a:hover{color:var(--amber)}
+  .menu-overlay .menu-links a::after{content:"→";color:var(--gray-2);font-size:18px}
+  .menu-overlay .menu-cta{display:block;text-align:center;background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);padding:18px 24px;border-radius:14px;font-weight:700;font-size:16px;margin-top:24px;text-decoration:none;box-shadow:0 12px 30px -10px rgba(255,182,39,0.5)}
+  .menu-overlay .menu-foot{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray-2)}
+  body.menu-open{overflow:hidden}
+  section{position:relative;z-index:2}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono', monospace;font-size:11.5px;color:var(--amber);background:rgba(255,182,39,0.10);border:1px solid rgba(255,182,39,0.25);padding:5px 12px;border-radius:6px;margin-bottom:18px;font-weight:600;letter-spacing:0.02em}
+  .eyebrow::before{content:"//";color:var(--amber);opacity:0.6}
+  .btn{padding:14px 24px;border-radius:12px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;transition:transform .2s, box-shadow .2s;text-decoration:none}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:linear-gradient(180deg, var(--amber), var(--amber-2));color:var(--bg);box-shadow:0 12px 30px -10px rgba(255,182,39,0.5);border:none}
+  .btn-secondary{background:#FFFFFF;color:var(--white);border:1px solid var(--line)}
+  footer{background:var(--bg-3);color:#4B5563;padding:60px 0 30px;font-size:13.5px;border-top:1px solid var(--line);position:relative;z-index:2}
+  footer a:hover{color:var(--amber)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:32px;margin-bottom:32px}
+  @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.foot-grid{grid-template-columns:1fr}}
+  .foot-tag{max-width:320px;line-height:1.55;color:var(--gray);margin-top:14px}
+  .foot-col h4{color:var(--white);font-family:'JetBrains Mono', monospace;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+  .foot-col ul{list-style:none;padding:0;margin:0}
+  .foot-col li{padding:5px 0}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--gray-2);font-family:'JetBrains Mono', monospace}
+
+.lhero{padding:50px 0 30px}
+.lhero h1{font-size:clamp(36px,5vw,56px);font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:12px;color:var(--white)}
+.lhero .lupdated{font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--gray-2);text-transform:uppercase;letter-spacing:0.05em}
+.lcontent{padding:30px 0 100px}
+.lcontent h2{font-size:24px;font-weight:700;color:var(--white);margin:40px 0 14px;letter-spacing:-0.015em}
+.lcontent h3{font-size:17px;font-weight:600;color:var(--white);margin:24px 0 10px}
+.lcontent p, .lcontent li{color:var(--gray);font-size:15px;line-height:1.65;margin-bottom:14px}
+.lcontent ul{padding-left:24px;margin-bottom:14px}
+.lcontent strong{color:var(--white);font-weight:600}
+.lcontent a{color:var(--amber);text-decoration:underline;text-underline-offset:3px}
+.lcontent a:hover{color:var(--amber-2)}
+.linfobox{background:rgba(255,182,39,0.06);border:1px solid rgba(255,182,39,0.25);border-radius:14px;padding:22px;margin:24px 0;backdrop-filter:blur(10px)}
+.linfobox p{margin:0}
+
+
+</style>
+</head>
+<body>
+<div class="bg-stars"></div>
+<div class="bg-grid"></div>
+<div class="bg-aurora"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<nav class="top">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg>
+      <span>hyrrä</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#mita-tekee">Tuote</a>
+      <a href="/integraatiot">Integraatiot</a>
+      <a href="/#hinta">Hinta</a>
+      <a href="/demo">Demo</a>
+      <a href="/blogi">Blogi</a>
+      <a href="/portaali-kirjautuminen">Portaali</a>
+      <a href="/#yhteys" class="nav-cta">Aloita pilotti →</a>
+      <button class="nav-burger" id="navBurger" aria-label="Avaa valikko"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <span class="menu-logo"><svg class="spin-mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#0A1628"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#0A1628"/></svg><span>hyrrä</span></span>
+    <button class="menu-close" id="menuClose" aria-label="Sulje valikko">✕</button>
+  </div>
+  <div class="menu-section"><div class="menu-label">// TUOTE</div><ul class="menu-links"><li><a href="/#mita-tekee">Mitä Hyrrä tekee</a></li><li><a href="/#laskuri">ROI-laskuri</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/demo">Kokeile demoa</a></li><li><a href="/#hinta">Hinnoittelu</a></li></ul></div>
+  <div class="menu-section"><div class="menu-label">// TOIMIALAT</div><ul class="menu-links"><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+  <div class="menu-section"><div class="menu-label">// PORTAALI</div><ul class="menu-links"><li><a href="/portaali-kirjautuminen">Kirjaudu portaaliin</a></li><li><a href="mailto:info@hyrr%C3%A4.fi">Pyydä tunnukset</a></li></ul></div>
+  <a href="/#yhteys" class="menu-cta">Aloita pilotti →</a>
+  <div class="menu-foot"><span><a href="/tietosuoja">Tietosuoja</a> · <a href="/kayttoehdot">Käyttöehdot</a></span><span>info@hyrrä.fi</span></div>
+</div>
+
+<section class="lhero">
+  <div class="container-narrow">
+    <div class="eyebrow">// KÄYTTÖEHDOT</div>
+    <h1>Käyttöehdot</h1>
+    <div class="lupdated">Päivitetty 1.6.2026</div>
+  </div>
+</section>
+<section class="lcontent">
+  <div class="container-narrow">
+    <div class="linfobox">
+      <p><strong>Lyhyesti:</strong> 14 päivän pilotti on ilmainen, voit perua koska tahansa. Vuosi­sopimukseen sisältyy yksi kuukausi ilmaiseksi. Pakettirajan ylittyvä käyttö 0,15 €/min. Suomalainen lasku, ALV-vähennys normaalisti.</p>
+    </div>
+    <h2>1. Palveluntarjoaja</h2>
+    <p>Wrty Clothing Oy (tuleva Hyrrä Oy) (Y-tunnus 3555902-3), Hämeenlinna, Suomi. <a href="mailto:info@hyrrä.fi">info@hyrrä.fi</a></p>
+    <h2>2. Palvelun kuvaus</h2>
+    <p>Hyrrä on AI-puhelinvastaanottajapalvelu, joka vastaa asiakasyrityksen puheluihin, varaa aikoja kalenteriin ja lähettää tekstiviesti­vahvistuksia. Tarkka kuvaus löytyy <a href="/">etusivulta</a> ja <a href="/integraatiot">integraatiosivulta</a>.</p>
+    <h2>3. Pilotti</h2>
+    <p>14 päivän pilotti on maksuton. Voit perua pilotin milloin tahansa ilman seuraamuksia. Pilotin päätyttyä asiakas voi siirtyä maksulliseen pakettiin Stripe-maksulinkin kautta.</p>
+    <h2>4. Maksulliset paketit</h2>
+    <p>Voimassa olevat hinnat: <a href="/#hinta">hyrrä.fi/#hinta</a>. Hinnat ALV 0 %. Vuosi­sopimuksessa yksi kuukausi ilmaiseksi (laskutus 11 kuukaudelta).</p>
+    <h2>5. Käytön rajoitukset</h2>
+    <p>Sisältyy tavanomainen käyttö. Pakettirajan ylittävät puhelut 0,15 €/min. Suuremmat volyymit ja Enterprise-paketti: sopimus erikseen.</p>
+    <h2>6. Sopimuksen päättäminen</h2>
+    <p>Kuukausi­sopimus: irtisanominen kuukauden varoituksella. Vuosi­sopimus: irtisanominen voi tapahtua sopimuskauden päättyessä. 30 päivän rahat-takaisin -takuu kuukausi­paketin aloittaessa.</p>
+    <h2>7. Hyrrän vastuu</h2>
+    <p>Pyrimme 99,9 % uptime-tasoon. Häiriötilanteissa korvaus enintään yhden kuukausi­hinnan suuruinen.</p>
+    <h2>8. Sovellettava laki</h2>
+    <p>Suomen laki. Erimielisyydet ratkaistaan Helsingin käräjäoikeudessa.</p>
+    <h2>9. Yhteystiedot</h2>
+    <p><a href="mailto:info@hyrrä.fi">info@hyrrä.fi</a></p>
+  </div>
+</section>
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a href="/" class="logo" style="font-size:22px"><svg class="spin-mark" viewBox="0 0 64 64" style="width:28px;height:28px"><circle cx="32" cy="32" r="27" fill="#FFB627"/><circle cx="32" cy="32" r="10" fill="#06101A"/><circle cx="32" cy="32" r="2" fill="#FFB627"/><circle cx="32" cy="11" r="3.2" fill="#06101A"/></svg><span>hyrrä</span></a>
+        <p class="foot-tag">Suomalainen AI-puhelinvastaanottaja pk-yrityksille.</p>
+      </div>
+      <div class="foot-col"><h4>// TUOTE</h4><ul><li><a href="/portaali-kirjautuminen">Portaali</a></li><li><a href="/#hinta">Hinta</a></li><li><a href="/demo">Demo</a></li><li><a href="/integraatiot">Integraatiot</a></li><li><a href="/blogi">Blogi</a></li></ul></div>
+      <div class="foot-col"><h4>// TOIMIALAT</h4><ul><li><a href="/autokorjaamoille">Autokorjaamoille</a></li><li><a href="/parturit-ja-kampaamot">Partureille ja kampaamoille</a></li><li><a href="/putki-ja-sahkoasentajille">Putki- ja sähköasentajille</a></li></ul></div>
+      <div class="foot-col"><h4>// LAKI</h4><ul><li><a href="/tietosuoja">Tietosuoja</a></li><li><a href="/kayttoehdot">Käyttöehdot</a></li><li><a href="/dpa">DPA</a></li><li><a href="/yhteystiedot">Yhteystiedot</a></li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>// © 2026 Wrty Clothing Oy (Hyrrä) · Y-tunnus 3555902-3 · Tehty Suomessa</span><span>info@hyrrä.fi</span></div>
+  </div>
+</footer>
+<script>
+(function(){var burger=document.getElementById('navBurger');var overlay=document.getElementById('menuOverlay');var close=document.getElementById('menuClose');if(!burger||!overlay)return;function open(){overlay.classList.add('open');document.body.classList.add('menu-open');overlay.setAttribute('aria-hidden','false');}function shut(){overlay.classList.remove('open');document.body.classList.remove('menu-open');overlay.setAttribute('aria-hidden','true');}burger.addEventListener('click',open);close.addEventListener('click',shut);overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',shut);});document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});})();
+(function(){var glow=document.getElementById('cursorGlow');if(!glow)return;var x=window.innerWidth/2,y=window.innerHeight/2,tx=x,ty=y;document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});function loop(){x+=(tx-x)*0.08;y+=(ty-y)*0.08;glow.style.transform='translate('+x+'px,'+y+'px) translate(-50%,-50%)';requestAnimationFrame(loop);}loop();})();
+</script>
+</body>
+</html>
